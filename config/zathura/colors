@@ -1,0 +1,22 @@
+set default-bg "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set default-fg "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+
+set recolor true
+set recolor-lightcolor "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set recolor-darkcolor "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+
+set completion-bg "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set completion-fg "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+set completion-highlight-bg "{"dark": Map({"color": Ident("#b9e789")}), "default": Map({"color": Ident("#b9e789")}), "light": Map({"color": Ident("#426919")})}"
+set completion-highlight-fg "{"dark": Map({"color": Ident("#1c3700")}), "default": Map({"color": Ident("#1c3700")}), "light": Map({"color": Ident("#ffffff")})}"
+
+set inputbar-bg "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set inputbar-fg "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+
+set statusbar-bg "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set statusbar-fg "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+
+set notification-bg "{"dark": Map({"color": Ident("#12140e")}), "default": Map({"color": Ident("#12140e")}), "light": Map({"color": Ident("#f9faef")})}"
+set notification-fg "{"dark": Map({"color": Ident("#e2e3d9")}), "default": Map({"color": Ident("#e2e3d9")}), "light": Map({"color": Ident("#1a1c16")})}"
+set notification-error-bg "{"dark": Map({"color": Ident("#ffb4ab")}), "default": Map({"color": Ident("#ffb4ab")}), "light": Map({"color": Ident("#ba1a1a")})}"
+set notification-error-fg "{"dark": Map({"color": Ident("#690005")}), "default": Map({"color": Ident("#690005")}), "light": Map({"color": Ident("#ffffff")})}"

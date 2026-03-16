@@ -1,0 +1,27 @@
+[background]
+path = "/usr/share/backgrounds/wall.jpg"
+fit = "Fill"
+
+[env]
+QT_QPA_PLATFORM = "wayland"
+
+[GTK]
+application_prefer_dark_theme = true
+cursor_theme_name = "Bibata-Modern-Classic"
+cursor_blink = true
+font_name = "Google Sans Flex Medium 11"
+icon_theme_name = "Adwaita"
+theme_name = "adw-gtk3"
+
+[commands]
+reboot = [ "systemctl", "reboot" ]
+poweroff = [ "systemctl", "poweroff" ]
+
+[appearance]
+greeting_msg = "Welcome Back!"
+
+[widget.clock]
+format = "%I:%M %p %a, %b %d"
+resolution = "500ms"
+timezone = "Asia/Kolkata"
+label_width = 150

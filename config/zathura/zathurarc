@@ -1,0 +1,19 @@
+set default-bg "#0f1417"
+set default-fg "#dfe3e7"
+
+set recolor "true"
+set recolor-keephue "true"
+set selection-clipboard clipboard
+
+set recolor-lightcolor "#0f1417"
+set recolor-darkcolor "#dfe3e7"
+
+set completion-bg "#0f1417"
+set completion-fg "#dfe3e7"
+set completion-highlight-bg "#8fcff3"
+set completion-highlight-fg "#003549"
+
+map f toggle_fullscreen
+
+# Allow 'f' to exit fullscreen as well
+map [fullscreen] f toggle_fullscreen

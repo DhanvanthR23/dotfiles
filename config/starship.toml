@@ -1,0 +1,45 @@
+format = """
+$cmd_duration 󰜥 $directory $git_branch
+$character"""
+
+palette = 'colors'
+
+[palettes.colors]
+mustard = '#af8700' # example
+color1 = '#8fcff3'
+color2 = '#003549'
+color3 = '#c0c7cd'
+color4 = '#1c2023'
+color5 = '#003549'
+color6 = '#0f1417'
+color7 = '#0f1417'
+color8 = '#8fcff3'
+color9 = '#cac1ea'
+
+# Prompt symbols 
+[character]                            # The name of the module we are configuring is "character"
+success_symbol = "[   ](bold fg:color9)"
+error_symbol = "[   ](bold fg:red)"
+
+[directory]
+format = "[](fg:color1 bg:color4)[󰉋](bg:color1 fg:color2)[ ](fg:color1 bg:color4)[$path ](fg:color3 bg:color4)[ ](fg:color4)"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+format = "[](fg:color8 bg:color4)[ ](bg:color8 fg:color5)[](fg:color8 bg:color4)[(bg:color8 fg:color5) $branch](fg:color3 bg:color4)[](fg:color4) "
+
+[time]
+format = "[](fg:color8 bg:color4)[ ](bg:color8 fg:color5)[](fg:color8 bg:color4)[(bg:color8 fg:color5) $time](fg:color3 bg:color4)[](fg:color4) "
+disabled = false
+time_format = "%R" # Hour:Minute Format
+
+[python]
+format = "[](fg:color8 bg:color4)[${symbol}${version}](bg:color8 fg:color5)[](fg:color8 bg:color4)[(bg:color8 fg:color5)( ${virtualenv})](fg:color3 bg:color4)[](fg:color4) "
+symbol = '🐍'
+# pyenv_version_name = true
+pyenv_prefix = 'venv'

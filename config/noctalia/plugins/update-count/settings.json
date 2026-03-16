@@ -1,0 +1,8 @@
+{
+  "updateIntervalMinutes": 90,
+  "updateTerminalCommand": "kitty -1",
+  "currentIconName": "cloud-download",
+  "hideOnZero": true,
+  "customCmdGetNumUpdates": "",
+  "customCmdDoSystemUpdate": "paru -Syu --noconfirm --sudoloop"
+}

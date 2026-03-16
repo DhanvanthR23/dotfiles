@@ -1,0 +1,231 @@
+# ============================================================
+# mangowm config.conf — DMS shell edition
+# ============================================================
+
+# ── Environment ──────────────────────────────────────────────
+env=QT_QPA_PLATFORM,wayland
+env=QT_QPA_PLATFORMTHEME,qt5ct
+env=XCURSOR_SIZE,24
+
+# ── Input ────────────────────────────────────────────────────
+repeat_rate=45
+repeat_delay=275
+numlockon=1
+
+sloppyfocus=1
+warpcursor=0
+
+# ── Monitors ─────────────────────────────────────────────────
+monitorrule=eDP-1,0.55,1,scroller,0,1,0,0,1366,768,60
+monitorrule=HDMI-A-1,0.55,1,tile,0,1,1366,0,1920,1080,60
+
+# ── Appearance ───────────────────────────────────────────────
+gappih=8
+gappiv=8
+gappoh=8
+gappov=8
+
+borderpx=2
+border_radius=15
+
+shadows=1
+shadow_only_floating=0
+shadows_blur=20
+shadows_size=5
+shadows_position_x=0
+shadows_position_y=5
+
+no_border_when_single=0
+
+# ── Scroller layout ──────────────────────────────────────────
+scroller_default_proportion=0.5
+scroller_proportion_preset=0.5,0.6667,1.0
+scroller_prefer_center=1
+
+# ── Animations ───────────────────────────────────────────────
+animations=1
+animation_type_open=zoom
+animation_type_close=fade
+animation_fade_in=1
+animation_fade_out=1
+animation_duration_open=220
+animation_duration_close=180
+animation_duration_move=200
+animation_duration_tag=200
+animation_curve_open=0.16,1,0.3,1
+animation_curve_move=0.16,1,0.3,1
+animation_curve_tag=0.16,1,0.3,1
+animation_curve_close=0.08,0.92,0,1
+tag_animation_direction=1
+
+# ── Smart gaps ───────────────────────────────────────────────
+smartgaps=1
+
+# ── Floating snap ────────────────────────────────────────────
+enable_floating_snap=1
+snap_distance=20
+
+# ── Overview / hotarea ───────────────────────────────────────
+enable_hotarea=1
+hotarea_size=10
+ov_tab_mode=0
+
+# ── Window Rules ─────────────────────────────────────────────
+windowrule=isfloating:1,appid:firefox,title:^Picture-in-Picture$
+
+windowrule=isterm:1,appid:kitty
+
+# ── Autostart ────────────────────────────────────────────────
+exec-once=dms run
+
+# ── Key Bindings ─────────────────────────────────────────────
+
+# Apps
+bind=SUPER,Return,spawn,kitty
+bind=SUPER,d,spawn,dms ipc call spotlight toggle
+bind=SUPER,l,spawn,dms ipc call lockscreen lock
+bind=SUPER,e,spawn,nautilus
+bind=SUPER,b,spawn,floorp
+bind=SUPER+SHIFT,b,spawn,brave
+bind=SUPER,m,spawn,thunderbird
+bind=SUPER,v,spawn,dms ipc call clipboard toggle
+bind=SUPER+CTRL+ALT,v,spawn,cliphist wipe
+bind=SUPER,i,spawn,dms ipc call settings toggle
+bind=SUPER,a,spawn,dms ipc call controlcenter toggle
+bind=SUPER,n,spawn,dms ipc call calendar toggle
+bind=SUPER,period,spawn,dms ipc call spotlight emoji
+bind=SUPER,h,spawn,dms ipc call idleinhibitor toggle
+bind=SUPER+CTRL,t,spawn,dms ipc call wallpaper toggle
+bind=SUPER+CTRL+ALT,t,spawn,dms ipc call wallpaper random
+bind=CTRL+ALT,Delete,spawn,dms ipc call sessionmenu toggle
+bind=SUPER+SHIFT,l,spawn,dms ipc call sessionmenu lockAndSuspend
+
+# Color picker
+bind=SUPER+SHIFT,c,spawn,hyprpicker -a
+
+# Window management
+bind=SUPER,q,killclient,
+bind=SUPER,Tab,toggleoverview,
+bind=SUPER,f,togglemaximizescreen,
+bind=SUPER+SHIFT,f,togglefullscreen,
+
+# Floating toggle
+bind=SUPER+ALT,space,togglefloating,
+
+# Focus direction
+bind=SUPER,Left,focusdir,left
+bind=SUPER,Right,focusdir,right
+bind=SUPER,Up,focusdir,up
+bind=SUPER,Down,focusdir,down
+
+# Move window
+bind=SUPER+CTRL,Left,exchange_client,left
+bind=SUPER+CTRL,Right,exchange_client,right
+bind=SUPER+CTRL,Up,exchange_client,up
+bind=SUPER+CTRL,Down,exchange_client,down
+
+# Monitor focus
+bind=SUPER+SHIFT,Left,focusmon,left
+bind=SUPER+SHIFT,Right,focusmon,right
+bind=SUPER+SHIFT,Up,focusmon,up
+bind=SUPER+SHIFT,Down,focusmon,down
+
+# Move window to monitor
+bind=SUPER+SHIFT+CTRL,Left,tagmon,left
+bind=SUPER+SHIFT+CTRL,Right,tagmon,right
+bind=SUPER+SHIFT+CTRL,Up,tagmon,up
+bind=SUPER+SHIFT+CTRL,Down,tagmon,down
+
+# Tags / workspaces
+bind=SUPER,1,view,1
+bind=SUPER,2,view,2
+bind=SUPER,3,view,3
+bind=SUPER,4,view,4
+bind=SUPER,5,view,5
+bind=SUPER,6,view,6
+bind=SUPER,7,view,7
+bind=SUPER,8,view,8
+bind=SUPER,9,view,9
+
+bind=SUPER+CTRL,1,tag,1
+bind=SUPER+CTRL,2,tag,2
+bind=SUPER+CTRL,3,tag,3
+bind=SUPER+CTRL,4,tag,4
+bind=SUPER+CTRL,5,tag,5
+bind=SUPER+CTRL,6,tag,6
+bind=SUPER+CTRL,7,tag,7
+bind=SUPER+CTRL,8,tag,8
+bind=SUPER+CTRL,9,tag,9
+
+bind=SUPER,Prior,viewtoleft_have_client,
+bind=SUPER,Next,viewtoright_have_client,
+
+bind=SUPER+ALT,Left,tag,prev
+bind=SUPER+ALT,Right,tag,next
+
+# Scroller proportion
+bind=SUPER,r,switch_proportion_preset,
+bind=SUPER,minus,increase_proportion,-0.05
+bind=SUPER,equal,increase_proportion,0.05
+
+# Scroll wheel tag switching
+axisbind=SUPER,UP,viewtoleft_have_client
+axisbind=SUPER,DOWN,viewtoright_have_client
+axisbind=SUPER+CTRL,UP,viewtoleft_have_client
+axisbind=SUPER+CTRL,DOWN,viewtoright_have_client
+
+# Reload config
+bind=SUPER,F5,reload_config,
+
+# ── Mouse Bindings ───────────────────────────────────────────
+mousebind=SUPER,btn_left,moveresize,curmove
+mousebind=SUPER,btn_right,moveresize,curresize
+
+# ── Media / Function Keys ────────────────────────────────────
+bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+
+bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-
+bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bind=NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bind=NONE,XF86AudioNext,spawn,playerctl next
+bind=NONE,XF86AudioPause,spawn,playerctl play-pause
+bind=NONE,XF86AudioPlay,spawn,playerctl play-pause
+bind=NONE,XF86AudioPrev,spawn,playerctl previous
+bind=NONE,XF86MonBrightnessUp,spawn,brightnessctl --class=backlight set +10%
+bind=NONE,XF86MonBrightnessDown,spawn,brightnessctl --class=backlight set 10%-
+
+# Screenshots
+bind=SUPER+SHIFT,s,spawn,~/.config/mango/screenshot.sh region
+bind=SUPER+SHIFT+CTRL,s,spawn,~/.config/mango/screenshot.sh region-annotate
+bind=CTRL,Print,spawn,~/.config/mango/screenshot.sh screen
+bind=ALT,Print,spawn,~/.config/mango/screenshot.sh monitor
+
+# ── Layout switching ─────────────────────────────────────────
+bind=SUPER,space,switch_layout,
+bind=SUPER+ALT,s,setlayout,scroller
+bind=SUPER+ALT,t,setlayout,tile
+bind=SUPER+ALT,m,setlayout,monocle
+bind=SUPER+ALT,g,setlayout,grid
+bind=SUPER+ALT,d,setlayout,deck
+
+# ── Scratchpad ───────────────────────────────────────────────
+bind=SUPER,grave,minimized,
+bind=SUPER+ALT,grave,toggle_scratchpad,
+bind=SUPER+SHIFT,grave,restore_minimized,
+
+# ── Named scratchpads ────────────────────────────────────────
+bind=SUPER,F12,toggle_named_scratchpad,kitty-sp,none,1280,800,kitty --class kitty-sp
+windowrule=isnamedscratchpad:1,width:1280,height:800,appid:kitty-sp
+
+bind=CTRL+SHIFT,Escape,toggle_named_scratchpad,btop-sp,none,1400,850,kitty -1 btop
+windowrule=isnamedscratchpad:1,width:1400,height:850,appid:btop-sp
+
+# ── Gesture bindings ─────────────────────────────────────────
+gesturebind=none,left,3,focusdir,left
+gesturebind=none,right,3,focusdir,right
+gesturebind=none,up,3,focusdir,up
+gesturebind=none,down,3,focusdir,down
+
+gesturebind=none,left,4,viewtoleft_have_client
+gesturebind=none,right,4,viewtoright_have_client
+gesturebind=none,up,4,toggleoverview
+gesturebind=none,down,4,toggleoverview

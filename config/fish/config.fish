@@ -1,0 +1,209 @@
+# ─────────────────────────────────────────────────────────
+# PROMPT (fallback — starship overrides this anyway)
+# ─────────────────────────────────────────────────────────
+function fish_prompt -d "Write out the prompt"
+    printf '%s@%s %s%s%s > ' $USER $hostname \
+        (set_color $fish_color_cwd) (prompt_pwd) (set_color normal)
+end
+
+# ─────────────────────────────────────────────────────────
+# INTERACTIVE SESSION
+# ─────────────────────────────────────────────────────────
+if status is-interactive
+
+    # No greeting
+    set fish_greeting
+
+    # Starship prompt
+    starship init fish | source
+
+    # Zoxide (replaces cd with z)
+    zoxide init fish | source
+
+    # ── Fastfetch on startup ───────────────────────────────
+    if command -q fastfetch
+        fastfetch
+    end
+
+    # ── Environment ────────────────────────────────────────
+    set -gx EDITOR nvim
+    set -gx VISUAL nvim
+
+    set -gx XDG_DATA_HOME $HOME/.local/share
+    set -gx XDG_CONFIG_HOME $HOME/.config
+    set -gx XDG_STATE_HOME $HOME/.local/state
+    set -gx XDG_CACHE_HOME $HOME/.cache
+
+    set -gx CLICOLOR 1
+    set -gx LS_COLORS 'no=00:fi=00:di=00;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:*.xml=00;31:'
+
+    # man page colors via less
+    set -gx LESS_TERMCAP_mb \e'[01;31m'
+    set -gx LESS_TERMCAP_md \e'[01;31m'
+    set -gx LESS_TERMCAP_me \e'[0m'
+    set -gx LESS_TERMCAP_se \e'[0m'
+    set -gx LESS_TERMCAP_so \e'[01;44;33m'
+    set -gx LESS_TERMCAP_ue \e'[0m'
+    set -gx LESS_TERMCAP_us \e'[01;32m'
+
+    # ── PATH ───────────────────────────────────────────────
+    fish_add_path $HOME/.local/bin
+    fish_add_path $HOME/.cargo/bin
+    fish_add_path /var/lib/flatpak/exports/bin
+    fish_add_path $HOME/.local/share/flatpak/exports/bin
+
+    # ── bat (distro-aware) ────────────────────────────────
+    if test -f /etc/os-release
+        set -l _distro_id (grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+        switch $_distro_id
+            case fedora rhel centos arch manjaro endeavouros
+                alias cat bat
+            case '*'
+                alias cat batcat
+        end
+    end
+
+    # ── Package management ────────────────────────────────
+    alias pamcan pacman
+    alias y paru
+    alias p paru
+    alias ps 'paru -S --needed'
+    alias pr 'paru -Rns'
+    alias pu 'paru -Syu --noconfirm --sudoloop'
+
+    # ── Editors ───────────────────────────────────────────
+    alias vim nvim
+    alias vi nvim
+    alias svi 'sudo nvim'
+
+    # ── Navigation ────────────────────────────────────────
+    alias .. 'cd ..'
+    alias ... 'cd ../..'
+    alias .... 'cd ../../..'
+    alias ..... 'cd ../../../..'
+
+    # ── Listing (eza) ─────────────────────────────────────
+    alias ls 'eza --icons'
+    alias la 'eza --icons -a -l -h'
+    alias ll 'eza --icons -l'
+    alias lk 'eza --icons -l --sort=size'
+    alias lt 'eza --icons -l --sort=modified'
+    alias lx 'eza --icons -l --sort=extension'
+
+    # ── Core utils ────────────────────────────────────────
+    alias cd z
+    alias rm 'trash -v'
+    alias mkdir 'mkdir -p'
+    alias less 'less -R'
+    alias ping 'ping -c 10'
+    alias clear "printf '\\033[2J\\033[3J\\033[1;1H'"
+    alias fcd 'cd (find . -type d | fzf)'
+
+    # grep → ripgrep if available
+    if command -q rg
+        alias grep rg
+    end
+
+    # ── System ────────────────────────────────────────────
+    alias ff fastfetch
+    alias da 'date "+%Y-%m-%d %A %T %Z"'
+    alias openports 'ss -tulnp'
+    alias logs 'journalctl -xe'
+    alias mountedinfo 'df -hT'
+    alias wifi 'sudo systemctl restart NetworkManager'
+
+    # ── Config shortcuts ──────────────────────────────────
+    alias ncn 'nvim ~/.config/niri/config.kdl'
+    alias ncf 'nvim ~/.config/fish/config.fish'
+    alias ncm 'nvim ~/.config/mango/config.conf'
+    alias q qalc
+
+    # ── Functions ─────────────────────────────────────────
+
+    # Go up N directories
+    function up -d "Go up N directories"
+        set -l d ""
+        set -l limit $argv[1]
+        for i in (seq 1 $limit)
+            set d $d/..
+        end
+        set d (string replace -r '^/' '' $d)
+        if test -z "$d"
+            set d ..
+        end
+        cd $d
+    end
+
+    # mkdir and cd into it
+    function mkdirg -d "mkdir -p and cd"
+        mkdir -p $argv[1]
+        cd $argv[1]
+    end
+
+    # cp and cd into destination
+    function cpg -d "cp then cd to destination"
+        if test -d $argv[2]
+            cp $argv[1] $argv[2] && cd $argv[2]
+        else
+            cp $argv[1] $argv[2]
+        end
+    end
+
+    # mv and cd into destination
+    function mvg -d "mv then cd to destination"
+        if test -d $argv[2]
+            mv $argv[1] $argv[2] && cd $argv[2]
+        else
+            mv $argv[1] $argv[2]
+        end
+    end
+
+    # Extract any archive
+    function extract -d "Extract any archive format"
+        for archive in $argv
+            if test -f $archive
+                switch $archive
+                    case '*.tar.bz2'
+                        tar xvjf $archive
+                    case '*.tar.gz'
+                        tar xvzf $archive
+                    case '*.bz2'
+                        bunzip2 $archive
+                    case '*.rar'
+                        rar x $archive
+                    case '*.gz'
+                        gunzip $archive
+                    case '*.tar'
+                        tar xvf $archive
+                    case '*.tbz2'
+                        tar xvjf $archive
+                    case '*.tgz'
+                        tar xvzf $archive
+                    case '*.zip'
+                        unzip $archive
+                    case '*.Z'
+                        uncompress $archive
+                    case '*.7z'
+                        7z x $archive
+                    case '*'
+                        echo "Don't know how to extract '$archive'"
+                end
+            else
+                echo "'$archive' is not a valid file!"
+            end
+        end
+    end
+
+    # Git shortcuts
+    function gcom -d "git add . && git commit -m"
+        git add .
+        git commit -m $argv[1]
+    end
+
+    function lazyg -d "git add, commit, push"
+        git add .
+        git commit -m $argv[1]
+        git push
+    end
+
+end

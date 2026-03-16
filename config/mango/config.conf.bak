@@ -1,0 +1,278 @@
+# ============================================================
+# mangowm config.conf — ported from niri config.kdl
+# ============================================================
+
+# ── Environment ──────────────────────────────────────────────
+env=QT_QPA_PLATFORM,wayland
+env=QT_QPA_PLATFORMTHEME,qt5ct
+env=XCURSOR_SIZE,24
+
+# ── Input ────────────────────────────────────────────────────
+repeat_rate=45
+repeat_delay=275
+numlockon=1
+
+# Focus follows mouse (sloppyfocus) — max-scroll-amount="0%" in niri
+# means focus follows mouse but no scroll-to-follow. Closest equivalent:
+sloppyfocus=1
+warpcursor=0
+
+# ── Monitors ─────────────────────────────────────────────────
+# Format: name,mfact,nmaster,layout,transform,scale,x,y,width,height,refreshrate
+# eDP-1 at 0,0 (1366x768) — primary laptop panel
+monitorrule=eDP-1,0.55,1,scroller,0,1,0,0,1366,768,60
+
+# HDMI-A-1 at x=1366,y=0 (1920x1080) — external monitor
+# NOTE: niri had focus-at-startup on HDMI-A-1; mango has no direct equivalent,
+# just put it second and it'll likely get focus. Adjust x offset if needed.
+monitorrule=HDMI-A-1,0.55,1,tile,0,1,1366,0,1920,1080,60
+
+# ── Appearance ───────────────────────────────────────────────
+# Gaps: niri used 8px gaps. mango splits into inner/outer.
+gappih=8
+gappiv=8
+gappoh=8
+gappov=8
+
+# Background (niri: "#000")
+
+# Border: niri had border off, focus-ring on (1.5px, active #7fc8ff33)
+# mango uses borderpx for both. Use 2px with the focus color.
+borderpx=2
+
+# Corner radius (niri: geometry-corner-radius 15)
+border_radius=15
+
+# Shadows (niri: on, softness=20, spread=5, offset y=5)
+shadows=1
+shadow_only_floating=0
+shadows_blur=20
+shadows_size=5
+shadows_position_x=0
+shadows_position_y=5
+
+# No border when single window (personal taste — niri had prefer-no-csd)
+no_border_when_single=0
+
+# ── Scroller layout (closest to niri's scrolling column layout) ──────────
+# niri default-column-width proportion 0.5
+scroller_default_proportion=0.5
+# niri preset-column-widths: 1.0, 0.5, 0.66667
+scroller_proportion_preset=0.5,0.6667,1.0
+# Keep focused window reasonably centered
+scroller_prefer_center=1
+
+# ── Animations ───────────────────────────────────────────────
+# niri used spring physics — mango uses duration + bezier curve.
+# Springs with stiffness ~700 and damping 1.0 ≈ snappy, no overshoot.
+# Bezier "ease-out-expo" is a close approximation.
+animations=1
+animation_type_open=zoom
+animation_type_close=fade
+animation_fade_in=1
+animation_fade_out=1
+animation_duration_open=220
+animation_duration_close=180
+animation_duration_move=200
+animation_duration_tag=200
+animation_curve_open=0.16,1,0.3,1
+animation_curve_move=0.16,1,0.3,1
+animation_curve_tag=0.16,1,0.3,1
+animation_curve_close=0.08,0.92,0,1
+tag_animation_direction=1
+
+# ── Smart gaps ───────────────────────────────────────────────
+# Don't render gaps when only one window is on screen
+smartgaps=1
+
+# ── Floating snap ────────────────────────────────────────────
+enable_floating_snap=1
+snap_distance=20
+
+# ── Overview / hotarea ───────────────────────────────────────
+# Move cursor to bottom-left corner to toggle overview
+enable_hotarea=1
+hotarea_size=10
+ov_tab_mode=0
+
+# ── Window Rules ─────────────────────────────────────────────
+# Firefox PiP → floating
+windowrule=isfloating:1,appid:firefox,title:^Picture-in-Picture$
+
+# Terminal — mark as terminal so GUI children can swallow it
+windowrule=isterm:1,appid:kitty
+windowrule=isterm:1,appid:kitty
+
+# ── Autostart ────────────────────────────────────────────────
+exec-once=qs -c noctalia-shell
+
+# ── Key Bindings ─────────────────────────────────────────────
+# SUPER = Mod in niri
+
+# Apps
+bind=SUPER,Return,spawn,kitty
+bind=SUPER,d,spawn,qs -c noctalia-shell ipc call launcher toggle
+bind=SUPER,l,spawn,qs -c noctalia-shell ipc call lockScreen lock
+bind=SUPER,e,spawn,nautilus
+bind=SUPER,b,spawn,floorp
+bind=SUPER+SHIFT,b,spawn,brave
+bind=SUPER,m,spawn,thunderbird
+bind=SUPER,v,spawn,qs -c noctalia-shell ipc call launcher clipboard
+bind=SUPER+CTRL+ALT,v,spawn,cliphist wipe
+bind=SUPER,i,spawn,qs -c noctalia-shell ipc call settings toggle
+bind=SUPER,a,spawn,qs -c noctalia-shell ipc call controlCenter toggle
+bind=SUPER,n,spawn,qs -c noctalia-shell ipc call calendar toggle
+bind=SUPER,period,spawn,qs -c noctalia-shell ipc call launcher emoji
+bind=SUPER,h,spawn,qs -c noctalia-shell ipc call idleInhibitor toggle
+bind=SUPER+CTRL,t,spawn,qs -c noctalia-shell ipc call wallpaper toggle
+bind=SUPER+CTRL+ALT,t,spawn,qs -c noctalia-shell ipc call wallpaper random all
+bind=CTRL+ALT,Delete,spawn,qs -c noctalia-shell ipc call sessionMenu toggle
+bind=SUPER+SHIFT,l,spawn,qs -c noctalia-shell ipc call sessionMenu lockAndSuspend
+
+# Color picker
+bind=SUPER+SHIFT,c,spawn,hyprpicker -a
+
+# Window management
+bind=SUPER,q,killclient,
+bind=SUPER,Tab,toggleoverview,
+bind=SUPER,f,togglemaximizescreen,
+bind=SUPER+SHIFT,f,togglefullscreen,
+
+# Floating toggle (niri: Mod+Alt+Space)
+bind=SUPER+ALT,space,togglefloating,
+
+# Focus direction (niri: Mod+Arrow)
+bind=SUPER,Left,focusdir,left
+bind=SUPER,Right,focusdir,right
+bind=SUPER,Up,focusdir,up
+bind=SUPER,Down,focusdir,down
+
+# Move window (niri: Mod+Ctrl+Arrow)
+bind=SUPER+CTRL,Left,exchange_client,left
+bind=SUPER+CTRL,Right,exchange_client,right
+bind=SUPER+CTRL,Up,exchange_client,up
+bind=SUPER+CTRL,Down,exchange_client,down
+
+# Monitor focus (niri: Mod+Shift+Arrow)
+bind=SUPER+SHIFT,Left,focusmon,left
+bind=SUPER+SHIFT,Right,focusmon,right
+bind=SUPER+SHIFT,Up,focusmon,up
+bind=SUPER+SHIFT,Down,focusmon,down
+
+# Move window to monitor (niri: Mod+Shift+Ctrl+Arrow)
+bind=SUPER+SHIFT+CTRL,Left,tagmon,left
+bind=SUPER+SHIFT+CTRL,Right,tagmon,right
+bind=SUPER+SHIFT+CTRL,Up,tagmon,up
+bind=SUPER+SHIFT+CTRL,Down,tagmon,down
+
+# Tags / workspaces (niri: Mod+1..9 = focus workspace, Mod+Ctrl+1..9 = move window)
+bind=SUPER,1,view,1
+bind=SUPER,2,view,2
+bind=SUPER,3,view,3
+bind=SUPER,4,view,4
+bind=SUPER,5,view,5
+bind=SUPER,6,view,6
+bind=SUPER,7,view,7
+bind=SUPER,8,view,8
+bind=SUPER,9,view,9
+
+bind=SUPER+CTRL,1,tag,1
+bind=SUPER+CTRL,2,tag,2
+bind=SUPER+CTRL,3,tag,3
+bind=SUPER+CTRL,4,tag,4
+bind=SUPER+CTRL,5,tag,5
+bind=SUPER+CTRL,6,tag,6
+bind=SUPER+CTRL,7,tag,7
+bind=SUPER+CTRL,8,tag,8
+bind=SUPER+CTRL,9,tag,9
+
+# Page_Down/Up → next/prev tag (niri: Mod+Page_Down/Up = workspace down/up)
+bind=SUPER,Prior,viewtoleft_have_client,
+bind=SUPER,Next,viewtoright_have_client,
+
+# Move window to next/prev tag
+bind=SUPER+ALT,Left,tag,prev
+bind=SUPER+ALT,Right,tag,next
+
+# Scroller proportion (niri: Mod+R = cycle preset widths, Mod+Minus/Equal = resize)
+bind=SUPER,r,switch_proportion_preset,
+bind=SUPER,minus,increase_proportion,-0.05
+bind=SUPER,equal,increase_proportion,0.05
+
+# Scroll wheel workspace/tag switching (niri: Mod+WheelScroll*)
+axisbind=SUPER,UP,viewtoleft_have_client
+axisbind=SUPER,DOWN,viewtoright_have_client
+axisbind=SUPER+CTRL,UP,viewtoleft_have_client
+axisbind=SUPER+CTRL,DOWN,viewtoright_have_client
+
+# Reload config
+bind=SUPER,F5,reload_config,
+
+# ── Mouse Bindings ───────────────────────────────────────────
+mousebind=SUPER,btn_left,moveresize,curmove
+mousebind=SUPER,btn_right,moveresize,curresize
+
+# ── Media / Function Keys ────────────────────────────────────
+bind=NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+
+bind=NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-
+bind=NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bind=NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bind=NONE,XF86AudioNext,spawn,playerctl next
+bind=NONE,XF86AudioPause,spawn,playerctl play-pause
+bind=NONE,XF86AudioPlay,spawn,playerctl play-pause
+bind=NONE,XF86AudioPrev,spawn,playerctl previous
+bind=NONE,XF86MonBrightnessUp,spawn,brightnessctl --class=backlight set +10%
+bind=NONE,XF86MonBrightnessDown,spawn,brightnessctl --class=backlight set 10%-
+
+# Screenshots — satty + grim + slurp
+# Script: ~/.config/mango/screenshot.sh (chmod +x it)
+bind=SUPER+SHIFT,s,spawn,~/.config/mango/screenshot.sh region
+bind=SUPER+SHIFT+CTRL,s,spawn,~/.config/mango/screenshot.sh region-annotate
+bind=CTRL,Print,spawn,~/.config/mango/screenshot.sh screen
+bind=ALT,Print,spawn,~/.config/mango/screenshot.sh monitor
+
+# ── Layout switching ─────────────────────────────────────────
+# Cycle all layouts with SUPER+Space
+bind=SUPER,space,switch_layout,
+# Or jump to a specific one directly:
+bind=SUPER+ALT,s,setlayout,scroller
+bind=SUPER+ALT,t,setlayout,tile
+bind=SUPER+ALT,m,setlayout,monocle
+bind=SUPER+ALT,g,setlayout,grid
+bind=SUPER+ALT,d,setlayout,deck
+
+# ── Scratchpad (sway-style) ───────────────────────────────────
+# Send focused window to scratchpad (minimize it)
+bind=SUPER,grave,minimized,
+# Cycle through hidden scratchpad windows
+bind=SUPER+ALT,grave,toggle_scratchpad,
+# Pull a window back out of scratchpad to tiling
+bind=SUPER+SHIFT,grave,restore_minimized,
+
+# ── Named scratchpads ────────────────────────────────────────
+# kitty terminal scratchpad — SUPER+F12 to toggle
+# Spawns a kitty with app-id "kitty-sp" if not already running
+bind=SUPER,F12,toggle_named_scratchpad,kitty-sp,none,1280,800,kitty --class kitty-sp
+windowrule=isnamedscratchpad:1,width:1280,height:800,appid:kitty-sp
+
+# btop scratchpad — SUPER+F11
+bind=CTRL+SHIFT,Escape,toggle_named_scratchpad,btop-sp,none,1400,850,kitty -1 btop
+windowrule=isnamedscratchpad:1,width:1400,height:850,appid:btop-sp
+
+# ── Gesture bindings ─────────────────────────────────────────
+# 3-finger swipe → focus direction
+gesturebind=none,left,3,focusdir,left
+gesturebind=none,right,3,focusdir,right
+gesturebind=none,up,3,focusdir,up
+gesturebind=none,down,3,focusdir,down
+
+# 4-finger swipe → switch tag / overview
+gesturebind=none,left,4,viewtoleft_have_client
+gesturebind=none,right,4,viewtoright_have_client
+gesturebind=none,up,4,toggleoverview
+gesturebind=none,down,4,toggleoverview
+
+# ── Source ───────────────────────────────────────────────────
+# This sources the noctalia theme
+source = /home/dhanvanth/.config/mango/noctalia.conf
+

@@ -1,0 +1,18 @@
+spawn-sh-at-startup "regreet; niri msg action quit --skip-confirmation"
+hotkey-overlay {
+    skip-at-startup
+}
+cursor {
+    xcursor-theme "Bibata-Modern-Classic"
+}
+environment {
+    GTK_USE_PORTAL "0"
+    GDK_DEBUG "no-portals"
+}
+output "HDMI-A-1" {
+    mode "1920x1080@60.000"
+}
+output "eDP-1" {
+    focus-at-startup
+    mode "1366x768@60.000"
+}

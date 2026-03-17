@@ -118,6 +118,11 @@ if status is-interactive
     alias ncm 'nvim ~/.config/mango/config.conf'
     alias q qalc
 
+    # ── Jellyfin  ─────────────────────────────────────────
+    alias jellystart "sudo systemctl start jellyfin"
+    alias jellystop "sudo systemctl stop jellyfin"
+    alias jellyre "sudo systemctl restart jellyfin"
+
     # ── Functions ─────────────────────────────────────────
 
     # Go up N directories
@@ -206,4 +211,10 @@ if status is-interactive
         git push
     end
 
+    function update-mirrors -d "update arch mirrors"
+        set TMPFILE (mktemp)
+        rate-mirrors --save="$TMPFILE" --protocol https arch --max-delay=46200
+        and sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+        and sudo mv "$TMPFILE" /etc/pacman.d/mirrorlist
+    end
 end

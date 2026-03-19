@@ -10,7 +10,7 @@
   "dockTransparency": 1,
   "widgetBackgroundColor": "sc",
   "widgetColorMode": "default",
-  "controlCenterTileColorMode": "primary",
+  "controlCenterTileColorMode": "primaryContainer",
   "buttonColorMode": "primary",
   "cornerRadius": 15,
   "niriLayoutGapsOverride": -1,
@@ -19,7 +19,7 @@
   "hyprlandLayoutGapsOverride": -1,
   "hyprlandLayoutRadiusOverride": -1,
   "hyprlandLayoutBorderSize": -1,
-  "mangoLayoutGapsOverride": 8,
+  "mangoLayoutGapsOverride": -1,
   "mangoLayoutRadiusOverride": -1,
   "mangoLayoutBorderSize": -1,
   "firstDayOfWeek": -1,
@@ -116,14 +116,16 @@
       "width": 50
     },
     {
-      "id": "nightMode",
+      "id": "battery",
       "enabled": true,
       "width": 50
     },
     {
-      "id": "darkMode",
+      "id": "diskUsage",
       "enabled": true,
-      "width": 50
+      "width": 50,
+      "instanceId": "mmujjik1gniwe1stupg",
+      "mountPath": "/"
     }
   ],
   "showWorkspaceIndex": true,
@@ -135,7 +137,7 @@
   "maxWorkspaceIcons": 3,
   "workspaceAppIconSizeOffset": 0,
   "groupWorkspaceApps": true,
-  "workspaceFollowFocus": false,
+  "workspaceFollowFocus": true,
   "showOccupiedWorkspacesOnly": false,
   "reverseScrolling": false,
   "dwlShowAllTags": false,
@@ -146,7 +148,7 @@
   "workspaceUrgentColorMode": "default",
   "workspaceFocusedBorderEnabled": false,
   "workspaceFocusedBorderColor": "primary",
-  "workspaceFocusedBorderThickness": 2,
+  "workspaceFocusedBorderThickness": 1,
   "workspaceNameIcons": {},
   "waveProgressEnabled": true,
   "scrollTitleEnabled": true,
@@ -205,7 +207,7 @@
   "dankLauncherV2UnloadOnClose": true,
   "useAutoLocation": true,
   "weatherEnabled": false,
-  "networkPreference": "auto",
+  "networkPreference": "wifi",
   "iconTheme": "System Default",
   "cursorSettings": {
     "theme": "Bibata-Modern-Classic",
@@ -279,7 +281,7 @@
   "terminalsAlwaysDark": true,
   "muxType": "tmux",
   "muxUseCustomCommand": false,
-  "muxCustomCommand": "",
+  "muxCustomCommand": "kitty -1 $1",
   "muxSessionFilter": "",
   "runDmsMatugenTemplates": true,
   "matugenTemplateGtk": true,
@@ -297,7 +299,7 @@
   "matugenTemplateKitty": true,
   "matugenTemplateFoot": false,
   "matugenTemplateAlacritty": false,
-  "matugenTemplateNeovim": false,
+  "matugenTemplateNeovim": true,
   "matugenTemplateWezterm": false,
   "matugenTemplateDgop": true,
   "matugenTemplateKcolorscheme": true,
@@ -306,7 +308,7 @@
   "matugenTemplateZed": false,
   "matugenTemplateNeovimSettings": {
     "dark": {
-      "baseTheme": "github_dark",
+      "baseTheme": "tokyonight",
       "harmony": 0.5
     },
     "light": {
@@ -410,11 +412,15 @@
   "customPowerActionReboot": "",
   "customPowerActionPowerOff": "",
   "updaterHideWidget": true,
-  "updaterUseCustomCommand": false,
-  "updaterCustomCommand": "",
+  "updaterUseCustomCommand": true,
+  "updaterCustomCommand": "paru -Syu",
   "updaterTerminalAdditionalParams": "",
   "displayNameMode": "system",
-  "screenPreferences": {},
+  "screenPreferences": {
+    "wallpaper": [
+      "all"
+    ]
+  },
   "showOnLastDisplay": {},
   "niriOutputSettings": {},
   "hyprlandOutputSettings": {},
@@ -457,6 +463,10 @@
           "id": "clock",
           "enabled": true,
           "clockCompactMode": false
+        },
+        {
+          "id": "privacyIndicator",
+          "enabled": true
         }
       ],
       "rightWidgets": [

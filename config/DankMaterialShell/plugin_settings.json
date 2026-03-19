@@ -1,5 +1,8 @@
 {
   "emojiLauncher": {
     "enabled": true
+  },
+  "dankHooks": {
+    "enabled": true
   }
 }

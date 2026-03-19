@@ -119,9 +119,9 @@ if status is-interactive
     alias q qalc
 
     # ── Jellyfin  ─────────────────────────────────────────
-    alias jellystart "sudo systemctl start jellyfin"
-    alias jellystop "sudo systemctl stop jellyfin"
-    alias jellyre "sudo systemctl restart jellyfin"
+    alias jstart "sudo systemctl start jellyfin"
+    alias jstop "sudo systemctl stop jellyfin"
+    alias jre "sudo systemctl restart jellyfin"
 
     # ── Functions ─────────────────────────────────────────
 
@@ -208,7 +208,7 @@ if status is-interactive
     function lazyg -d "git add, commit, push"
         git add .
         git commit -m $argv[1]
-        git push
+        git push --set-upstream origin main
     end
 
     function update-mirrors -d "update arch mirrors"

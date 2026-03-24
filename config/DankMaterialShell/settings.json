@@ -1,9 +1,10 @@
 {
   "currentThemeName": "dynamic",
   "currentThemeCategory": "dynamic",
-  "customThemeFile": "",
+  "customThemeFile": "/home/dhanvanth/.config/matugen/colors.json",
   "registryThemeVariants": {},
   "matugenScheme": "scheme-vibrant",
+  "matugenContrast": 0,
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
   "popupTransparency": 1,
@@ -93,15 +94,11 @@
     {
       "id": "brightnessSlider",
       "enabled": true,
-      "width": 50
+      "width": 50,
+      "deviceName": "backlight:intel_backlight"
     },
     {
       "id": "wifi",
-      "enabled": true,
-      "width": 50
-    },
-    {
-      "id": "bluetooth",
       "enabled": true,
       "width": 50
     },
@@ -126,6 +123,11 @@
       "width": 50,
       "instanceId": "mmujjik1gniwe1stupg",
       "mountPath": "/"
+    },
+    {
+      "id": "nightMode",
+      "enabled": true,
+      "width": 50
     }
   ],
   "showWorkspaceIndex": true,
@@ -454,7 +456,8 @@
         },
         {
           "id": "focusedWindow",
-          "enabled": true
+          "enabled": true,
+          "focusedWindowCompactMode": true
         }
       ],
       "centerWidgets": [
@@ -490,7 +493,11 @@
           "id": "controlCenterButton",
           "enabled": true,
           "showAudioIcon": true,
-          "showAudioPercent": false
+          "showAudioPercent": false,
+          "showVpnIcon": true,
+          "showBrightnessIcon": false,
+          "showBrightnessPercent": false,
+          "showBatteryIcon": false
         },
         {
           "id": "systemTray",

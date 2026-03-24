@@ -1,0 +1,28 @@
+<Control><Alt>G Compress to 'tar.gz'
+<Control><Alt>X Compress to 'tar.xz'
+<Control><Alt>S Compress to 'tar.zst'
+<Control><Alt>Z Compress to 'zip'
+<Control>E Extract here
+<Control><Alt>C Copy file names
+<Control><Alt>V Paste clipboard content
+<Control><Shift>C Compare items
+<Control><Alt>U Find duplicate files
+<Control><Shift>E Find empty directories
+<Control><Alt>0 Find empty files
+<Control><Alt>J Find junk files
+<Control><Alt>H List hidden files
+<Control><Alt>B List largest files
+<Control><Alt>P List permissions and owners
+<Control><Alt>R List recent files
+<Control><Shift>O Open item location
+<Control><Alt>I Show files information
+<Control><Alt>M Show files MIME type
+<Control><Shift>V Paste as symbolic link
+<Control><Shift>G Git: Clone URLs
+<Control><Shift>R Git: Reset and pull
+<Control><Shift>X URL: Download file
+F7 Code editor
+F12 Disk usage analyzer
+F4 Terminal
+<Control><Alt>W Text: List issues
+<Control><Shift>P Rename: Remove parentheses blocks

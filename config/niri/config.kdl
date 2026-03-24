@@ -1,37 +1,71 @@
-environment {
-  QT_QPA_PLATFORM "wayland"
-  QT_QPA_PLATFORMTHEME "qt5ct"
-}
-gestures {
-    hot-corners {
-        off
-    }
+// ============================================================================
+// NIRI CONFIGURATION - iNiR (ii)
+// ============================================================================
+// Wiki: https://github.com/YaLTeR/niri/wiki/Configuration:-Introduction
+// ============================================================================
+
+prefer-no-csd
+
+hotkey-overlay {
+    skip-at-startup
 }
 
-input {
-  keyboard{
-    repeat-delay 275
-    repeat-rate 45
-    numlock
-  }
-  focus-follows-mouse max-scroll-amount="0%"
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+debug {
+    honor-xdg-activation-with-invalid-serial
 }
+
+// ============================================================================
+// OUTPUTS
+// ============================================================================
 
 output "HDMI-A-1" {
-  mode "1920x1080@60.000"
-  scale 1
-  focus-at-startup
-  position x=1366 y=0
+    mode "1920x1080@60.000"
+    scale 1
+    focus-at-startup
+    position x=1366 y=0
 }
+
 output "eDP-1" {
-  mode "1366x768@60.003"
-  scale 1.0
-  position x=0 y=0
+    mode "1366x768@60.003"
+    scale 1.0
+    position x=0 y=0
 }
+
+// ============================================================================
+// INPUT
+// ============================================================================
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+        }
+        repeat-delay 275
+        repeat-rate 45
+        numlock
+    }
+    touchpad {
+        tap
+        tap-button-map "left-right-middle"
+    }
+    mouse {
+        accel-profile "flat"
+    }
+    focus-follows-mouse max-scroll-amount="0%"
+
+    mod-key "Super"
+    mod-key-nested "Alt"
+}
+
+// ============================================================================
+// LAYOUT
+// ============================================================================
+
 layout {
-    gaps 8.0
-    background-color "#000"
-    // always-center-single-column
+    gaps 8
+    background-color "transparent"
     center-focused-column "never"
 
     preset-column-widths {
@@ -40,13 +74,8 @@ layout {
         proportion 0.66667
     }
 
-    default-column-width { proportion 0.50; }
-
-    focus-ring {
-        // off
-        width 1.5
-        active-color "#7fc8ff33"
-        inactive-color "#505050"
+    default-column-width {
+        proportion 0.5
     }
 
     border {
@@ -56,8 +85,15 @@ layout {
         inactive-color "#222"
     }
 
+    focus-ring {
+        off
+        width 1
+        active-color "#7fc8ff33"
+        inactive-color "#505050"
+    }
+
     shadow {
-        on
+        off
         softness 20
         spread 5
         offset x=0 y=5
@@ -75,157 +111,224 @@ layout {
     insert-hint {
         color "#ffffff22"
     }
+
+    struts { }
 }
 
-prefer-no-csd
+gestures {
+    hot-corners {
+        off
+    }
+}
 
-screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+cursor {
+    xcursor-theme "Bibata-Modern-Classic"
+    xcursor-size 24
+}
+
+overview {
+    zoom 0.75
+    // backdrop-color "#000"
+    workspace-shadow {
+      off
+    }
+}
+
+// ============================================================================
+// WINDOW RULES
+// ============================================================================
+
+window-rule {
+    geometry-corner-radius 16
+    clip-to-geometry true
+}
+
+window-rule {
+    match is-active=false
+    opacity 0.9
+}
+
+// Firefox PiP always floating
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// ============================================================================
+// ANIMATIONS
+// ============================================================================
 
 animations {
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.00001
+    }
     window-open {
         spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
     }
     window-close {
         spring damping-ratio=1.0 stiffness=700 epsilon=0.1
     }
-    window-resize {
-        spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
     }
     window-movement {
         spring damping-ratio=1.0 stiffness=600 epsilon=0.0001
     }
+    window-resize {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+    }
     overview-open-close {
         spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
     }
-    workspace-switch {
-        spring damping-ratio=1.0 stiffness=800 epsilon=0.00001
+    config-notification-open-close {
+        spring damping-ratio=0.90 stiffness=800 epsilon=0.0001
     }
-    horizontal-view-movement {
-        spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
+    screenshot-ui-open {
+        spring damping-ratio=0.85 stiffness=750 epsilon=0.0001
     }
 }
 
-// Open the Firefox picture-in-picture player as floating by default.
-window-rule {
-    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
-    open-floating true
+// ============================================================================
+// ENVIRONMENT
+// ============================================================================
+
+environment {
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_MENU_PREFIX "plasma-"
+    QT_QPA_PLATFORM "wayland"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_LOGGING_RULES "quickshell.dbus.properties=false"
+    QT_QPA_PLATFORMTHEME "qt6ct"
+    QT_STYLE_OVERRIDE "Darkly"
+    ILLOGICAL_IMPULSE_VIRTUAL_ENV "$HOME/.local/state/quickshell/.venv"
 }
 
-// Example: enable rounded corners for all windows.
-window-rule {
-    geometry-corner-radius 15
-    clip-to-geometry true
+// ============================================================================
+// STARTUP
+// ============================================================================
+
+spawn-at-startup "bash" "-c" "systemctl --user import-environment XDG_MENU_PREFIX && kbuildsycoca6"
+spawn-at-startup "bash" "-c" "wl-paste --watch cliphist store &"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+spawn-at-startup "qs" "-c" "ii"
+
+// ============================================================================
+// LAYER RULES
+// ============================================================================
+
+layer-rule {
+    match namespace="quickshell:iiBackdrop"
+    place-within-backdrop true
+    opacity 1.0
 }
 
 layer-rule {
-  match namespace="^noctalia-overview*"
-  place-within-backdrop true
+    match namespace="quickshell:wBackdrop"
+    place-within-backdrop true
+    opacity 1.0
 }
 
+// ============================================================================
+// KEYBINDINGS
+// ============================================================================
+
 binds {
-    // Mod-Shift-/, which is usually the same as Mod-?,
-    // shows a list of important hotkeys.
-    Mod+Shift+Slash { show-hotkey-overlay; }
+    // System
+    Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Mod+Slash { spawn "qs" "-c" "ii" "ipc" "call" "cheatsheet" "toggle"; }
 
-    // Open/close the Overview: a zoomed-out view of workspaces and windows.
-    // You can also do a four-finger swipe up on a touchpad.
-    Mod+TAB hotkey-overlay-title="Toggle Overview" { toggle-overview; }
+    // ii Shell — mapped to old noctalia keybinds
+    Mod+D hotkey-overlay-title="Open Launcher" { spawn "qs" "-c" "ii" "ipc" "call" "overview" "toggle"; }
+    Mod+L hotkey-overlay-title="Lock Screen" { spawn "qs" "-c" "ii" "ipc" "call" "lock" "activate"; }
+    Mod+I hotkey-overlay-title="Open Settings" { spawn "qs" "-c" "ii" "ipc" "call" "settings" "open"; }
+    Mod+A hotkey-overlay-title="Action Center" { spawn "qs" "-c" "ii" "ipc" "call" "sidebarRight" "toggle"; }
+    Mod+V hotkey-overlay-title="Clipboard History" { spawn "qs" "-c" "ii" "ipc" "call" "clipboard" "toggle"; }
+    Mod+Ctrl+Alt+V hotkey-overlay-title="Wipe Clipboard" { spawn "cliphist" "wipe"; }
+    Mod+N hotkey-overlay-title="sidebarLeft" { spawn "qs" "-c" "ii" "ipc" "call" "sidebarLeft" "toggle"; }
+    Mod+Period hotkey-overlay-title="Emoji Selector" { spawn "qs" "-c" "ii" "ipc" "call" "overlay" "toggle"; }
+    Mod+Ctrl+T hotkey-overlay-title="Change Wallpaper" { spawn "qs" "-c" "ii" "ipc" "call" "wallpaperSelector" "toggle"; }
+    Ctrl+Alt+Delete hotkey-overlay-title="Session Menu" { spawn "qs" "-c" "ii" "ipc" "call" "session" "toggle"; }
+    Mod+Shift+L hotkey-overlay-title="Suspend" { spawn "qs" "-c" "ii" "ipc" "call" "lock" "activate"; }
 
-    // Suggested binds for running programs: terminal, app launcher, screen locker.
+    // ii Region tools
+    Mod+Shift+S { spawn "qs" "-c" "ii" "ipc" "call" "region" "screenshot"; }
+    Mod+Shift+X { spawn "qs" "-c" "ii" "ipc" "call" "region" "ocr"; }
+    Mod+Shift+A { spawn "qs" "-c" "ii" "ipc" "call" "region" "search"; }
+
+    // ii Alt+Tab window switcher
+    Alt+Tab { spawn "qs" "-c" "ii" "ipc" "call" "altSwitcher" "next"; }
+    Alt+Shift+Tab { spawn "qs" "-c" "ii" "ipc" "call" "altSwitcher" "previous"; }
+
+    // Applications
     Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "kitty"; }
-    Mod+D hotkey-overlay-title="Open Launcher" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+L hotkey-overlay-title="Lock Screen" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
     Mod+E hotkey-overlay-title="Open File Manager" { spawn "nautilus"; }
-    Ctrl+Alt+Delete hotkey-overlay-title="Session Menu" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"; }
-    Mod+Shift+L hotkey-overlay-title="Suspend" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend" ; }
-    Mod+I hotkey-overlay-title="Open Settings" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
-    Mod+A hotkey-overlay-title="Action Center" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-
     Mod+B hotkey-overlay-title="Open Floorp" { spawn "floorp"; }
     Mod+Shift+B hotkey-overlay-title="Open Brave" { spawn "brave"; }
-
-    Mod+M hotkey-overlay-title="Open Thunderbird" {spawn "thunderbird"; }
-
-    Mod+V hotkey-overlay-title="Clipboard History" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
-    Mod+Ctrl+Alt+V hotkey-overlay-title="Wipe Clipboard" { spawn "cliphist" "wipe"; }
+    Mod+M hotkey-overlay-title="Open Thunderbird" { spawn "thunderbird"; }
     Ctrl+Shift+Escape hotkey-overlay-title="System Monitor" { spawn "kitty" "-1" "btop"; }
-    Mod+Period hotkey-overlay-title="Emoji Selector" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "emoji"; }
-    Mod+H hotkey-overlay-title="Idle Inhibitor" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "idleInhibitor" "toggle"; }
+    Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "hyprpicker" "-a"; }
+    Mod+F12 { spawn "qs" "-c" "ii" "ipc" "call" "gamemode" "toggle"; }
 
-    Mod+Ctrl+T hotkey-overlay-title="Change Wallpaper" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "wallpaper" "toggle"; }
-    Mod+Ctrl+Alt+T hotkey-overlay-title="Set Random Wallpaper" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "wallpaper" "random" "all"; }
-
-    Mod+N hotkey-overlay-title="Open Calendar" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "calendar" "toggle"; }
-    // Example volume keys mappings for PipeWire & WirePlumber.
-    // The allow-when-locked=true property makes them work even when the session is locked.
-    XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"; }
-    XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
-    XF86AudioMute hotkey-overlay-title="Mute Output" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86AudioMicMute hotkey-overlay-title="Mute Input" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-
-    // Example media keys mapping using playerctl.
-    // This will work with any MPRIS-enabled media player.
-    XF86AudioNext hotkey-overlay-title="Next Song" { spawn-sh "playerctl next"; }
-    XF86AudioPause hotkey-overlay-title="Pause Music" { spawn-sh "playerctl play-pause"; }
-    XF86AudioPlay hotkey-overlay-title="Play Music" { spawn-sh "playerctl play-pause"; }
-    XF86AudioPrev hotkey-overlay-title="Previous Music" { spawn-sh "playerctl previous"; }
-
-    // Example brightness key mappings for brightnessctl.
-    XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
-
+    // Window management
     Mod+Q repeat=false { close-window; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+C { center-column; }
+    Mod+W { toggle-column-tabbed-display; }
+    Mod+Alt+Space { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
-    Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
+    // Focus (arrow keys only, matching old config)
+    Mod+Left { focus-column-left; }
+    Mod+Down { focus-window-down; }
+    Mod+Up { focus-window-up; }
     Mod+Right { focus-column-right; }
 
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
+    // Move windows (Mod+Ctrl+Arrow, matching old config)
+    Mod+Ctrl+Left { move-column-left; }
+    Mod+Ctrl+Down { move-window-down; }
+    Mod+Ctrl+Up { move-window-up; }
     Mod+Ctrl+Right { move-column-right; }
 
-    Mod+Home { focus-column-first; }
-    Mod+End  { focus-column-last; }
-    Mod+Ctrl+Home { move-column-to-first; }
-    Mod+Ctrl+End  { move-column-to-last; }
+    // Column/window sizing
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
 
-    Mod+Shift+Left  { focus-monitor-left; }
-    Mod+Shift+Down  { focus-monitor-down; }
-    Mod+Shift+Up    { focus-monitor-up; }
+    // Column tiling
+    Mod+BracketLeft { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma { consume-window-into-column; }
+    Mod+Shift+Period { expel-window-from-column; }
+
+    // Monitor move
+    Mod+Shift+Left { focus-monitor-left; }
+    Mod+Shift+Down { focus-monitor-down; }
+    Mod+Shift+Up { focus-monitor-up; }
     Mod+Shift+Right { focus-monitor-right; }
-
-    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
-    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Left { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Down { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+Up { move-column-to-monitor-up; }
     Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
 
-    Mod+Page_Down      { focus-workspace-down; }
-    Mod+Page_Up        { focus-workspace-up; }
+    // Navigate/move workspaces
+    Mod+Home { focus-column-first; }
+    Mod+End { focus-column-last; }
+    Mod+Ctrl+Home { move-column-to-first; }
+    Mod+Ctrl+End { move-column-to-last; }
+    Mod+Page_Down { focus-workspace-down; }
+    Mod+Page_Up { focus-workspace-up; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
-    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
-
+    Mod+Ctrl+Page_Up { move-column-to-workspace-up; }
     Mod+Shift+Page_Down { move-workspace-down; }
-    Mod+Shift+Page_Up   { move-workspace-up; }
+    Mod+Shift+Page_Up { move-workspace-up; }
 
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
-    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
-    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
-
-    Mod+WheelScrollRight      { focus-column-right; }
-    Mod+WheelScrollLeft       { focus-column-left; }
-    Mod+Ctrl+WheelScrollRight { move-column-right; }
-    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
-
-    // Usually scrolling up and down with Shift in applications results in
-    // horizontal scrolling; these binds replicate that.
-    Mod+Shift+WheelScrollDown      { focus-column-right; }
-    Mod+Shift+WheelScrollUp        { focus-column-left; }
-    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
-    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
-
+    // Workspaces by number
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -235,6 +338,7 @@ binds {
     Mod+7 { focus-workspace 7; }
     Mod+8 { focus-workspace 8; }
     Mod+9 { focus-workspace 9; }
+
     Mod+Ctrl+1 { move-column-to-workspace 1; }
     Mod+Ctrl+2 { move-column-to-workspace 2; }
     Mod+Ctrl+3 { move-column-to-workspace 3; }
@@ -245,54 +349,37 @@ binds {
     Mod+Ctrl+8 { move-column-to-workspace 8; }
     Mod+Ctrl+9 { move-column-to-workspace 9; }
 
-    Mod+BracketLeft  { consume-or-expel-window-left; }
-    Mod+BracketRight { consume-or-expel-window-right; }
+    // Scroll workspace navigation
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
-    // Consume one window from the right to the bottom of the focused column.
-    Mod+Comma  { consume-window-into-column; }
-    // Expel the bottom window from the focused column to the right.
-    Mod+Shift+Period { expel-window-from-column; }
-
-    Mod+R { switch-preset-column-width; }
-    Mod+Shift+R { switch-preset-window-height; }
-    Mod+Ctrl+R { reset-window-height; }
-    Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
-    Mod+C { center-column; }
-    Mod+W { toggle-column-tabbed-display; }
-
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
-
-    // Finer height adjustments when in column with other windows.
-    Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
-
-    // Move the focused window between the floating and the tiling layout.
-    Mod+Alt+Space       { toggle-window-floating; }
-    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
-
-
-    Mod+Shift+S { screenshot show-pointer=false; }
+    // Screenshots (native niri)
     Ctrl+Print { screenshot-screen show-pointer=false; }
     Alt+Print { screenshot-window; }
 
-    Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "hyprpicker" "-a"; }
-}
+    // Volume (via ii IPC for OSD feedback)
+    XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "qs" "-c" "ii" "ipc" "call" "audio" "volumeUp"; }
+    XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "qs" "-c" "ii" "ipc" "call" "audio" "volumeDown"; }
+    XF86AudioMute hotkey-overlay-title="Mute Output" { spawn "qs" "-c" "ii" "ipc" "call" "audio" "mute"; }
+    XF86AudioMicMute hotkey-overlay-title="Mute Input" { spawn "qs" "-c" "ii" "ipc" "call" "audio" "micMute"; }
 
-overview {
-    backdrop-color "#000"
-    zoom 0.5
-}
+    // Brightness (via ii IPC for OSD feedback)
+    XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "qs" "-c" "ii" "ipc" "call" "brightness" "increment"; }
+    XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "qs" "-c" "ii" "ipc" "call" "brightness" "decrement"; }
 
-hotkey-overlay {
-    skip-at-startup
-}
-
-spawn-at-startup "qs" "-c" "noctalia-shell"
-
-include "./noctalia.kdl"
-
-debug {
-  honor-xdg-activation-with-invalid-serial
+    // Media (via ii IPC)
+    XF86AudioNext hotkey-overlay-title="Next Song" { spawn "qs" "-c" "ii" "ipc" "call" "mpris" "next"; }
+    XF86AudioPause hotkey-overlay-title="Pause Music" { spawn "qs" "-c" "ii" "ipc" "call" "mpris" "playPause"; }
+    XF86AudioPlay hotkey-overlay-title="Play Music" { spawn "qs" "-c" "ii" "ipc" "call" "mpris" "playPause"; }
+    XF86AudioPrev hotkey-overlay-title="Previous Music" { spawn "qs" "-c" "ii" "ipc" "call" "mpris" "previous"; }
 }

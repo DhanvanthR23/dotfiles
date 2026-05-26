@@ -1,0 +1,134 @@
+// ~/.config/waybar/config.jsonc
+// Tokyo Night Storm — Niri-optimized, lean, no heavy modules
+
+{
+  "layer": "top",
+  "position": "top",
+  "height": 32,
+  "spacing": 0,
+  "exclusive": true,
+  "passthrough": false,
+  "gtk-layer-shell": true,
+
+  "modules-left": ["niri/workspaces", "niri/window"],
+  "modules-center": ["clock"],
+  "modules-right": [
+    "custom/updates",
+    "cpu",
+    "memory",
+    "pulseaudio",
+    "network",
+    "battery",
+    "custom/notif",
+    "tray",
+  ],
+
+  "niri/workspaces": {
+    "format": "{value}",
+    "on-click": "activate",
+    "sort-by": "id",
+  },
+
+  "niri/window": {
+    "format": "  {title}",
+    "max-length": 50,
+    "rewrite": {
+      "(.+) — Mozilla Firefox": "󰈹 $1",
+      "(.+) - Chromium": "󰊯 $1",
+      "(.+) - kitty": "󰄛 $1",
+      "(.+) - foot": "󰰢 $1",
+      "nvim (.+)": "󰀫 $1",
+      "(.+) - nvim": "󰀫 $1",
+    },
+  },
+
+  "clock": {
+    "format": "󰥔 {:%H:%M}",
+    "format-alt": "󰃭 {:%a %d %b}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "on-scroll": 1,
+      "format": {
+        "months": "<span color='#c0caf5'><b>{}</b></span>",
+        "days": "<span color='#a9b1d6'>{}</span>",
+        "today": "<span color='#7aa2f7'><b>{}</b></span>",
+      },
+    },
+  },
+
+  "custom/updates": {
+    "exec": "~/.config/niri/scripts/check-updates.sh",
+    "return-type": "json",
+    "interval": 21600,
+    "signal": 8,
+    "on-click": "/home/dhanvanth/.config/niri/scripts/run-updates.sh",
+    "on-click-right": "sh -c 'rm -f /run/user/1000/waybar-updates.cache; pkill -SIGRTMIN+8 waybar'",
+    "tooltip": true,
+  },
+
+  "cpu": {
+    "format": "󰻠 {usage}%",
+    "interval": 5,
+    "tooltip": false,
+  },
+
+  "memory": {
+    "format": "󰍛 {used:.1f}G",
+    "interval": 10,
+    "on-click": "foot -e btop",
+    "tooltip-format": "{used:.1f}G / {total:.1f}G",
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 mute",
+    "format-icons": {
+      "headphone": "󰋋",
+      "headset": "󰋎",
+      "default": ["󰕿", "󰖀", "󰕾"],
+    },
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+    "tooltip": false,
+  },
+
+  "network": {
+    "format-wifi": "󰤨 {essid}",
+    "format-ethernet": "󰈀 eth",
+    "format-disconnected": "󰤭 offline",
+    "interval": 30,
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
+    "tooltip-format-ethernet": "{ipaddr}",
+    "on-click": "foot -e impala",
+  },
+
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15,
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "interval": 60,
+    "tooltip": false,
+  },
+
+  "custom/notif": {
+    "exec": "count=$(makoctl history -j 2>/dev/null | python3 -c \"import sys,json; d=json.load(sys.stdin); print(len(d))\" 2>/dev/null || echo 0); [ \"$count\" -gt 0 ] && echo \"$count\" || echo ''",
+    "interval": 2,
+    "format": "󰂚 {}",
+    "on-click": "sh -c 'makoctl dismiss --all; pkill mako; sleep 0.1; mako &'",
+    "on-click-right": "makoctl restore",
+    "tooltip": false,
+    "return-type": "",
+  },
+
+  "tray": {
+    "icon-size": 14,
+    "spacing": 8,
+  },
+}

@@ -1,0 +1,192 @@
+/* ~/.config/waybar/style.css */
+/* Tokyo Night Storm — GTK CSS compatible, no custom properties */
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+  font-size: 12px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: #1f2335;
+  color: #c0caf5;
+  border-bottom: 1px solid #3b4261;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+  padding: 0 4px;
+}
+
+#workspaces,
+#window,
+#clock,
+#cpu,
+#memory,
+#pulseaudio,
+#network,
+#battery,
+#tray,
+#custom-notif {
+  padding: 0 8px;
+  color: #9aa5ce;
+}
+
+#workspaces {
+  padding: 0 4px;
+}
+
+#workspaces button {
+  padding: 2px 8px;
+  margin: 4px 2px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #9aa5ce;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 11px;
+  transition: all 0.15s ease;
+  box-shadow: none;
+  min-width: 0;
+}
+
+#workspaces button:hover {
+  background: #292e42;
+  color: #c0caf5;
+}
+
+#workspaces button.active {
+  background: #7aa2f7;
+  color: #1f2335;
+  font-weight: bold;
+}
+
+#workspaces button.urgent {
+  background: #f7768e;
+  color: #1f2335;
+}
+
+#window {
+  color: #9aa5ce;
+  font-size: 11px;
+  padding: 0 6px;
+}
+
+#window.empty {
+  color: transparent;
+}
+
+#clock {
+  color: #bb9af7;
+  font-weight: bold;
+}
+
+#cpu {
+  color: #7dcfff;
+}
+
+#cpu.high {
+  color: #f7768e;
+}
+
+#memory {
+  color: #9ece6a;
+}
+
+#memory.warning {
+  color: #e0af68;
+}
+
+#memory.critical {
+  color: #f7768e;
+}
+
+#pulseaudio {
+  color: #7aa2f7;
+}
+
+#pulseaudio.muted {
+  color: #9aa5ce;
+}
+
+#network {
+  color: #7dcfff;
+}
+
+#network.disconnected {
+  color: #f7768e;
+}
+
+#battery {
+  color: #9ece6a;
+}
+
+#battery.warning {
+  color: #e0af68;
+}
+
+#battery.critical {
+  color: #f7768e;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #9ece6a;
+}
+
+#custom-notif {
+  color: #9aa5ce;
+}
+
+#tray {
+  padding: 0 6px;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #f7768e;
+  border-radius: 4px;
+}
+
+tooltip {
+  background: #1f2335;
+  border: 1px solid #3b4261;
+  border-radius: 6px;
+  color: #c0caf5;
+  font-size: 11px;
+}
+
+tooltip label {
+  color: #c0caf5;
+}
+/* ── Updates widget ──────────────────────────────────── */
+#custom-updates {
+  min-width: 52px;
+  color: #9aa5ce;
+}
+
+#custom-updates.normal {
+  color: #e0af68;
+}
+
+#custom-updates.warning {
+  color: #ff9e64;
+}
+
+#custom-updates.critical {
+  color: #f7768e;
+}
+
+#custom-updates.updated {
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px;
+  color: transparent;
+}

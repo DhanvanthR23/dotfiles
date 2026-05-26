@@ -1,0 +1,126 @@
+# ~/.config/starship.toml
+# Tokyo Night Storm — lean, nerd font icons, no heavy modules
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](fg:#1f2335)\
+$os\
+[](bg:#24283b fg:#1f2335)\
+$directory\
+[](bg:#292e42 fg:#24283b)\
+$git_branch\
+$git_status\
+[](bg:#1f2335 fg:#292e42)\
+$nodejs$python$rust$golang$java\
+[](fg:#1f2335)\
+$fill\
+$cmd_duration\
+$status\
+[ ](fg:#1f2335)\
+$line_break\
+$character"""
+
+[os]
+format = "[ $symbol ](bg=#1f2335 fg=#7aa2f7)"
+disabled = false
+
+[os.symbols]
+Linux = ""
+Arch = "󰣇"
+EndeavourOS = ""
+
+[directory]
+format = "[ 󰉋 $path ]($style)"
+style = "bg:#24283b fg:#c0caf5"
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = "…/"
+read_only = " 󰌾"
+read_only_style = "bg:#24283b fg:#f7768e"
+
+[git_branch]
+format = "[ $symbol$branch ]($style)"
+symbol = " "
+style = "bg:#292e42 fg=#7aa2f7"
+truncation_length = 20
+truncation_symbol = "…"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style)"
+style = "bg:#292e42 fg=#bb9af7"
+conflicted = " "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "󰛄 ${count} "
+stashed = " "
+modified = "󰏫 ${count} "
+staged = "󰐗 ${count} "
+renamed = "󰁔 ${count} "
+deleted = "󰍶 ${count} "
+
+[nodejs]
+format = "[ $symbol$version ]($style)"
+symbol = "󰎙 "
+style = "bg:#1f2335 fg=#9ece6a"
+
+[python]
+format = "[ $symbol$version ]($style)"
+symbol = " "
+style = "bg:#1f2335 fg=#e0af68"
+
+[rust]
+format = "[ $symbol$version ]($style)"
+symbol = "󱘗 "
+style = "bg:#1f2335 fg=#f7768e"
+
+[golang]
+format = "[ $symbol$version ]($style)"
+symbol = " "
+style = "bg:#1f2335 fg=#7dcfff"
+
+[java]
+format = "[ $symbol$version ]($style)"
+symbol = " "
+style = "bg:#1f2335 fg=#f7768e"
+
+[fill]
+symbol = " "
+
+[cmd_duration]
+format = "[ 󱎫 $duration ]($style)"
+style = "fg:#e0af68"
+min_time = 2_000
+show_milliseconds = false
+
+[status]
+format = "[ $symbol$status ]($style)"
+style = "fg:#f7768e"
+symbol = "󰅚 "
+success_symbol = ""
+not_executable_symbol = "󰉖 "
+not_found_symbol = "󰍉 "
+sigint_symbol = "󰂭 "
+signal_symbol = "󱐋 "
+disabled = false
+
+[character]
+success_symbol = "[❯](fg:#9ece6a)"
+error_symbol = "[❯](fg:#f7768e)"
+vimcmd_symbol = "[❮](fg:#bb9af7)"
+
+[line_break]
+disabled = false
+
+[package]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[terraform]
+disabled = true
+
+[kubernetes]
+disabled = true

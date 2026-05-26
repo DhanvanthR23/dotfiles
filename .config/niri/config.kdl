@@ -347,7 +347,7 @@ binds {
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
     // Volume
-    XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"; }
+    XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "sh" "-c" "~/.config/niri/scripts/volume-up.sh"; } 
     XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
     XF86AudioMute hotkey-overlay-title="Mute Output" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute hotkey-overlay-title="Mute Input" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }

@@ -10,6 +10,7 @@ padding=12,16
 width=340
 height=120
 max-visible=5
+max-history=20
 
 # ── Appearance ────────────────────────────────────────
 font=JetBrainsMono Nerd Font 11

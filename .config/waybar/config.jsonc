@@ -101,7 +101,7 @@
     "interval": 30,
     "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
     "tooltip-format-ethernet": "{ipaddr}",
-    "on-click": "foot -e impala",
+    "on-click": "foot -e nmtui",
   },
 
   "battery": {

@@ -223,24 +223,39 @@ animations {
 // ============================================================================
 
 binds {
-    // System
+    //Mod+D { spawn "qs" "ipc" "call" "ui" "toggleLauncher"; }
+    //Mod+A { spawn "qs" "ipc" "call" "ui" "toggleControlCenter"; }
+    //Ctrl+Alt+Delete { spawn "qs" "ipc" "call" "ui" "togglePowerMenu"; }
+
+    // Tier 2: OSD Volume hooks
+    //XF86AudioRaiseVolume { spawn "fish" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && qs ipc call ui showOsd Vol $(wpctl get-volume @DEFAULT_AUDIO_SINK@)"; }
+    //XF86AudioLowerVolume { spawn "fish" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && qs ipc call ui showOsd Vol $(wpctl get-volume @DEFAULT_AUDIO_SINK@)"; }
+    
+    //Mod+Shift+N { spawn "fish" "-c" "killall gammastep || gammastep -O 3500 &"; }
+    //Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
+    //Mod+Ctrl+T { spawn "qs" "ipc" "call" "wallpaper" "toggle"; }
+    //Mod+L { spawn "qs" "ipc" "call" "lockscreen" "lock"; }
+
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
-    // noctalia-shell IPC
-    
-    Mod+D { spawn "fuzzel"; }
-    Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
-    Mod+Shift+N { spawn "makoctl" "dismiss" "--all"; }
-    Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
+    // legacy commands
+     Mod+D { spawn "fuzzel"; }
+     Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
+     Mod+Shift+N { spawn "makoctl" "dismiss" "--all"; }
+     Mod+Ctrl+T { spawn "waypaper";}
+     Mod+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
+     Mod+Shift+U { spawn "sh" "-c" "rm -f /run/user/1000/waybar-updates.cache; pkill -SIGRTMIN+8 waybar"; }
+     XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "sh" "-c" "~/.config/niri/scripts/volume-up.sh"; } 
+     XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+     Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
+     Ctrl+Alt+Delete { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
+
     // Screenshots
     Mod+Shift+S { screenshot show-pointer=false; }
     Ctrl+Print { screenshot-screen show-pointer=false; }
     Alt+Print { screenshot-window; }
-    Mod+Ctrl+T { spawn "waypaper";}
-    Ctrl+Alt+Delete { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
-    Mod+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
 
     // Applications
     Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "foot"; }
@@ -250,7 +265,6 @@ binds {
     Mod+M hotkey-overlay-title="Open Thunderbird" { spawn "thunderbird"; }
     Ctrl+Shift+Escape hotkey-overlay-title="System Monitor" { spawn "foot" "-e" "btop"; }
     Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "hyprpicker" "-a"; }
-    Mod+Shift+U { spawn "sh" "-c" "rm -f /run/user/1000/waybar-updates.cache; pkill -SIGRTMIN+8 waybar"; }
 
     // Window management
     Mod+Q repeat=false { close-window; }
@@ -347,8 +361,6 @@ binds {
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
     // Volume
-    XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "sh" "-c" "~/.config/niri/scripts/volume-up.sh"; } 
-    XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
     XF86AudioMute hotkey-overlay-title="Mute Output" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute hotkey-overlay-title="Mute Input" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
 

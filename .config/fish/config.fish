@@ -59,7 +59,7 @@ if status is-interactive
     if test -f /etc/os-release
         set -l _distro_id (grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
         switch $_distro_id
-            case fedora rhel centos arch manjaro endeavouros
+            case fedora rhel centos arch manjaro endeavouros cachyos
                 alias cat bat
             case '*'
                 alias cat batcat

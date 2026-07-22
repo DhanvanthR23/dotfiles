@@ -6,6 +6,11 @@ function fish_prompt -d "Write out the prompt"
         (set_color $fish_color_cwd) (prompt_pwd) (set_color normal)
 end
 
+if test -z "$SSH_AUTH_SOCK"
+    eval (ssh-agent -c) >/dev/null
+    ssh-add ~/.ssh/id_ed25519 2>/dev/null
+end
+
 # ─────────────────────────────────────────────────────────
 # INTERACTIVE SESSION
 # ─────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-# dotfiles — requiem
+# dotfiles — wistoria
 
 > Tokyo Night Storm rice on EndeavourOS + Niri
 

@@ -18,6 +18,7 @@
     "memory",
     "pulseaudio",
     "network",
+    "custom/bluetooth",
     "battery",
     "custom/notif",
     "tray",
@@ -55,6 +56,12 @@
         "today": "<span color='#7aa2f7'><b>{}</b></span>",
       },
     },
+  },
+
+  "custom/bluetooth": {
+    "exec": "~/.config/niri/scripts/bluetooth.sh watch",
+    "return-type": "json",
+    "tooltip": true,
   },
 
   "custom/updates": {
@@ -101,7 +108,7 @@
     "interval": 30,
     "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
     "tooltip-format-ethernet": "{ipaddr}",
-    "on-click": "foot -e nmtui",
+    "on-click": "foot -e wlctl",
   },
 
   "battery": {
@@ -113,8 +120,9 @@
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰚥 {capacity}%",
     "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "on-click-right": "~/.config/niri/scripts/battery-cycle.fish",
     "interval": 60,
-    "tooltip": false,
+    "tooltip": "{timeTo}, {power}W",
   },
 
   "custom/notif": {

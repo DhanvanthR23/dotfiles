@@ -22,7 +22,7 @@ output "HDMI-A-1" {
     mode "1920x1080@60.000"
     scale 1
     focus-at-startup
-    position x=1366 y=0
+    position x=-1920 y=-100
 }
 
 output "eDP-1" {
@@ -263,7 +263,7 @@ binds {
     Mod+B hotkey-overlay-title="Open Brave" { spawn "brave-origin"; }
     Mod+Shift+B hotkey-overlay-title="Open Chrome" { spawn "google-chrome-stable"; }
     Mod+M hotkey-overlay-title="Open Thunderbird" { spawn "thunderbird"; }
-    Ctrl+Shift+Escape hotkey-overlay-title="System Monitor" { spawn "foot" "-e" "btop"; }
+    Ctrl+Shift+Escape hotkey-overlay-title="System Monitor" { spawn "foot" "-e" "btop" "--force-utf"; }
     Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "hyprpicker" "-a"; }
 
     // Window management

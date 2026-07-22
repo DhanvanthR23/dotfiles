@@ -190,3 +190,18 @@ tooltip label {
   margin: 0px;
   color: transparent;
 }
+
+#custom-bluetooth {
+  color: #7aa2f7;
+}
+
+#custom-bluetooth.hidden {
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px;
+  color: transparent;
+}
+
+#custom-bluetooth.connected {
+  padding: 0 8px;
+}

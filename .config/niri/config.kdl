@@ -78,22 +78,25 @@ layout {
 
     focus-ring {
         width 1.5
-        active-color "#7fc8ff33"
-        inactive-color "#505050"
+        active-color "#7aa2f7"
+        inactive-color "#3b4261"
+        urgent-color "#f7768e"
     }
 
     border {
         off
         width 1
-        active-color "#555"
-        inactive-color "#222"
+        active-color "#7aa2f7"
+        inactive-color "#3b4261"
+        urgent-color "#f7768e"
     }
 
     shadow {
-        off
+        on
         softness 20
         spread 5
         offset x=0 y=5
+        color "#1f233588"
     }
 
     tab-indicator {
@@ -101,15 +104,23 @@ layout {
         gap -5
         gaps-between-tabs 5
         corner-radius 10
-        active-color "#fff"
-        inactive-color "#ffffff55"
+        active-color "#7aa2f7"
+        inactive-color "#3b4261"
+        urgent-color "#f7768e"
     }
 
     insert-hint {
-        color "#ffffff22"
+        color "#7aa2f780"
     }
 
     struts { }
+}
+
+recent-windows {
+    highlight {
+        active-color "#7aa2f7"
+        urgent-color "#f7768e"
+    }
 }
 
 gestures {
@@ -375,4 +386,4 @@ binds {
     XF86AudioPrev hotkey-overlay-title="Previous Music" { spawn-sh "playerctl previous"; }
 }
 
-include "./noctalia.kdl"
+

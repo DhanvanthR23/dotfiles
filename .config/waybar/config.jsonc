@@ -1,7 +1,8 @@
 // ~/.config/waybar/config.jsonc
-// Tokyo Night Storm — Niri-optimized, lean, no heavy modules
+// Rosé Pine — Niri-optimized, lean, no heavy modules
 
 {
+  "include": ["colors/colors-waybar.jsonc"],
   "layer": "top",
   "position": "top",
   "height": 32,
@@ -50,11 +51,6 @@
     "calendar": {
       "mode": "month",
       "on-scroll": 1,
-      "format": {
-        "months": "<span color='#c0caf5'><b>{}</b></span>",
-        "days": "<span color='#a9b1d6'>{}</span>",
-        "today": "<span color='#7aa2f7'><b>{}</b></span>",
-      },
     },
   },
 

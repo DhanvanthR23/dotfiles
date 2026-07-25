@@ -1,0 +1,21 @@
+@define-color theme_bg_color #232136;
+@define-color theme_fg_color #e0def4;
+@define-color theme_base_color #1f1d2e;
+@define-color theme_text_color #e0def4;
+@define-color theme_selected_bg_color #3e8fb0;
+@define-color theme_selected_fg_color #232136;
+@define-color theme_tooltip_bg_color #2a273f;
+@define-color theme_tooltip_fg_color #e0def4;
+@define-color theme_link_color #9ccfd8;
+@define-color theme_link_visited_color #c4a7e7;
+
+@define-color wm_title #e0def4;
+@define-color wm_title_background #2a273f;
+@define-color wm_title_foreground #e0def4;
+@define-color wm_highlight #3e8fb0;
+@define-color wm_highlight_foreground #232136;
+@define-color wm_borders #56526e;
+@define-color wm_button_close_color #eb6f92;
+@define-color wm_button_maximize_color #9ccfd8;
+@define-color wm_button_minimize_color #f6c177;
+

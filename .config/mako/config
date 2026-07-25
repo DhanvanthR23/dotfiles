@@ -1,5 +1,8 @@
 # ~/.config/mako/config
-# Tokyo Night Storm — lean, no animation overhead, grouping enabled
+# Rosé Pine — lean, no animation overhead, grouping enabled
+
+# ── Colors ─────────────────────────────────────────────
+include=~/.config/colors/colors-mako.ini
 
 # ── Layout ────────────────────────────────────────────
 sort=-time
@@ -14,9 +17,6 @@ max-history=20
 
 # ── Appearance ────────────────────────────────────────
 font=JetBrainsMono Nerd Font 11
-background-color=#1f2335ee
-text-color=#c0caf5
-border-color=#3b4261
 border-size=1
 border-radius=8
 icon-location=left
@@ -29,33 +29,17 @@ ignore-timeout=0
 
 # ── Urgency: low ──────────────────────────────────────
 [urgency=low]
-background-color=#1f2335cc
-text-color=#9aa5ce
-border-color=#3b4261
 default-timeout=4000
 
 # ── Urgency: normal ───────────────────────────────────
 [urgency=normal]
-background-color=#1f2335ee
-text-color=#c0caf5
-border-color=#3b4261
 default-timeout=5000
 
 # ── Urgency: high (critical) ──────────────────────────
 [urgency=high]
-background-color=#1f2335
-text-color=#f7768e
-border-color=#f7768e
 border-size=2
 default-timeout=0
 
 # ── App-specific overrides ────────────────────────────
-[app-name=Spotify]
-border-color=#9ece6a
-default-timeout=4000
-
 [app-name="volume-notify"]
 default-timeout=2000
-
-[app-name=Jellyfin]
-border-color=#7aa2f7

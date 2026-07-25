@@ -63,7 +63,7 @@ input {
 
 layout {
     gaps 8
-    background-color "#000"
+    background-color "#232136"
     center-focused-column "never"
 
     preset-column-widths {
@@ -78,17 +78,17 @@ layout {
 
     focus-ring {
         width 1.5
-        active-color "#7aa2f7"
-        inactive-color "#3b4261"
-        urgent-color "#f7768e"
+        active-color "#56526e"
+        inactive-color "#6e6a86"
+        urgent-color "#eb6f92"
     }
 
     border {
-        off
+        on
         width 1
-        active-color "#7aa2f7"
-        inactive-color "#3b4261"
-        urgent-color "#f7768e"
+        active-color "#56526e"
+        inactive-color "#6e6a86"
+        urgent-color "#eb6f92"
     }
 
     shadow {
@@ -96,7 +96,7 @@ layout {
         softness 20
         spread 5
         offset x=0 y=5
-        color "#1f233588"
+        color "#23213688"
     }
 
     tab-indicator {
@@ -104,13 +104,13 @@ layout {
         gap -5
         gaps-between-tabs 5
         corner-radius 10
-        active-color "#7aa2f7"
-        inactive-color "#3b4261"
-        urgent-color "#f7768e"
+        active-color "#56526e"
+        inactive-color "#6e6a86"
+        urgent-color "#eb6f92"
     }
 
     insert-hint {
-        color "#7aa2f780"
+        color "#3e8fb080"
     }
 
     struts { }
@@ -118,10 +118,12 @@ layout {
 
 recent-windows {
     highlight {
-        active-color "#7aa2f7"
-        urgent-color "#f7768e"
+        active-color "#56526e"
+        urgent-color "#eb6f92"
     }
 }
+
+include "~/.config/colors/colors.kdl"
 
 gestures {
     hot-corners {
@@ -135,7 +137,7 @@ cursor {
 }
 
 overview {
-    backdrop-color "#000"
+    backdrop-color "#232136"
     zoom 0.5
 }
 

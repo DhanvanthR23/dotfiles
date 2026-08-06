@@ -251,7 +251,6 @@ binds {
 
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
-    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
     // legacy commands
      Mod+D { spawn "fuzzel"; }
@@ -263,7 +262,7 @@ binds {
      XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "sh" "-c" "~/.config/niri/scripts/volume-up.sh"; } 
      XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
      Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
-     Ctrl+Alt+Delete { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
+     Mod+Escape { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
 
     // Screenshots
     Mod+Shift+S { screenshot show-pointer=false; }

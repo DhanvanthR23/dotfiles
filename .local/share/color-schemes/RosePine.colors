@@ -1,7 +1,3 @@
-# KDE/Qt Color Scheme — Rosé Pine
-# Place at: ~/.local/share/color-schemes/RosePine.colors
-# Then select in qt6ct: Appearance → Color scheme → Custom → Rosé Pine
-
 [ColorEffects:Disabled]
 Color=110,106,134
 ColorAmount=0.55

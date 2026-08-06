@@ -91,12 +91,12 @@ if status is-interactive
     alias ..... 'cd ../../../..'
 
     # ── Listing (eza) ─────────────────────────────────────
-    alias ls 'eza --icons always always'
-    alias la 'eza --icons always always -a -l -h'
-    alias ll 'eza --icons always -l'
-    alias lk 'eza --icons always -l --sort=size'
-    alias lt 'eza --icons always -l --sort=modified'
-    alias lx 'eza --icons always -l --sort=extension'
+    alias ls 'eza --icons auto'
+    alias la 'eza --icons auto -a -l -h'
+    alias ll 'eza --icons auto -l'
+    alias lk 'eza --icons auto -l --sort=size'
+    alias lt 'eza --icons auto -l --sort=modified'
+    alias lx 'eza --icons auto -l --sort=extension'
 
     # ── Core utils ────────────────────────────────────────
     alias cd z

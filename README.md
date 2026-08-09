@@ -40,18 +40,26 @@ The script will:
 
 ```
 .config/
+├── colors/          # source of truth for the color scheme (colors.conf)
 ├── fish/            # shell config, aliases, functions
 ├── foot/            # terminal theme
 ├── fontconfig/      # font fallback rules
 ├── fuzzel/          # launcher theme
-├── gtk-3.0/         # GTK3 window decorations + colors
-├── gtk-4.0/         # GTK4 window decorations + colors
+├── gtk-3.0/         # GTK3 theme + colors
+├── gtk-4.0/         # GTK4 theme + colors
 ├── hypr/            # hyprlock + hypridle
 ├── mako/            # notification daemon
 ├── niri/            # compositor config + scripts
 ├── qt5ct/           # Qt5 palette
 ├── qt6ct/           # Qt6 palette
 ├── starship.toml    # prompt
+├── templates/       # shell templates
 ├── waybar/          # status bar
-└── waypaper/        # wallpaper picker
+├── waypaper/        # wallpaper picker
+└── zathura/         # PDF viewer theme
 ```
+
+`.config/colors/colors.conf` is the single source of truth. Run
+`.config/niri/scripts/generate-colors.sh` after editing it to propagate the
+scheme to niri, waybar, mako, foot, fuzzel, hyprlock, GTK3/4, Qt, and
+zathura.

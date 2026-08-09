@@ -1,0 +1,4 @@
+# ~/.config/zathura/zathurarc
+# Rosé Pine — colors come from the centralized scheme via include
+
+include colors-zathura

@@ -158,6 +158,37 @@ placeholder=${COLOR_FG_MUTED}88
 input=${COLOR_FG}ff
 EOF
 
+# ── Zathura ───────────────────────────────────────────────────────────────────
+cat > "$OUT/colors-zathura" << EOF
+set default-bg "#${COLOR_BG}"
+set default-fg "#${COLOR_FG}"
+set recolor-darkcolor "#${COLOR_FG}"
+set recolor-lightcolor "#${COLOR_BG}"
+set statusbar-bg "#${COLOR_BG}"
+set statusbar-fg "#${COLOR_FG}"
+set inputbar-bg "#${COLOR_SURFACE}"
+set inputbar-fg "#${COLOR_FG}"
+set notification-error-bg "#${COLOR_RED}"
+set notification-error-fg "#${COLOR_BG}"
+set notification-warning-bg "#${COLOR_GOLD}"
+set notification-warning-fg "#${COLOR_BG}"
+set notification-bg "#${COLOR_SURFACE}"
+set notification-fg "#${COLOR_FG}"
+set index-bg "#${COLOR_BG}"
+set index-fg "#${COLOR_FG}"
+set index-active-bg "#${COLOR_IRIS}"
+set index-active-fg "#${COLOR_BG}"
+set completion-bg "#${COLOR_BG}"
+set completion-fg "#${COLOR_FG}"
+set completion-group-bg "#${COLOR_SURFACE}"
+set completion-group-fg "#${COLOR_FG_SUBTLE}"
+set completion-highlight-bg "#${COLOR_SELECTION}"
+set completion-highlight-fg "#${COLOR_FG}"
+set highlight-color "#${COLOR_SELECTION}"
+set highlight-active-color "#${COLOR_PINE}"
+set recolor true
+EOF
+
 # ── Hyprlock (hyprlang vars) ─────────────────────────────────────────────────
 cat > "$OUT/colors-hypr.conf" << EOF
 \$border_color=rgb(${COLOR_BORDER})
@@ -320,7 +351,8 @@ contrast=4
 EOF
 
 # ── GTK colors ──────────────────────────────────────────────────────────────
-GTK_COLORS_CONTENT="@define-color theme_bg_color #${COLOR_BG};
+# GTK3: legacy theme_* variables
+GTK3_COLORS_CONTENT="@define-color theme_bg_color #${COLOR_BG};
 @define-color theme_fg_color #${COLOR_FG};
 @define-color theme_base_color #${COLOR_DIM_BLACK};
 @define-color theme_text_color #${COLOR_FG};
@@ -342,7 +374,63 @@ GTK_COLORS_CONTENT="@define-color theme_bg_color #${COLOR_BG};
 @define-color wm_button_minimize_color #${COLOR_GOLD};
 "
 
-echo "$GTK_COLORS_CONTENT" > "${HOME}/.config/gtk-3.0/colors"
-echo "$GTK_COLORS_CONTENT" > "${HOME}/.config/gtk-4.0/colors"
+# GTK4: libadwaita color variables
+GTK4_COLORS_CONTENT="/* Rosé Pine — libadwaita color overrides */
+@define-color accent_bg_color #${COLOR_IRIS};
+@define-color accent_fg_color #${COLOR_BG};
+@define-color accent_color #${COLOR_IRIS};
+
+@define-color destructive_bg_color #${COLOR_RED};
+@define-color destructive_fg_color #${COLOR_BG};
+@define-color destructive_color #${COLOR_RED};
+
+@define-color success_bg_color #${COLOR_FOAM};
+@define-color success_fg_color #${COLOR_FG};
+@define-color success_color #${COLOR_FOAM};
+
+@define-color warning_bg_color #${COLOR_GOLD};
+@define-color warning_fg_color #${COLOR_FG};
+@define-color warning_color #${COLOR_GOLD};
+
+@define-color error_bg_color #${COLOR_RED};
+@define-color error_fg_color #${COLOR_FG};
+@define-color error_color #${COLOR_RED};
+
+@define-color window_bg_color #${COLOR_BG};
+@define-color window_fg_color #${COLOR_FG};
+
+@define-color view_bg_color #${COLOR_BG};
+@define-color view_fg_color #${COLOR_FG};
+
+@define-color headerbar_bg_color #${COLOR_SURFACE};
+@define-color headerbar_fg_color #${COLOR_FG};
+@define-color headerbar_backdrop_color #${COLOR_BG};
+@define-color headerbar_shade_color #${COLOR_BG};
+
+@define-color card_bg_color #${COLOR_SURFACE};
+@define-color card_fg_color #${COLOR_FG};
+@define-color card_shade_color #${COLOR_BG};
+
+@define-color popover_bg_color #${COLOR_SURFACE};
+@define-color popover_fg_color #${COLOR_FG};
+
+@define-color sidebar_bg_color #${COLOR_BG};
+@define-color sidebar_fg_color #${COLOR_FG};
+
+/* Legacy GTK3 vars for compatibility */
+@define-color theme_bg_color #${COLOR_BG};
+@define-color theme_fg_color #${COLOR_FG};
+@define-color theme_base_color #${COLOR_DIM_BLACK};
+@define-color theme_selected_bg_color #${COLOR_PINE};
+@define-color theme_selected_fg_color #${COLOR_BG};
+"
+
+echo "$GTK3_COLORS_CONTENT" > "${HOME}/.config/gtk-3.0/colors"
+echo "$GTK4_COLORS_CONTENT" > "${HOME}/.config/gtk-4.0/colors"
+
+# ── Symlinks (for tools that resolve includes relative to their config dir) ──
+mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura"
+ln -sfn "$OUT" "${HOME}/.config/waybar/colors"
+ln -sfn "$OUT/colors-zathura" "${HOME}/.config/zathura/colors-zathura"
 
 echo "Colors generated from $COLORS"

@@ -252,6 +252,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+H { spawn "sh" "-c" "~/.config/niri/scripts/toggle-idle.fish"; }
     Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
+    Mod+Shift+D {spawn "sh" "-c" "~/.config/niri/scripts/file-search.sh";}
 
     // legacy commands
      Mod+D { spawn "fuzzel"; }

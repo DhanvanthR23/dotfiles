@@ -11,7 +11,7 @@
 | Launcher         | [fuzzel](https://codeberg.org/dnkl/fuzzel)                          |
 | Notifications    | [mako](https://github.com/emersion/mako)                            |
 | Terminal         | [foot](https://codeberg.org/dnkl/foot)                              |
-| Wallpaper        | [swww](https://github.com/LGFae/swww) + [waypaper](https://github.com/anufrievroman/waypaper) |
+| Wallpaper        | [awww](https://github.com/D-Brox/awww) + [waypaper](https://github.com/anufrievroman/waypaper) |
 | Lock screen      | [hyprlock](https://github.com/hyprwm/hyprlock) + [hypridle](https://github.com/hyprwm/hypridle) |
 | GTK theme        | [tokyonight-gtk-theme](https://github.com/Fausto-Korpsvart/Tokyonight-GTK-Theme) |
 | Qt theme         | [darkly](https://github.com/Bali10050/Darkly) + [qt6ct](https://github.com/trialuser02/qt6ct) |

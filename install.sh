@@ -5,25 +5,31 @@ set -e
 echo "==> Installing packages..."
 paru -S --needed \
   waybar mako fuzzel foot cliphist wl-clipboard \
-  hyprlock hypridle swww waypaper \
+  hyprlock hypridle awww waypaper \
   tokyonight-gtk-theme-git darkly qt6ct qt5ct \
   ttf-jetbrains-mono-nerd starship pacman-contrib \
   libnotify playerctl xdg-desktop-portal-gtk \
   gtk-engine-murrine stow
 
 echo "==> Backing up existing configs..."
-for dir in waybar mako fuzzel foot hypr niri starship waypaper \
-  gtk-3.0 gtk-4.0 fontconfig qt6ct qt5ct environment.d; do
+for dir in waybar mako fuzzel foot hypr niri waypaper \
+  gtk-3.0 gtk-4.0 fontconfig qt6ct qt5ct environment.d \
+  colors zathura fish templates; do
   [ -d ~/.config/$dir ] && mv ~/.config/$dir ~/.config/$dir.bak &&
     echo "  backed up ~/.config/$dir"
 done
+[ -f ~/.config/starship.toml ] && mv ~/.config/starship.toml ~/.config/starship.toml.bak &&
+  echo "  backed up ~/.config/starship.toml"
 
 echo "==> Stowing dotfiles..."
 cd "$(dirname "$0")"
 stow . --target="$HOME"
 
 echo "==> Fixing script permissions..."
-chmod +x ~/.config/niri/scripts/*.sh
+chmod +x ~/.config/niri/scripts/*.sh ~/.config/niri/scripts/*.fish
+
+echo "==> Generating colors..."
+~/.config/niri/scripts/generate-colors.sh
 
 echo "==> Applying GTK theme..."
 gsettings set org.gnome.desktop.interface gtk-theme 'Tokyonight-Storm-BL'

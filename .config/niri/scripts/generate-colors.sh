@@ -430,7 +430,7 @@ echo "$GTK4_COLORS_CONTENT" > "${HOME}/.config/gtk-4.0/colors"
 
 # ── Symlinks (for tools that resolve includes relative to their config dir) ──
 mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura"
-ln -sfn "$OUT" "${HOME}/.config/waybar/colors"
-ln -sfn "$OUT/colors-zathura" "${HOME}/.config/zathura/colors-zathura"
+[ -L "${HOME}/.config/waybar/colors" ] || ln -sf "../colors" "${HOME}/.config/waybar/colors"
+[ -L "${HOME}/.config/zathura/colors-zathura" ] || ln -sf "../colors/colors-zathura" "${HOME}/.config/zathura/colors-zathura"
 
 echo "Colors generated from $COLORS"

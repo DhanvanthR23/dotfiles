@@ -165,7 +165,7 @@ spawn-at-startup "hypridle"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-spawn-at-startup "sh" "-c" "~/.config/niri/scripts/swww-restore.sh"
+spawn-at-startup "sh" "-c" "~/.config/niri/scripts/awww-restore.sh"
 spawn-at-startup "sh" "-c" "sleep 2; systemctl --user import-environment WAYLAND_DISPLAY XDG_RUNTIME_DIR; systemctl --user restart xdg-desktop-portal-gtk xdg-desktop-portal"
 
 // ============================================================================

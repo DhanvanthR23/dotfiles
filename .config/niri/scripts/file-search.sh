@@ -13,9 +13,9 @@ file=$(fd --type f . "$target" --color never | awk -F/ '{print $NF "\t" $0}' | f
   --placeholder "search files" \
   --lines 10 \
   --width 55 \
-  --anchor center \
+  --anchor top \
   --with-nth=1 \
-  --match-nth=2 \
+  --match-nth=1 \
   --accept-nth=2 \
   --no-run-if-empty)
 

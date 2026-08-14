@@ -221,8 +221,12 @@ if status is-interactive
         and sudo mv "$TMPFILE" /etc/pacman.d/mirrorlist
     end
     function wifi -d "fix wifi not working"
-        sudo systemctl restart iwd
+        sudo systemctl restart NetworkManager
         sudo systemctl restart systemd-networkd
         sudo systemctl restart systemd-resolved
     end
 end
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/home/dhanvanth/.local/bin" $PATH

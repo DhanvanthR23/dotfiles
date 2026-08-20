@@ -9,13 +9,13 @@ set -euo pipefail
 
 state() {
     if ! command -v bluetoothctl >/dev/null; then
-        echo '{"text":"","tooltip":"","class":"hidden"}'
+        echo '{"text":"󰂲","tooltip":"bluetoothctl not found","class":"off"}'
         return
     fi
 
     powered=$(bluetoothctl show | grep -q "Powered: yes" && echo 1 || echo 0)
     if [ "$powered" -eq 0 ]; then
-        echo '{"text":"","tooltip":"Bluetooth off","class":"hidden"}'
+        echo '{"text":"󰂲","tooltip":"Bluetooth off","class":"off"}'
         return
     fi
 
@@ -23,8 +23,8 @@ state() {
     mapfile -t devices < <(bluetoothctl devices Connected | awk '{print $2}')
 
     if [ "${#devices[@]}" -eq 0 ]; then
-        # Powered but nothing connected -> collapse (autohide)
-        echo '{"text":"","tooltip":"","class":"hidden"}'
+        # Powered but nothing connected
+        echo '{"text":"󰂯","tooltip":"Bluetooth on, disconnected","class":"disconnected"}'
         return
     fi
 
@@ -43,11 +43,7 @@ state() {
         names+=("$name")
     done
 
-    if [ "${#devices[@]}" -eq 1 ]; then
-        text="󰂱 ${names[0]}"
-    else
-        text="󰂱 ${#devices[@]} devices"
-    fi
+    text="󰂱"
 
     # Build tooltip with \n-joined lines, escaped for JSON
     tooltip=$(printf '%s\\n' "${tooltip_lines[@]}")

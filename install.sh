@@ -5,14 +5,14 @@ set -e
 echo "==> Installing packages..."
 paru -S --needed \
   waybar mako fuzzel foot cliphist wl-clipboard \
-  hyprlock hypridle awww waypaper \
+  hyprlock hypridle awww waypaper swayosd \
   tokyonight-gtk-theme-git darkly qt6ct qt5ct \
   ttf-jetbrains-mono-nerd starship pacman-contrib \
   libnotify playerctl xdg-desktop-portal-gtk \
   gtk-engine-murrine stow
 
 echo "==> Backing up existing configs..."
-for dir in waybar mako fuzzel foot hypr niri waypaper \
+for dir in waybar mako fuzzel foot hypr niri waypaper swayosd \
   gtk-3.0 gtk-4.0 fontconfig qt6ct qt5ct environment.d \
   colors zathura fish templates; do
   [ -d ~/.config/$dir ] && mv ~/.config/$dir ~/.config/$dir.bak &&

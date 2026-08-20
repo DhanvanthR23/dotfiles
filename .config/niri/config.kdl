@@ -162,6 +162,7 @@ environment {
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "hypridle"
+spawn-at-startup "swayosd-server" "--top-margin" "0.08"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
@@ -203,31 +204,31 @@ layer-rule {
 
 animations {
     workspace-switch {
-        spring damping-ratio=1.0 stiffness=800 epsilon=0.00001
+        spring damping-ratio=0.82 stiffness=600 epsilon=0.00001
     }
     window-open {
-        spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
+        spring damping-ratio=0.78 stiffness=700 epsilon=0.0001
     }
     window-close {
-        spring damping-ratio=1.0 stiffness=700 epsilon=0.1
+        spring damping-ratio=0.85 stiffness=800 epsilon=0.01
     }
     horizontal-view-movement {
-        spring damping-ratio=1.0 stiffness=700 epsilon=0.0001
+        spring damping-ratio=0.82 stiffness=650 epsilon=0.0001
     }
     window-movement {
-        spring damping-ratio=1.0 stiffness=600 epsilon=0.0001
+        spring damping-ratio=0.80 stiffness=600 epsilon=0.0001
     }
     window-resize {
-        spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+        spring damping-ratio=0.82 stiffness=750 epsilon=0.001
     }
     overview-open-close {
-        spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
+        spring damping-ratio=0.85 stiffness=850 epsilon=0.0001
     }
     config-notification-open-close {
-        spring damping-ratio=0.90 stiffness=800 epsilon=0.0001
+        spring damping-ratio=0.80 stiffness=800 epsilon=0.0001
     }
     screenshot-ui-open {
-        spring damping-ratio=0.85 stiffness=750 epsilon=0.0001
+        spring damping-ratio=0.80 stiffness=750 epsilon=0.0001
     }
 }
 
@@ -261,8 +262,12 @@ binds {
      Mod+Ctrl+T { spawn "waypaper";}
      Mod+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
      Mod+Shift+U { spawn "sh" "-c" "rm -f /run/user/1000/waybar-updates.cache; pkill -SIGRTMIN+8 waybar"; }
-     XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "sh" "-c" "~/.config/niri/scripts/volume-up.sh"; } 
-     XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+     XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "swayosd-client" "--output-volume" "raise"; }
+     XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "swayosd-client" "--output-volume" "lower"; }
+     XF86AudioMute hotkey-overlay-title="Mute Volume" { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+     XF86AudioMicMute hotkey-overlay-title="Mute Microphone" { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+     XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "swayosd-client" "--brightness" "raise"; }
+     XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "swayosd-client" "--brightness" "lower"; }
      Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
      Mod+Escape { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
 
@@ -373,14 +378,6 @@ binds {
     Mod+Shift+WheelScrollUp        { focus-column-left; }
     Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
-
-    // Volume
-    XF86AudioMute hotkey-overlay-title="Mute Output" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86AudioMicMute hotkey-overlay-title="Mute Input" { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-
-    // Brightness
-    XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
     // Media
     XF86AudioNext hotkey-overlay-title="Next Song" { spawn-sh "playerctl next"; }

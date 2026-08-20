@@ -429,8 +429,9 @@ echo "$GTK3_COLORS_CONTENT" > "${HOME}/.config/gtk-3.0/colors"
 echo "$GTK4_COLORS_CONTENT" > "${HOME}/.config/gtk-4.0/colors"
 
 # ── Symlinks (for tools that resolve includes relative to their config dir) ──
-mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura"
+mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura" "${HOME}/.config/swayosd"
 [ -L "${HOME}/.config/waybar/colors" ] || ln -sf "../colors" "${HOME}/.config/waybar/colors"
 [ -L "${HOME}/.config/zathura/colors-zathura" ] || ln -sf "../colors/colors-zathura" "${HOME}/.config/zathura/colors-zathura"
+[ -L "${HOME}/.config/swayosd/colors.css" ] || ln -sf "../colors/colors.css" "${HOME}/.config/swayosd/colors.css"
 
 echo "Colors generated from $COLORS"

@@ -194,16 +194,18 @@ tooltip label {
 }
 
 #custom-bluetooth {
-  color: @gold;
-}
-
-#custom-bluetooth.hidden {
-  min-width: 0px;
-  padding: 0px;
-  margin: 0px;
-  color: transparent;
+  padding: 0 8px;
+  font-size: 14px;
 }
 
 #custom-bluetooth.connected {
-  padding: 0 8px;
+  color: @foam;
+}
+
+#custom-bluetooth.disconnected {
+  color: @gold;
+}
+
+#custom-bluetooth.off {
+  color: @fg-subtle;
 }

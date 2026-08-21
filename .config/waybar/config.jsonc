@@ -56,7 +56,9 @@
 
   "custom/bluetooth": {
     "exec": "~/.config/niri/scripts/bluetooth.sh watch",
+    "on-click": "foot -e bluetui",
     "return-type": "json",
+    "restart-interval": 2,
     "tooltip": true,
   },
 

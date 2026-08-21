@@ -31,7 +31,7 @@ state() {
     names=()
     tooltip_lines=()
     for mac in "${devices[@]}"; do
-        info=$(bluetoothctl info "$mac")
+        info=$(bluetoothctl info "$mac" 2>/dev/null || true)
         name=$(echo "$info" | awk -F': ' '/Name:/{print $2; exit}')
         [ -z "$name" ] && name="$mac"
         batt=$(echo "$info" | awk -F'[()]' '/Battery Percentage/{print $2; exit}')

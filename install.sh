@@ -9,7 +9,7 @@ paru -S --needed \
   tokyonight-gtk-theme-git darkly qt6ct qt5ct \
   ttf-jetbrains-mono-nerd starship pacman-contrib \
   libnotify playerctl xdg-desktop-portal-gtk \
-  gtk-engine-murrine stow
+  gtk-engine-murrine stow polkit-gnome
 
 echo "==> Backing up existing configs..."
 for dir in waybar mako fuzzel foot hypr niri waypaper swayosd \

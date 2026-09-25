@@ -12,14 +12,20 @@
 }
 
 window#waybar {
-  background-color: @bg;
-  color: @fg;
-  border-bottom: 1px solid @border;
+  background-color: transparent;
+}
+
+window#waybar > box {
+  background-color: transparent;
 }
 
 .modules-left,
 .modules-center,
 .modules-right {
+  background-color: @bg;
+  color: @fg;
+  border: 1px solid @border;
+  border-radius: 10px;
   padding: 0 4px;
 }
 
@@ -44,7 +50,7 @@ window#waybar {
 #workspaces button {
   padding: 2px 8px;
   margin: 4px 2px;
-  border-radius: 4px;
+  border-radius: 10px;
   border: none;
   background: transparent;
   color: @fg-subtle;
@@ -154,13 +160,13 @@ window#waybar {
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
   background-color: @red;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 tooltip {
   background: @bg;
   border: 1px solid @border;
-  border-radius: 6px;
+  border-radius: 10px;
   color: @fg;
   font-size: 11px;
 }

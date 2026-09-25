@@ -225,8 +225,17 @@ if status is-interactive
         sudo systemctl restart systemd-networkd
         sudo systemctl restart systemd-resolved
     end
+    function scr -d "Phone Mirroring"
+        adb disconnect >/dev/null 2>&1
+        set target (adb mdns services | string match -r '([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+)' -g)
+        if test -z "$target"
+            echo "No paired device found via mDNS — check Wireless debugging is on and same-band Wi-Fi."
+            return 1
+        end
+        adb connect $target
+        scrcpy --stay-awake -m 1920 --max-fps=60 -b 12M --window-borderless --always-on-top -s $target
+    end
 end
-
 
 # Added by Antigravity CLI installer
 set -gx PATH "/home/dhanvanth/.local/bin" $PATH

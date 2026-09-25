@@ -1,5 +1,7 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export FREELLMAPI_API_KEY:freellmapi\x2d265eb33562fc159c909bb9e04c2b906debd2e60729b3ace0
+SETUVAR --export JARVIS_AGY_CREDS:/home/dhanvanth/\x2egemini/oauth_creds\x2ejson\x3a/home/agent/\x2egemini/oauth_creds\x2ejson\x2c/home/dhanvanth/\x2egemini/google_accounts\x2ejson\x3a/home/agent/\x2egemini/google_accounts\x2ejson\x2c/home/dhanvanth/\x2egemini/antigravity\x2dcli/antigravity\x2doauth\x2dtoken\x3a/home/agent/\x2egemini/antigravity\x2dcli/antigravity\x2doauth\x2dtoken
 SETUVAR __fish_initialized:4300
 SETUVAR _fisher_jorgebucaran_2F_fisher_files:\x7e/\x2econfig/fish/functions/fisher\x2efish\x1e\x7e/\x2econfig/fish/completions/fisher\x2efish
 SETUVAR _fisher_plugins:jorgebucaran/fisher

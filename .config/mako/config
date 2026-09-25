@@ -18,7 +18,7 @@ max-history=20
 # ── Appearance ────────────────────────────────────────
 font=JetBrainsMono Nerd Font 11
 border-size=1
-border-radius=8
+border-radius=10
 icon-location=left
 markup=1
 actions=1

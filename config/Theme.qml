@@ -22,11 +22,15 @@ Singleton {
 
     // sizes
     readonly property int radius: 16
-    readonly property int barHeight: 36
     readonly property int gap: 10
     readonly property int padding: 12
 
     // font
     readonly property string fontFamily: "Google Sans Flex"
     readonly property int fontSize: 14
+
+    readonly property int barHeight: 40       // was 36
+    readonly property int toastWidth: 340
+    readonly property int toastHeight: 40
+    readonly property int animDuration: 180
 }

@@ -25,28 +25,40 @@ Scope {
             }
 
             ClockPill {
+                id: clock
                 anchors.centerIn: parent
             }
 
-            Workspaces {
-                screenName: modelData.name
-                anchors {
-                    left: parent.left
-                    verticalCenter: parent.verticalCenter
-                    leftMargin: Theme.padding
-                }
-            }
             Row {
                 anchors {
-                    right: parent.right
+                    right: clock.left
+                    rightMargin: Theme.gap
                     verticalCenter: parent.verticalCenter
-                    rightMargin: Theme.padding
                 }
                 spacing: Theme.gap
 
-                StatPill { icon: "󰻠"; value: Cpu.usage.toFixed(0) + "%" ; valueColor: Cpu.usage > 80 ? Theme.warn : Theme.text}
-                StatPill { icon: "󰍛"; value: Ram.usedGb.toFixed(1) + "G"; valueColor: Ram.usedPercent > 85 ? Theme.warn: Theme.text }
-                StatPill { visible: Battery.available; icon: Battery.icon; value: Math.round(Battery.percent) + "%"}
+                Workspaces {
+                    screenName: modelData.name
+                }
+            }
+
+            Row {
+                anchors {
+                    left: clock.right
+                    leftMargin: Theme.gap
+                    verticalCenter: parent.verticalCenter
+                }
+                spacing: Theme.gap
+
+                StatPill { icon: "󰻠"; value: Cpu.usage.toFixed(0) + "%"; valueColor: Cpu.usage > 80 ? Theme.warn : Theme.text }
+                StatPill { icon: "󰍛"; value: Ram.usedGb.toFixed(1) + "G"; valueColor: Ram.usedPercent > 85 ? Theme.warn : Theme.text }
+                StatPill { visible: Battery.available; icon: Battery.icon; value: Math.round(Battery.percent) + "%"; valueColor: Battery.percent <= 20 ? Theme.error : Theme.text }
+                StatPill {
+                    visible: Updates.count > 0
+                    icon: "󰚰"
+                    value: String(Updates.count)
+                    valueColor: Updates.count >= 50 ? Theme.error : Updates.count >= 25 ? Theme.warn : Theme.text
+                }
             }
         }
     }

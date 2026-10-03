@@ -8,7 +8,7 @@ Rectangle {
     property color valueColor: Theme.text
 
     implicitWidth: content.implicitWidth + Theme.padding * 2
-    implicitHeight: 28
+    implicitHeight: Theme.pillHeight
     radius: height / 2
     color: hover.hovered ? Theme.surfaceAlt : Theme.surface
     border.width: 1
@@ -21,13 +21,13 @@ Rectangle {
             id: iconLabel
             text: root.icon
             color: Theme.accent
-            font.family: Theme.fontFamily
+            font.family: Theme.iconFont
             font.pixelSize: Theme.fontSize
         }
         Text {
             id: valueLabel
             text: root.value
-            color: Theme.text
+            color: root.valueColor
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
         }

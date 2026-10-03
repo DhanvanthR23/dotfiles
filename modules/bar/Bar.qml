@@ -7,6 +7,7 @@ Scope {
     Variants {
         model: Quickshell.screens
         PanelWindow {
+            id: bar
             required property var modelData
             screen: modelData
             anchors{
@@ -27,7 +28,10 @@ Scope {
             ClockPill {
                 id: clock
                 anchors.centerIn: parent
+                expand: popup.progress
             }
+
+            CalendarPopup { id: popup; pill: clock }
 
             Row {
                 anchors {
@@ -38,7 +42,7 @@ Scope {
                 spacing: Theme.gap
 
                 Workspaces {
-                    screenName: modelData.name
+                    screenName: bar.modelData.name
                 }
             }
 
@@ -52,7 +56,7 @@ Scope {
 
                 StatPill { icon: "󰻠"; value: Cpu.usage.toFixed(0) + "%"; valueColor: Cpu.usage > 80 ? Theme.warn : Theme.text }
                 StatPill { icon: "󰍛"; value: Ram.usedGb.toFixed(1) + "G"; valueColor: Ram.usedPercent > 85 ? Theme.warn : Theme.text }
-                StatPill { visible: Battery.available; icon: Battery.icon; value: Math.round(Battery.percent) + "%"; valueColor: Battery.percent <= 20 ? Theme.error : Theme.text }
+                StatPill { visible: Battery.available; icon: Battery.icon; value: Math.round(Battery.percent) + "%"; valueColor: Battery.low ? Theme.error : Theme.text }
                 StatPill {
                     visible: Updates.count > 0
                     icon: "󰚰"

@@ -6,9 +6,16 @@ Rectangle {
     id: root
 
     readonly property bool toast: Notifs.toastVisible
+    readonly property bool hovered: hover.hovered
 
-    implicitWidth: toast ? Theme.toastWidth : clockLabel.implicitWidth + Theme.padding * 2
-    implicitHeight: toast ? Theme.toastHeight : 28
+    property real expand: 0     // 0..1, driven by the calendar popup
+
+    readonly property real idleWidth: clockLabel.implicitWidth + Theme.padding * 2
+
+    implicitWidth: toast ? Theme.toastWidth
+                 : idleWidth + (Theme.toastWidth - idleWidth) * expand
+
+    implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
     radius: height / 2
     color: hover.hovered ? Theme.surfaceAlt : Theme.surface
     border.width: 1
@@ -16,6 +23,7 @@ Rectangle {
     clip: true
 
     Behavior on implicitWidth {
+        enabled: root.expand === 0
         NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
     }
     Behavior on implicitHeight {
@@ -96,24 +104,13 @@ Rectangle {
     }
 
     // update badge, hidden while a toast is showing
-    Rectangle {
-        visible: Updates.count > 0 && !root.toast
-        width: 8
-        height: 8
-        radius: 4
+    UpdateDot {
+        visible: Updates.count > 0 && !root.toast   // hidden while a toast shows
         anchors {
             top: parent.top
             right: parent.right
             topMargin: 2
             rightMargin: 4
-        }
-        color: Updates.level === "critical" ? Theme.error
-             : Updates.level === "warning" ? Theme.warn
-             : Theme.accent
-
-        TapHandler {
-            margin: 6
-            onTapped: Updates.run()
         }
     }
 

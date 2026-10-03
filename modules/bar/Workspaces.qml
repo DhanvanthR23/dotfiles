@@ -7,7 +7,7 @@ Rectangle {
     property string screenName
 
     implicitWidth: row.implicitWidth + Theme.padding * 2
-    implicitHeight: 28
+    implicitHeight: Theme.pillHeight
     radius: height / 2
     color: Theme.surface
     border.width: 1

@@ -15,7 +15,17 @@ Singleton {
     readonly property bool toastCritical: toastUrgency === NotificationUrgency.Critical
     readonly property bool toastLow: toastUrgency === NotificationUrgency.Low
     readonly property var all: server.trackedNotifications
+    readonly property int count: all.values.length
+    readonly property var newestFirst: all.values.slice().reverse()
 
+    function isCritical(n) { return n.urgency === NotificationUrgency.Critical }
+    function isLow(n) { return n.urgency === NotificationUrgency.Low }
+
+    function dismiss(n) { n.dismiss() }
+
+    function clearAll() {
+        for (const n of all.values.slice()) n.dismiss()
+    }
     // timeout is in ms; -1 or 0 = app has no preference
     function durationFor(timeout, urgency) {
         if (timeout > 0) return timeout

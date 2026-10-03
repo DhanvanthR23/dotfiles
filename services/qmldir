@@ -6,3 +6,7 @@ singleton Notifs 1.0 Notifs.qml
 singleton Updates 1.0 Updates.qml
 singleton Bt 1.0 Bt.qml
 singleton Net 1.0 Net.qml
+singleton Power 1.0 Power.qml
+singleton NightLight 1.0 NightLight.qml
+singleton Audio 1.0 Audio.qml
+singleton Brightness 1.0 Brightness.qml

@@ -1,17 +1,24 @@
+import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import QtQuick
 
 PanelWindow {
     id: root
+
     required property var popup
 
-    anchors { top: true; bottom: true; left: true; right: true }
-    exclusionMode: ExclusionMode.Ignore   // don't push windows around
+    exclusionMode: ExclusionMode.Ignore
     color: "transparent"
     visible: popup.open
-
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+
+    anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+    }
+    // don't push windows around
 
     Item {
         anchors.fill: parent
@@ -23,5 +30,7 @@ PanelWindow {
             acceptedButtons: Qt.AllButtons
             onClicked: root.popup.close()
         }
+
     }
+
 }

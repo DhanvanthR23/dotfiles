@@ -1,15 +1,16 @@
-import QtQuick
+import "../../components"
 import "../../config"
 import "../../services"
-import "../../components"
+import QtQuick
 
 Column {
     id: root
-    spacing: 8
 
     readonly property int rowHeight: 52
     readonly property int rowGap: 6
     readonly property int visibleRows: 3
+
+    spacing: 8
 
     // divider
     Rectangle {
@@ -35,6 +36,7 @@ Column {
 
         Text {
             id: clearLabel
+
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             visible: Notifs.count > 0
@@ -42,11 +44,26 @@ Column {
             color: clearHover.hovered ? Theme.accent : Theme.textMuted
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontCaption
-            Behavior on color { ColorAnimation { duration: Theme.animFast } }
 
-            HoverHandler { id: clearHover; cursorShape: Qt.PointingHandCursor }
-            TapHandler { onTapped: Notifs.clearAll() }
+            HoverHandler {
+                id: clearHover
+
+                cursorShape: Qt.PointingHandCursor
+            }
+
+            TapHandler {
+                onTapped: Notifs.clearAll()
+            }
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.animFast
+                }
+
+            }
+
         }
+
     }
 
     // empty state
@@ -65,10 +82,10 @@ Column {
     // the list: grows with its content up to 3 rows, then scrolls
     ListView {
         id: list
+
         visible: Notifs.count > 0
         width: parent.width
-        height: Math.min(contentHeight,
-                         root.visibleRows * root.rowHeight + (root.visibleRows - 1) * root.rowGap)
+        height: Math.min(contentHeight, root.visibleRows * root.rowHeight + (root.visibleRows - 1) * root.rowGap)
         spacing: root.rowGap
         clip: true
         boundsBehavior: Flickable.StopAtBounds
@@ -76,6 +93,7 @@ Column {
 
         delegate: Rectangle {
             id: row
+
             required property var modelData
 
             width: ListView.view.width
@@ -87,11 +105,18 @@ Column {
 
             NotifAvatar {
                 id: avatar
+
                 color: Theme.surface
                 app: row.modelData.appName
                 critical: Notifs.isCritical(row.modelData)
                 low: Notifs.isLow(row.modelData)
-                anchors { left: parent.left; leftMargin: Theme.gap; verticalCenter: parent.verticalCenter }
+
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.gap
+                    verticalCenter: parent.verticalCenter
+                }
+
             }
 
             Column {
@@ -99,7 +124,7 @@ Column {
                     left: avatar.right
                     leftMargin: Theme.gap
                     right: parent.right
-                    rightMargin: 40            // room for the close button
+                    rightMargin: 40 // room for the close button
                     verticalCenter: parent.verticalCenter
                 }
 
@@ -112,6 +137,7 @@ Column {
                     font.pixelSize: Theme.fontSmall
                     font.bold: true
                 }
+
                 Text {
                     width: parent.width
                     text: row.modelData.body
@@ -120,19 +146,20 @@ Column {
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontCaption
                 }
+
             }
 
             // close button, only visible while hovering the row
             Item {
                 width: 24
                 height: 24
+                opacity: rowHover.hovered ? 1 : 0
+
                 anchors {
                     right: parent.right
                     rightMargin: 8
                     verticalCenter: parent.verticalCenter
                 }
-                opacity: rowHover.hovered ? 1 : 0
-                Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
 
                 Rectangle {
                     anchors.fill: parent
@@ -140,6 +167,7 @@ Column {
                     color: Theme.surface
                     opacity: closeHover.hovered ? 1 : 0
                 }
+
                 Text {
                     anchors.centerIn: parent
                     text: "󰅖"
@@ -147,11 +175,32 @@ Column {
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.fontSize
                 }
-                HoverHandler { id: closeHover; cursorShape: Qt.PointingHandCursor }
-                TapHandler { onTapped: Notifs.dismiss(row.modelData) }
+
+                HoverHandler {
+                    id: closeHover
+
+                    cursorShape: Qt.PointingHandCursor
+                }
+
+                TapHandler {
+                    onTapped: Notifs.dismiss(row.modelData)
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.animFast
+                    }
+
+                }
+
             }
 
-            HoverHandler { id: rowHover }
+            HoverHandler {
+                id: rowHover
+            }
+
         }
+
     }
+
 }

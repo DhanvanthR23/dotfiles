@@ -1,31 +1,36 @@
-pragma Singleton
+import QtQuick
 import Quickshell
 import Quickshell.Io
-import QtQuick
+pragma Singleton
 
-Singleton{
+Singleton {
     id: root
+
     property real usedPercent: 0
     property real usedGb: 0
     property real totalGb: 0
-    FileView{
+
+    FileView {
         id: meminfo
+
         path: "/proc/meminfo"
         blockLoading: true
     }
+
     Timer {
         interval: 1500
         running: true
         repeat: true
         triggeredOnStart: true
         onTriggered: {
-            meminfo.reload()
-            const text = meminfo.text()
-            const total = parseInt(text.match(/MemTotal:\s+(\d+)/)[1])
-            const avail = parseInt(text.match(/MemAvailable:\s+(\d+)/)[1])
-            root.totalGb = total / 1048576
-            root.usedGb = (total - avail) / 1048576
-            root.usedPercent = (total - avail) / total * 100
+            meminfo.reload();
+            const text = meminfo.text();
+            const total = parseInt(text.match(/MemTotal:\s+(\d+)/)[1]);
+            const avail = parseInt(text.match(/MemAvailable:\s+(\d+)/)[1]);
+            root.totalGb = total / 1.04858e+06;
+            root.usedGb = (total - avail) / 1.04858e+06;
+            root.usedPercent = (total - avail) / total * 100;
         }
     }
+
 }

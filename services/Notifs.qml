@@ -1,7 +1,7 @@
-pragma Singleton
+import QtQuick
 import Quickshell
 import Quickshell.Services.Notifications
-import QtQuick
+pragma Singleton
 
 Singleton {
     id: root
@@ -17,52 +17,67 @@ Singleton {
     readonly property int count: all.values.length
     readonly property var newestFirst: all.values.slice().reverse()
 
-    function isCritical(n) { return n.urgency === NotificationUrgency.Critical }
-    function isLow(n) { return n.urgency === NotificationUrgency.Low }
+    function isCritical(n) {
+        return n.urgency === NotificationUrgency.Critical;
+    }
 
-    function dismiss(n) { n.dismiss() }
+    function isLow(n) {
+        return n.urgency === NotificationUrgency.Low;
+    }
+
+    function dismiss(n) {
+        n.dismiss();
+    }
 
     function clearAll() {
         for (const n of all.values.slice()) n.dismiss()
     }
+
     // timeout is in ms; -1 or 0 = app has no preference
     function durationFor(timeout, urgency) {
-        if (timeout > 0) return timeout
-        if (urgency === NotificationUrgency.Critical) return 5000
-        if (urgency === NotificationUrgency.Low) return 1500
-        return 2500
+        if (timeout > 0)
+            return timeout;
+
+        if (urgency === NotificationUrgency.Critical)
+            return 5000;
+
+        if (urgency === NotificationUrgency.Low)
+            return 1500;
+
+        return 2500;
     }
 
     function show(app, summary, body, urgency, timeout) {
-        toastApp = app
-        toastSummary = summary
-        toastBody = body
-        toastUrgency = urgency
-        hideTimer.interval = durationFor(timeout, urgency)
-        hideTimer.restart()
-        toastVisible = true
+        toastApp = app;
+        toastSummary = summary;
+        toastBody = body;
+        toastUrgency = urgency;
+        hideTimer.interval = durationFor(timeout, urgency);
+        hideTimer.restart();
+        toastVisible = true;
     }
 
     function hideToast() {
-        toastVisible = false
-        hideTimer.stop()
+        toastVisible = false;
+        hideTimer.stop();
     }
 
     NotificationServer {
         id: server
+
         bodySupported: true
         actionsSupported: true
         imageSupported: true
-
-        onNotification: notification => {
-            notification.tracked = true
-            root.show(notification.appName, notification.summary, notification.body,
-                      notification.urgency, notification.expireTimeout)
+        onNotification: (notification) => {
+            notification.tracked = true;
+            root.show(notification.appName, notification.summary, notification.body, notification.urgency, notification.expireTimeout);
         }
     }
 
     Timer {
         id: hideTimer
+
         onTriggered: root.hideToast()
     }
+
 }

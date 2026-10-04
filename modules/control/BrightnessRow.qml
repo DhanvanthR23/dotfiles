@@ -1,10 +1,11 @@
-import QtQuick
+import "../../components"
 import "../../config"
 import "../../services"
-import "../../components"
+import QtQuick
 
 Column {
     id: root
+
     spacing: 6
 
     SliderRow {
@@ -12,13 +13,17 @@ Column {
         icon: "󰃟"
         value: Brightness.position
         interactive: Brightness.controllable
-        onMoved: v => Brightness.setPosition(v)
+        onMoved: (v) => {
+            return Brightness.setPosition(v);
+        }
         onIconClicked: monitorList.open = !monitorList.open
     }
 
     Item {
         id: monitorList
+
         property bool open: false
+
         width: parent.width
         height: open ? list.implicitHeight : 0
         visible: open
@@ -26,6 +31,7 @@ Column {
 
         Column {
             id: list
+
             width: parent.width
             spacing: 4
 
@@ -34,6 +40,7 @@ Column {
 
                 Rectangle {
                     id: mon
+
                     required property string modelData
                     readonly property bool picked: modelData === Brightness.current
 
@@ -53,26 +60,36 @@ Column {
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSmall
                     }
+
                     Text {
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.padding
                         anchors.verticalCenter: parent.verticalCenter
-                        text: Brightness.isInternal(mon.modelData) ? "Built-in"
-                            : Brightness.ddcDisplays[mon.modelData] ? "External" : "No DDC"
+                        text: Brightness.isInternal(mon.modelData) ? "Built-in" : Brightness.ddcDisplays[mon.modelData] ? "External" : "No DDC"
                         color: Theme.textMuted
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontCaption
                     }
 
-                    HoverHandler { id: monHover; cursorShape: Qt.PointingHandCursor }
+                    HoverHandler {
+                        id: monHover
+
+                        cursorShape: Qt.PointingHandCursor
+                    }
+
                     TapHandler {
                         onTapped: {
-                            Brightness.selected = mon.modelData
-                            monitorList.open = false
+                            Brightness.selected = mon.modelData;
+                            monitorList.open = false;
                         }
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }

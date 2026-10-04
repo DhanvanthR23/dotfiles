@@ -1,69 +1,71 @@
-import Quickshell
-import QtQuick
+import "../../components"
 import "../../config"
 import "../../services"
-import "../../components"
+import QtQuick
+import Quickshell
 
 PopupWindow {
     id: root
-    required property Item pill   // the ClockPill
+
+    required property Item pill // the ClockPill
     readonly property int headerHeight: 32
     readonly property int stripHeight: 52
     readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight
-
     // --- week strip data ---
     readonly property var today: Time.now
     property int weekOffset: 0
-
     readonly property var stripStart: {
-        const d = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-        d.setDate(d.getDate() - 3 + weekOffset * 7)
-        return d
+        const d = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        d.setDate(d.getDate() - 3 + weekOffset * 7);
+        return d;
     }
     readonly property var centerDay: {
-        const d = new Date(stripStart)
-        d.setDate(d.getDate() + 3)
-        return d
+        const d = new Date(stripStart);
+        d.setDate(d.getDate() + 3);
+        return d;
     }
-
     // --- open/close logic ---
     property bool open: false
     readonly property bool wantOpen: pill.hovered || popupHover.hovered
-
-    onWantOpenChanged: {
-        if (wantOpen) { closeTimer.stop(); open = true }
-        else closeTimer.restart()
-    }
-    Timer { id: closeTimer; interval: 150; onTriggered: root.open = false }
-
     // --- animation driver: 0 = pill, 1 = full popup ---
     readonly property bool shown: open && !Notifs.toastVisible
     property real progress: shown ? 1 : 0
-    readonly property real fade: Math.max(0, progress * 2 - 1)   // 0 in the first half, ramps to 1 in the second
-    Behavior on progress {
-        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
-    }
-    // reset week only once fully collapsed, so it doesn't jump mid-animation
-    onProgressChanged: if (progress === 0) weekOffset = 0
+    readonly property real fade: Math.max(0, progress * 2 - 1) // 0 in the first half, ramps to 1 in the second
 
+    onWantOpenChanged: {
+        if (wantOpen) {
+            closeTimer.stop();
+            open = true;
+        } else {
+            closeTimer.restart();
+        }
+    }
+    onProgressChanged: {
+        if (progress === 0) {
+            weekOffset = 0;
+        }
+    }
     // window sits exactly on top of the pill, card grows downward from there
     anchor.item: pill
     anchor.rect.x: (pill.width - width) / 2
     anchor.rect.y: 0
-
     implicitWidth: Theme.toastWidth
     implicitHeight: Theme.pillHeight + contentHeight
-    visible: shown || progress > 0     // stay mapped while shrinking
+    visible: shown || progress > 0 // stay mapped while shrinking
     color: "transparent"
 
-    // only the card catches the mouse, transparent window area doesn't block other pills
-    mask: Region { item: card }
+    Timer {
+        id: closeTimer
+
+        interval: 150
+        onTriggered: root.open = false
+    }
 
     Rectangle {
         id: card
+
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-
         width: root.pill.width
         height: Theme.pillHeight + root.contentHeight * root.progress
         radius: Math.min(height / 2, Theme.radius)
@@ -85,6 +87,7 @@ PopupWindow {
             font.pixelSize: Theme.fontSize
             font.bold: true
         }
+
         Text {
             anchors.right: parent.right
             anchors.rightMargin: Theme.padding
@@ -95,9 +98,10 @@ PopupWindow {
             color: Theme.textMuted
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSmall
-            opacity: root.fade   // same fade as the calendar content
+            opacity: root.fade // same fade as the calendar content
         }
         // calendar content: fixed size, revealed by the growing card, fades in 2nd half
+
         Item {
             anchors.horizontalCenter: parent.horizontalCenter
             y: Theme.pillHeight
@@ -129,9 +133,20 @@ PopupWindow {
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
 
-                        ArrowButton { label: "‹"; nudge: -2; onClicked: root.weekOffset-- }
-                        ArrowButton { label: "›"; nudge: 2;  onClicked: root.weekOffset++ }
+                        ArrowButton {
+                            label: "‹"
+                            nudge: -2
+                            onClicked: root.weekOffset--
+                        }
+
+                        ArrowButton {
+                            label: "›"
+                            nudge: 2
+                            onClicked: root.weekOffset++
+                        }
+
                     }
+
                 }
 
                 Row {
@@ -142,15 +157,14 @@ PopupWindow {
 
                         Item {
                             id: cell
-                            required property int index
 
+                            required property int index
                             readonly property var day: {
-                                const d = new Date(root.stripStart)
-                                d.setDate(d.getDate() + index)
-                                return d
+                                const d = new Date(root.stripStart);
+                                d.setDate(d.getDate() + index);
+                                return d;
                             }
-                            readonly property bool isToday:
-                                day.toDateString() === root.today.toDateString()
+                            readonly property bool isToday: day.toDateString() === root.today.toDateString()
 
                             width: parent.width / 7
                             height: 52
@@ -173,6 +187,7 @@ PopupWindow {
                                         font.family: Theme.fontFamily
                                         font.pixelSize: Theme.fontCaption
                                     }
+
                                     Text {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         text: cell.day.getDate()
@@ -181,14 +196,22 @@ PopupWindow {
                                         font.pixelSize: Theme.fontSize
                                         font.bold: cell.isToday
                                     }
+
                                 }
+
                             }
+
                         }
+
                     }
+
                 }
+
             }
+
         }
         // update dot, same spot as on the pill so the handoff is invisible
+
         UpdateDot {
             anchors {
                 top: parent.top
@@ -196,7 +219,27 @@ PopupWindow {
                 topMargin: 2
                 rightMargin: 4
             }
+
         }
-        HoverHandler { id: popupHover }
+
+        HoverHandler {
+            id: popupHover
+        }
+
     }
+
+    Behavior on progress {
+        NumberAnimation {
+            duration: Theme.animDuration
+            easing.type: Easing.OutCubic
+        }
+
+    }
+    // reset week only once fully collapsed, so it doesn't jump mid-animation
+
+    // only the card catches the mouse, transparent window area doesn't block other pills
+    mask: Region {
+        item: card
+    }
+
 }

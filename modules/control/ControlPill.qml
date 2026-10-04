@@ -1,40 +1,41 @@
-import Quickshell
-import QtQuick
-import QtQuick.Shapes
 import "../../config"
 import "../../services"
+import QtQuick
+import QtQuick.Shapes
+import Quickshell
 
 Rectangle {
     id: root
 
     readonly property bool hovered: hover.hovered
-
     readonly property real ringWidth: 2
     readonly property real fraction: Battery.available ? Battery.percent / 100 : 0
-    readonly property color ringColor: Battery.low ? Theme.error
-                                     : Battery.pluggedIn ? Theme.ok
-                                     : Theme.accent
-
-    readonly property string tipText:
-        Net.label + (Battery.available
-            ? "  ·  " + Math.round(Battery.percent) + "%"
-              + (Battery.charging ? " charging" : Battery.pluggedIn ? " plugged in" : "")
-            : "")
-
-    property bool tipEnabled: true          // disabled while the popup is open
+    readonly property color ringColor: Battery.low ? Theme.error : Battery.pluggedIn ? Theme.ok : Theme.accent
+    readonly property string tipText: Net.label + (Battery.available ? "  ·  " + Math.round(Battery.percent) + "%" + (Battery.charging ? " charging" : Battery.pluggedIn ? " plugged in" : "") : "")
+    property bool tipEnabled: true // disabled while the popup is open
     property bool showTip: false
+
     signal clicked()
 
     onHoveredChanged: {
-        if (hovered && tipEnabled) tipTimer.restart()
-        else { tipTimer.stop(); showTip = false }
+        if (hovered && tipEnabled) {
+            tipTimer.restart();
+        } else {
+            tipTimer.stop();
+            showTip = false;
+        }
     }
-    Timer { id: tipTimer; interval: 400; onTriggered: root.showTip = true }
-
     implicitWidth: Theme.pillHeight
     implicitHeight: Theme.pillHeight
     radius: width / 2
     color: hover.hovered ? Theme.surfaceAlt : Theme.surface
+
+    Timer {
+        id: tipTimer
+
+        interval: 400
+        onTriggered: root.showTip = true
+    }
 
     Shape {
         anchors.fill: parent
@@ -54,6 +55,7 @@ Rectangle {
                 startAngle: -90
                 sweepAngle: 360
             }
+
         }
 
         // battery progress: starts at 12 o'clock, sweeps clockwise
@@ -71,7 +73,9 @@ Rectangle {
                 startAngle: -90
                 sweepAngle: 360 * root.fraction
             }
+
         }
+
     }
 
     Text {
@@ -82,14 +86,22 @@ Rectangle {
         font.pixelSize: Theme.fontSize
     }
 
-    HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
-    TapHandler { onTapped: root.clicked() }
+    HoverHandler {
+        id: hover
+
+        cursorShape: Qt.PointingHandCursor
+    }
+
+    TapHandler {
+        onTapped: root.clicked()
+    }
+
     PopupWindow {
         id: tip
+
         anchor.item: root
         anchor.rect.x: (root.width - width) / 2
         anchor.rect.y: root.height + 6
-
         implicitWidth: tipLabel.implicitWidth + Theme.padding * 2
         implicitHeight: Theme.pillHeight
         visible: root.showTip && root.tipEnabled
@@ -104,12 +116,16 @@ Rectangle {
 
             Text {
                 id: tipLabel
+
                 anchors.centerIn: parent
                 text: root.tipText
                 color: Theme.text
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSmall
             }
+
         }
+
     }
+
 }

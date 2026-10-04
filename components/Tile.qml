@@ -1,38 +1,37 @@
-import QtQuick
 import "../config"
+import QtQuick
 
 Rectangle {
     id: root
+
     property string icon
     property string title
     property string subtitle
     property bool active: false
+
     signal clicked()
 
     implicitHeight: 52
     radius: Theme.radiusItem
     color: active ? Theme.accent : Theme.surfaceAlt
     border.width: 1
-    border.color: active ? Theme.accent
-                : hover.hovered ? Theme.accent
-                : Theme.border
+    border.color: active ? Theme.accent : hover.hovered ? Theme.accent : Theme.border
     scale: tap.pressed ? 0.96 : 1
-
-    Behavior on color { ColorAnimation { duration: Theme.animFast } }
-    Behavior on border.color { ColorAnimation { duration: Theme.animFast } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPress } }
 
     Text {
         id: iconLabel
+
+        text: root.icon
+        color: root.active ? Theme.bg : Theme.accent
+        font.family: Theme.iconFont
+        font.pixelSize: Theme.iconSizeLarge
+
         anchors {
             left: parent.left
             leftMargin: Theme.padding
             verticalCenter: parent.verticalCenter
         }
-        text: root.icon
-        color: root.active ? Theme.bg : Theme.accent
-        font.family: Theme.iconFont
-        font.pixelSize: Theme.iconSizeLarge
+
     }
 
     Column {
@@ -53,6 +52,7 @@ Rectangle {
             font.pixelSize: Theme.fontSmall
             font.bold: true
         }
+
         Text {
             width: parent.width
             text: root.subtitle
@@ -61,8 +61,40 @@ Rectangle {
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontCaption
         }
+
     }
 
-    HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
-    TapHandler { id: tap; onTapped: root.clicked() }
+    HoverHandler {
+        id: hover
+
+        cursorShape: Qt.PointingHandCursor
+    }
+
+    TapHandler {
+        id: tap
+
+        onTapped: root.clicked()
+    }
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Theme.animFast
+        }
+
+    }
+
+    Behavior on border.color {
+        ColorAnimation {
+            duration: Theme.animFast
+        }
+
+    }
+
+    Behavior on scale {
+        NumberAnimation {
+            duration: Theme.animPress
+        }
+
+    }
+
 }

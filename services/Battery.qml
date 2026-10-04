@@ -1,11 +1,12 @@
-pragma Singleton
+import QtQuick
 import Quickshell
 import Quickshell.Services.UPower
-import QtQuick
+pragma Singleton
 
-Singleton{
+Singleton {
     id: root
-    readonly property var levelIcons:    ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+
+    readonly property var levelIcons: ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     readonly property var chargingIcons: ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
     readonly property var device: UPower.displayDevice
     readonly property bool available: device.ready && device.isPresent
@@ -14,7 +15,5 @@ Singleton{
     readonly property bool charging: device.state === UPowerDeviceState.Charging
     readonly property bool low: available && UPower.onBattery && percent <= 20
     readonly property int level: Math.max(0, Math.min(10, Math.round(percent / 10)))
-    readonly property string icon: low ? "󰂃"
-                                 : charging ? chargingIcons[level]
-                                 : levelIcons[level]
+    readonly property string icon: low ? "󰂃" : charging ? chargingIcons[level] : levelIcons[level]
 }

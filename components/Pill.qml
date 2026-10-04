@@ -1,8 +1,9 @@
-import QtQuick
 import "../config"
+import QtQuick
 
 Rectangle {
     id: root
+
     property bool hoverable: true
     readonly property bool hovered: hover.hovered
 
@@ -12,5 +13,8 @@ Rectangle {
     border.width: 1
     border.color: Theme.border
 
-    HoverHandler { id: hover }
+    HoverHandler {
+        id: hover
+    }
+
 }

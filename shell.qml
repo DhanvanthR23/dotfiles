@@ -1,6 +1,8 @@
-import Quickshell
 import "./modules/bar"
+import Quickshell
 
-Scope{
-    Bar {}
+Scope {
+    Bar {
+    }
+
 }

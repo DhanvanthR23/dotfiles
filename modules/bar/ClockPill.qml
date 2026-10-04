@@ -1,59 +1,58 @@
-import QtQuick
-import "../../services"
-import "../../config"
 import "../../components"
+import "../../config"
+import "../../services"
+import QtQuick
 
 Pill {
     id: root
 
     readonly property bool toast: Notifs.toastVisible
-
-    property real expand: 0     // 0..1, driven by the calendar popup
-
+    property real expand: 0 // 0..1, driven by the calendar popup
     readonly property real idleWidth: clockLabel.implicitWidth + Theme.padding * 2
 
-    implicitWidth: toast ? Theme.toastWidth
-                 : idleWidth + (Theme.toastWidth - idleWidth) * expand
-
+    implicitWidth: toast ? Theme.toastWidth : idleWidth + (Theme.toastWidth - idleWidth) * expand
     implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
 
-    Behavior on implicitWidth {
-        enabled: root.expand === 0
-        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
-    }
-    Behavior on implicitHeight {
-        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
-    }
-    Behavior on border.color {
-        ColorAnimation { duration: Theme.animFast }
-    }
-
     // normal state: the clock
     Text {
         id: clockLabel
+
         anchors.centerIn: parent
         text: Time.time
         color: Theme.text
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
         opacity: root.toast ? 0 : 1
-        Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Theme.animFast
+            }
+
+        }
+
     }
 
     // toast state
     Item {
         anchors.fill: parent
         opacity: root.toast ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
 
         NotifAvatar {
             id: avatar
+
             app: Notifs.toastApp
             critical: Notifs.toastCritical
             low: Notifs.toastLow
-            anchors { left: parent.left; leftMargin: 6; verticalCenter: parent.verticalCenter }
+
+            anchors {
+                left: parent.left
+                leftMargin: 6
+                verticalCenter: parent.verticalCenter
+            }
+
         }
 
         Column {
@@ -74,6 +73,7 @@ Pill {
                 font.pixelSize: Theme.fontSize
                 font.bold: true
             }
+
             Text {
                 width: parent.width
                 text: Notifs.toastBody
@@ -82,24 +82,60 @@ Pill {
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontCaption
             }
+
         }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Theme.animFast
+            }
+
+        }
+
     }
 
     // update badge, hidden while a toast is showing
     UpdateDot {
         visible: Updates.count > 0 && !root.toast
+
         anchors {
             top: parent.top
             right: parent.right
             topMargin: 2
             rightMargin: 4
         }
+
     }
 
     // click anywhere on a toast to dismiss it
     TapHandler {
         enabled: root.toast
         onTapped: Notifs.hideToast()
+    }
+
+    Behavior on implicitWidth {
+        enabled: root.expand === 0
+
+        NumberAnimation {
+            duration: Theme.animDuration
+            easing.type: Easing.OutCubic
+        }
+
+    }
+
+    Behavior on implicitHeight {
+        NumberAnimation {
+            duration: Theme.animDuration
+            easing.type: Easing.OutCubic
+        }
+
+    }
+
+    Behavior on border.color {
+        ColorAnimation {
+            duration: Theme.animFast
+        }
+
     }
 
 }

@@ -2,11 +2,14 @@ import Quickshell
 import QtQuick
 import "../../config"
 import "../../services"
+import "../../components"
 
 PopupWindow {
     id: root
     required property Item pill   // the ClockPill
-    readonly property int contentHeight: 118   // 12 + 32 header + 10 + 52 strip + 12
+    readonly property int headerHeight: 32
+    readonly property int stripHeight: 52
+    readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight
 
     // --- week strip data ---
     readonly property var today: Time.now
@@ -36,6 +39,7 @@ PopupWindow {
     // --- animation driver: 0 = pill, 1 = full popup ---
     readonly property bool shown: open && !Notifs.toastVisible
     property real progress: shown ? 1 : 0
+    readonly property real fade: Math.max(0, progress * 2 - 1)   // 0 in the first half, ramps to 1 in the second
     Behavior on progress {
         NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
     }
@@ -90,8 +94,8 @@ PopupWindow {
             text: Time.dateShort
             color: Theme.textMuted
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize - 1
-            opacity: Math.max(0, root.progress * 2 - 1)   // same fade as the calendar content
+            font.pixelSize: Theme.fontSmall
+            opacity: root.fade   // same fade as the calendar content
         }
         // calendar content: fixed size, revealed by the growing card, fades in 2nd half
         Item {
@@ -99,13 +103,13 @@ PopupWindow {
             y: Theme.pillHeight
             width: root.implicitWidth
             height: root.contentHeight
-            opacity: Math.max(0, root.progress * 2 - 1)
+            opacity: root.fade
             enabled: root.shown
 
             Column {
                 anchors.fill: parent
                 anchors.margins: Theme.padding
-                spacing: 10
+                spacing: Theme.gap
 
                 Item {
                     width: parent.width
@@ -155,7 +159,7 @@ PopupWindow {
                                 anchors.centerIn: parent
                                 width: parent.width - 6
                                 height: parent.height
-                                radius: 14
+                                radius: Theme.radiusItem
                                 color: cell.isToday ? Theme.accent : "transparent"
 
                                 Column {
@@ -167,7 +171,7 @@ PopupWindow {
                                         text: Qt.formatDate(cell.day, "ddd")
                                         color: cell.isToday ? Theme.bg : Theme.textMuted
                                         font.family: Theme.fontFamily
-                                        font.pixelSize: Theme.fontSize - 3
+                                        font.pixelSize: Theme.fontCaption
                                     }
                                     Text {
                                         anchors.horizontalCenter: parent.horizontalCenter

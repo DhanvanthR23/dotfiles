@@ -1,12 +1,12 @@
 import QtQuick
 import "../../services"
 import "../../config"
+import "../../components"
 
-Rectangle {
+Pill {
     id: root
 
     readonly property bool toast: Notifs.toastVisible
-    readonly property bool hovered: hover.hovered
 
     property real expand: 0     // 0..1, driven by the calendar popup
 
@@ -16,9 +16,6 @@ Rectangle {
                  : idleWidth + (Theme.toastWidth - idleWidth) * expand
 
     implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
-    radius: height / 2
-    color: hover.hovered ? Theme.surfaceAlt : Theme.surface
-    border.width: 1
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
 
@@ -30,7 +27,7 @@ Rectangle {
         NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
     }
     Behavior on border.color {
-        ColorAnimation { duration: 120 }
+        ColorAnimation { duration: Theme.animFast }
     }
 
     // normal state: the clock
@@ -42,42 +39,27 @@ Rectangle {
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
         opacity: root.toast ? 0 : 1
-        Behavior on opacity { NumberAnimation { duration: 120 } }
+        Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
     }
 
     // toast state
     Item {
         anchors.fill: parent
         opacity: root.toast ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 120 } }
+        Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
 
-        Rectangle {
+        NotifAvatar {
             id: avatar
-            width: 28
-            height: 28
-            radius: 14
-            color: Theme.surfaceAlt
-            anchors {
-                left: parent.left
-                leftMargin: 6
-                verticalCenter: parent.verticalCenter
-            }
-
-            Text {
-                anchors.centerIn: parent
-                text: Notifs.toastApp.charAt(0).toUpperCase()
-                color: Notifs.toastCritical ? Theme.error
-                     : Notifs.toastLow ? Theme.textMuted
-                     : Theme.accent
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-            }
+            app: Notifs.toastApp
+            critical: Notifs.toastCritical
+            low: Notifs.toastLow
+            anchors { left: parent.left; leftMargin: 6; verticalCenter: parent.verticalCenter }
         }
 
         Column {
             anchors {
                 left: avatar.right
-                leftMargin: 10
+                leftMargin: Theme.gap
                 right: parent.right
                 rightMargin: Theme.padding
                 verticalCenter: parent.verticalCenter
@@ -98,14 +80,14 @@ Rectangle {
                 color: Theme.textMuted
                 elide: Text.ElideRight
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize - 2
+                font.pixelSize: Theme.fontCaption
             }
         }
     }
 
     // update badge, hidden while a toast is showing
     UpdateDot {
-        visible: Updates.count > 0 && !root.toast   // hidden while a toast shows
+        visible: Updates.count > 0 && !root.toast
         anchors {
             top: parent.top
             right: parent.right
@@ -120,5 +102,4 @@ Rectangle {
         onTapped: Notifs.hideToast()
     }
 
-    HoverHandler { id: hover }
 }

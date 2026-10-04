@@ -1,6 +1,6 @@
 import QtQuick
-import "../../config"
-import "../../services"
+import "../config"
+import "../services"
 
 Rectangle {
     width: 8

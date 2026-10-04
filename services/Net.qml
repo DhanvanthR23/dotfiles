@@ -17,7 +17,7 @@ Singleton {
         wifiDevice ? (wifiDevice.networks.values.find(n => n.connected) || null) : null
 
     readonly property bool wifiOn: Networking.wifiEnabled
-    readonly property real signal: activeNetwork ? activeNetwork.signalStrength : 0
+    readonly property real strength: activeNetwork ? activeNetwork.signalStrength : 0
 
     // "wifi" | "wired" | "off" | "none"
     readonly property string type:
@@ -37,7 +37,7 @@ Singleton {
         type === "wired" ? "󰈀"
         : type === "off" ? "󰤮"
         : type === "none" ? "󰤭"
-        : wifiIcons[Math.max(0, Math.min(4, Math.round(signal * 4)))]
+        : wifiIcons[Math.max(0, Math.min(4, Math.round(strength * 4)))]
 
     function toggleWifi() {
         Networking.wifiEnabled = !Networking.wifiEnabled

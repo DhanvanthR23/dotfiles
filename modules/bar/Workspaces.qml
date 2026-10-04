@@ -1,17 +1,14 @@
 import QtQuick
 import Quickshell.Niri
 import "../../config"
+import "../../components"
 
-Rectangle {
+Pill {
     id: root
     property string screenName
 
     implicitWidth: row.implicitWidth + Theme.padding * 2
-    implicitHeight: Theme.pillHeight
-    radius: height / 2
-    color: Theme.surface
-    border.width: 1
-    border.color: Theme.border
+    hoverable: false
 
     Row {
         id: row
@@ -30,7 +27,7 @@ Rectangle {
                 height: root.height
 
                 Behavior on width {
-                    NumberAnimation { duration: 150 }
+                    NumberAnimation { duration: Theme.animDuration }
                 }
 
                 Rectangle {

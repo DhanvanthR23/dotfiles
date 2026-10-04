@@ -21,6 +21,8 @@ Singleton {
 
     // --- levels: screen name -> { raw, max } ---
     property var levels: ({})
+    property bool watching: false
+    Timer { interval: 1000; running: root.watching; repeat: true; triggeredOnStart: true; onTriggered: root.refreshInternal() }
 
     function setLevel(name, raw, max) {
         const old = levels[name]

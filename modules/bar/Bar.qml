@@ -2,6 +2,9 @@ import Quickshell
 import QtQuick
 import "../../config"
 import "../../services"
+import "../calendar"
+import "../control"
+import "../../components"
 
 Scope {
     Variants {
@@ -30,16 +33,16 @@ Scope {
             // qmllint enable unqualified
 
             ClockPill {
-                id: clock
+                id: clockPill
                 anchors.centerIn: parent
-                expand: popup.progress
+                expand: calendarPopup.progress
             }
 
-            CalendarPopup { id: popup; pill: clock }
+            CalendarPopup { id: calendarPopup; pill: clockPill }
 
             Row {
                 anchors {
-                    right: clock.left
+                    right: clockPill.left
                     rightMargin: Theme.gap
                     verticalCenter: parent.verticalCenter
                 }
@@ -52,7 +55,7 @@ Scope {
 
             Row {
                 anchors {
-                    left: clock.right
+                    left: clockPill.right
                     leftMargin: Theme.gap
                     verticalCenter: parent.verticalCenter
                 }

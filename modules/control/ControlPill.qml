@@ -21,7 +21,7 @@ Rectangle {
               + (Battery.charging ? " charging" : Battery.pluggedIn ? " plugged in" : "")
             : "")
 
-    property bool tipEnabled: true          // step 3 will turn this off while the popup is open
+    property bool tipEnabled: true          // disabled while the popup is open
     property bool showTip: false
     signal clicked()
 
@@ -108,7 +108,7 @@ Rectangle {
                 text: root.tipText
                 color: Theme.text
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize - 1
+                font.pixelSize: Theme.fontSmall
             }
         }
     }

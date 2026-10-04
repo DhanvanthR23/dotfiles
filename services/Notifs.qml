@@ -1,4 +1,3 @@
-// services/Notifs.qml
 pragma Singleton
 import Quickshell
 import Quickshell.Services.Notifications
@@ -64,6 +63,6 @@ Singleton {
 
     Timer {
         id: hideTimer
-        onTriggered: root.toastVisible = false
+        onTriggered: root.hideToast()
     }
 }

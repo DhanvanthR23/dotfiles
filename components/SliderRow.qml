@@ -1,5 +1,5 @@
 import QtQuick
-import "../../config"
+import "../config"
 
 Item {
     id: root
@@ -27,8 +27,8 @@ Item {
             text: root.icon
             color: iconHover.hovered ? Theme.accent : Theme.textMuted
             font.family: Theme.iconFont
-            font.pixelSize: Theme.fontSize + 4
-            Behavior on color { ColorAnimation { duration: 120 } }
+            font.pixelSize: Theme.iconSize
+            Behavior on color { ColorAnimation { duration: Theme.animFast } }
         }
         HoverHandler { id: iconHover; cursorShape: Qt.PointingHandCursor }
         TapHandler { onTapped: root.iconClicked() }
@@ -43,7 +43,7 @@ Item {
         text: Math.round(root.shownValue * 100) + "%"
         color: Theme.textMuted
         font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize - 2
+        font.pixelSize: Theme.fontCaption
         opacity: root.interactive ? 1 : 0.4
     }
 
@@ -75,7 +75,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             color: Theme.text
             scale: area.pressed || area.containsMouse ? 1.2 : 1
-            Behavior on scale { NumberAnimation { duration: 100 } }
+            Behavior on scale { NumberAnimation { duration: Theme.animPress } }
         }
     }
 

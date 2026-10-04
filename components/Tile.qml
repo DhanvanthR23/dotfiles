@@ -1,5 +1,5 @@
 import QtQuick
-import "../../config"
+import "../config"
 
 Rectangle {
     id: root
@@ -10,7 +10,7 @@ Rectangle {
     signal clicked()
 
     implicitHeight: 52
-    radius: 14
+    radius: Theme.radiusItem
     color: active ? Theme.accent : Theme.surfaceAlt
     border.width: 1
     border.color: active ? Theme.accent
@@ -18,9 +18,9 @@ Rectangle {
                 : Theme.border
     scale: tap.pressed ? 0.96 : 1
 
-    Behavior on color { ColorAnimation { duration: 120 } }
-    Behavior on border.color { ColorAnimation { duration: 120 } }
-    Behavior on scale { NumberAnimation { duration: 80 } }
+    Behavior on color { ColorAnimation { duration: Theme.animFast } }
+    Behavior on border.color { ColorAnimation { duration: Theme.animFast } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPress } }
 
     Text {
         id: iconLabel
@@ -32,13 +32,13 @@ Rectangle {
         text: root.icon
         color: root.active ? Theme.bg : Theme.accent
         font.family: Theme.iconFont
-        font.pixelSize: Theme.fontSize + 6
+        font.pixelSize: Theme.iconSizeLarge
     }
 
     Column {
         anchors {
             left: iconLabel.right
-            leftMargin: 10
+            leftMargin: Theme.gap
             right: parent.right
             rightMargin: Theme.padding
             verticalCenter: parent.verticalCenter
@@ -50,7 +50,7 @@ Rectangle {
             color: root.active ? Theme.bg : Theme.text
             elide: Text.ElideRight
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize - 1
+            font.pixelSize: Theme.fontSmall
             font.bold: true
         }
         Text {
@@ -59,7 +59,7 @@ Rectangle {
             color: root.active ? Theme.bg : Theme.textMuted
             elide: Text.ElideRight
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize - 3
+            font.pixelSize: Theme.fontCaption
         }
     }
 

@@ -1,6 +1,7 @@
 import QtQuick
 import "../../config"
 import "../../services"
+import "../../components"
 
 Column {
     id: root
@@ -40,8 +41,8 @@ Column {
             text: "Clear all"
             color: clearHover.hovered ? Theme.accent : Theme.textMuted
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize - 2
-            Behavior on color { ColorAnimation { duration: 120 } }
+            font.pixelSize: Theme.fontCaption
+            Behavior on color { ColorAnimation { duration: Theme.animFast } }
 
             HoverHandler { id: clearHover; cursorShape: Qt.PointingHandCursor }
             TapHandler { onTapped: Notifs.clearAll() }
@@ -58,7 +59,7 @@ Column {
         text: "No notifications"
         color: Theme.textMuted
         font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSize - 1
+        font.pixelSize: Theme.fontSmall
     }
 
     // the list: grows with its content up to 3 rows, then scrolls
@@ -79,38 +80,24 @@ Column {
 
             width: ListView.view.width
             height: root.rowHeight
-            radius: 14
+            radius: Theme.radiusItem
             color: Theme.surfaceAlt
             border.width: 1
             border.color: Notifs.isCritical(modelData) ? Theme.error : Theme.border
 
-            Rectangle {
+            NotifAvatar {
                 id: avatar
-                width: 28
-                height: 28
-                radius: 14
                 color: Theme.surface
-                anchors {
-                    left: parent.left
-                    leftMargin: 10
-                    verticalCenter: parent.verticalCenter
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: row.modelData.appName.charAt(0).toUpperCase()
-                    color: Notifs.isCritical(row.modelData) ? Theme.error
-                         : Notifs.isLow(row.modelData) ? Theme.textMuted
-                         : Theme.accent
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize
-                }
+                app: row.modelData.appName
+                critical: Notifs.isCritical(row.modelData)
+                low: Notifs.isLow(row.modelData)
+                anchors { left: parent.left; leftMargin: Theme.gap; verticalCenter: parent.verticalCenter }
             }
 
             Column {
                 anchors {
                     left: avatar.right
-                    leftMargin: 10
+                    leftMargin: Theme.gap
                     right: parent.right
                     rightMargin: 40            // room for the close button
                     verticalCenter: parent.verticalCenter
@@ -122,7 +109,7 @@ Column {
                     color: Theme.text
                     elide: Text.ElideRight
                     font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize - 1
+                    font.pixelSize: Theme.fontSmall
                     font.bold: true
                 }
                 Text {
@@ -131,7 +118,7 @@ Column {
                     color: Theme.textMuted
                     elide: Text.ElideRight
                     font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize - 3
+                    font.pixelSize: Theme.fontCaption
                 }
             }
 
@@ -145,7 +132,7 @@ Column {
                     verticalCenter: parent.verticalCenter
                 }
                 opacity: rowHover.hovered ? 1 : 0
-                Behavior on opacity { NumberAnimation { duration: 120 } }
+                Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
 
                 Rectangle {
                     anchors.fill: parent

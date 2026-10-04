@@ -2,6 +2,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "../config"
 
 Singleton {
     id: root
@@ -10,9 +11,6 @@ Singleton {
     property string active: "off"    // what is actually running
     readonly property bool enabled: mode !== "off"
 
-    readonly property int temperature: 4000
-    readonly property string latitude: "11.0"
-    readonly property string longitude: "77.0"
 
     function cycle() {
         mode = mode === "off" ? "now" : mode === "now" ? "auto" : "off"
@@ -26,7 +24,7 @@ Singleton {
     Process {
         running: root.active === "now"
         command: ["bash", "-c",
-            "exec wlsunset -T 6500 -t " + root.temperature
+            "exec wlsunset -T 6500 -t " + Settings.nightTemperature
             + " -s $(date -d '-45 minutes' +%H:%M)"
             + " -S $(date -d '+12 hours' +%H:%M)"]
     }
@@ -34,7 +32,7 @@ Singleton {
     // real schedule from location
     Process {
         running: root.active === "auto"
-        command: ["wlsunset", "-T", "6500", "-t", String(root.temperature),
-                  "-l", root.latitude, "-L", root.longitude]
+        command: ["wlsunset", "-T", "6500", "-t", String(Settings.nightTemperature),
+                  "-l", Settings.latitude, "-L", Settings.longitude]
     }
 }

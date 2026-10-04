@@ -1,4 +1,3 @@
-// config/Theme.qml
 pragma Singleton
 import Quickshell
 import QtQuick
@@ -20,11 +19,6 @@ Singleton {
     readonly property color warn: "#f6c177"
     readonly property color error: "#eb6f92"
 
-    // sizes
-    readonly property int radius: 16
-    readonly property int gap: 10
-    readonly property int padding: 12
-
     // font
     readonly property string iconFont: "JetBrainsMono Nerd Font"
     readonly property string fontFamily: "Google Sans Flex"
@@ -35,4 +29,22 @@ Singleton {
     readonly property int toastWidth: 340
     readonly property int toastHeight: 40
     readonly property int animDuration: 180
+
+    // sizes
+    readonly property int radius: 16          // cards
+    readonly property int radiusItem: 14      // tiles, notification rows, calendar cells
+    readonly property int radiusSmall: 10     // list items inside a card (monitor picker)
+    readonly property int gap: 10
+    readonly property int padding: 12
+    readonly property int popupWidth: 340
+
+    // type
+    readonly property int fontSmall: fontSize - 1
+    readonly property int fontCaption: fontSize - 3
+    readonly property int iconSize: fontSize + 4
+    readonly property int iconSizeLarge: fontSize + 6
+
+    // motion
+    readonly property int animFast: 120       // hover/color/opacity
+    readonly property int animPress: 80       // press feedback
 }

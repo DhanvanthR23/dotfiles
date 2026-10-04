@@ -13,7 +13,6 @@ if [[ $1 != --force && -f $cache ]]; then
 fi
 
 # checkupdates: exit 0 = updates, 2 = none, 1 = real error (offline etc)
-official=$(checkupdates 2>/dev/null | wc -l)
 out=$(checkupdates 2>/dev/null); rc=$?
 if (( rc == 1 )); then
   # offline or broken: keep the old cache if any, never cache a fake 0

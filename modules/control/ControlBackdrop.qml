@@ -5,11 +5,10 @@ import Quickshell.Wayland
 PanelWindow {
     id: root
 
-    required property var popup
+    signal dismissed()
 
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
-    visible: popup.open
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
     anchors {
@@ -18,19 +17,16 @@ PanelWindow {
         left: true
         right: true
     }
-    // don't push windows around
 
     Item {
         anchors.fill: parent
         focus: true
-        Keys.onEscapePressed: root.popup.close()
+        Keys.onEscapePressed: root.dismissed()
 
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.AllButtons
-            onClicked: root.popup.close()
+            onClicked: root.dismissed()
         }
-
     }
-
 }

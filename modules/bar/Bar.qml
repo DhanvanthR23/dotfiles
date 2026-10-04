@@ -33,10 +33,6 @@ Scope {
                 pill: controlPill
             }
 
-            ControlBackdrop {
-                popup: controlPopup
-                screen: bar.modelData
-            }
 
             // qmllint disable unqualified
             margins {
@@ -111,6 +107,15 @@ Scope {
                     tipEnabled: !controlPopup.open
                     opacity: controlPopup.progress > 0.2 ? 0 : 1
                     onClicked: controlPopup.toggle()
+                }
+
+                LazyLoader {
+                    active: controlPopup.open
+
+                    ControlBackdrop {
+                        screen: bar.modelData
+                        onDismissed: controlPopup.close()
+                    }
                 }
 
             }

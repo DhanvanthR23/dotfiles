@@ -159,13 +159,6 @@ Singleton {
         blockLoading: true
     }
 
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: root.refreshInternal()
-    }
 
     Process {
         id: detector

@@ -5,6 +5,7 @@ import "../calendar"
 import "../control"
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 
 Scope {
     Variants {
@@ -33,6 +34,10 @@ Scope {
                 pill: controlPill
             }
 
+            IdleInhibitor {
+                window: bar
+                enabled: Idle.inhibited
+            }
 
             // qmllint disable unqualified
             margins {
@@ -79,27 +84,8 @@ Scope {
                     verticalCenter: parent.verticalCenter
                 }
 
-                StatPill {
-                    icon: "󰻠"
-                    value: Cpu.usage.toFixed(0) + "%"
-                    valueColor: Cpu.usage > 80 ? Theme.warn : Theme.text
-                    sample: "99%"
-                }
+                SystemPill { id: systemPill }
 
-                StatPill {
-                    icon: "󰍛"
-                    value: Ram.usedGb.toFixed(1) + "G"
-                    valueColor: Ram.usedPercent > 85 ? Theme.warn : Theme.text
-                    sample: "0.0G"
-                }
-
-                StatPill {
-                    visible: Updates.count > 0
-                    icon: "󰚰"
-                    value: String(Updates.count)
-                    valueColor: Updates.count >= 50 ? Theme.error : Updates.count >= 25 ? Theme.warn : Theme.text
-                    sample: "999"
-                }
 
                 ControlPill {
                     id: controlPill

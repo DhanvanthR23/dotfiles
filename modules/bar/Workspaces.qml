@@ -7,15 +7,22 @@ Pill {
     id: root
 
     property string screenName
+    readonly property real dotSize: 10
+    readonly property real focusedSize: 20
+    readonly property real dotGap: 6
+    readonly property int maxDots: 4
+    // room for 4 workspaces, so the pill stays put while they come and go
+    readonly property real fixedWidth: focusedSize + (maxDots - 1) * (dotSize + dotGap) + Theme.padding * 2
 
-    implicitWidth: row.implicitWidth + Theme.padding * 2
+    // never smaller than the fixed width, but grows if a 5th workspace ever shows up
+    implicitWidth: Math.max(fixedWidth, row.implicitWidth + Theme.padding * 2)
     hoverable: false
 
     Row {
         id: row
 
         anchors.centerIn: parent
-        spacing: 6
+        spacing: root.dotGap
 
         Repeater {
             model: Niri.workspaces
@@ -26,13 +33,13 @@ Pill {
                 required property var modelData
 
                 visible: modelData.output === root.screenName
-                width: modelData.focused ? 20 : 10
+                width: modelData.focused ? root.focusedSize : root.dotSize
                 height: root.height
 
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
-                    height: 10
+                    height: root.dotSize
                     radius: height / 2
                     color: dot.modelData.focused ? Theme.accent : dot.modelData.occupied ? Theme.textMuted : Theme.border
                 }
@@ -49,13 +56,8 @@ Pill {
                     NumberAnimation {
                         duration: Theme.animDuration
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

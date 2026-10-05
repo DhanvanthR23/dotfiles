@@ -10,7 +10,8 @@ PopupWindow {
     required property Item pill // the ClockPill
     readonly property int headerHeight: 32
     readonly property int stripHeight: 52
-    readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight
+    readonly property int mediaHeight: 36
+    readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight + (Media.available ? Theme.gap + mediaHeight : 0)
     // --- week strip data ---
     readonly property var today: Time.now
     property int weekOffset: 0
@@ -205,6 +206,61 @@ PopupWindow {
 
                     }
 
+                }
+                Item {
+                    visible: Media.available
+                    width: parent.width
+                    height: root.mediaHeight
+
+                    Column {
+                        anchors {
+                            left: parent.left
+                            right: controls.left
+                            rightMargin: Theme.gap
+                            verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
+                            width: parent.width
+                            text: Media.title
+                            color: Theme.text
+                            elide: Text.ElideRight
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontSmall
+                            font.bold: true
+                        }
+
+                        Text {
+                            width: parent.width
+                            text: Media.artist
+                            color: Theme.textMuted
+                            elide: Text.ElideRight
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontCaption
+                        }
+                    }
+
+                    Row {
+                        id: controls
+
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        ArrowButton {
+                            label: "󰒮"
+                            onClicked: Media.previous()
+                        }
+
+                        ArrowButton {
+                            label: Media.playing ? "󰏤" : "󰐊"
+                            onClicked: Media.toggle()
+                        }
+
+                        ArrowButton {
+                            label: "󰒭"
+                            onClicked: Media.next()
+                        }
+                    }
                 }
 
             }

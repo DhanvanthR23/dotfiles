@@ -149,6 +149,32 @@ PopupWindow {
 
                 }
 
+                Row {
+                    width: parent.width
+                    spacing: Theme.gap
+
+                    Tile {
+                        width: (parent.width - parent.spacing) / 2
+                        icon: "󰚰"
+                        title: "Updates"
+                        subtitle: Updates.checking ? "Checking..." : Updates.count === 0 ? "Up to date" : Updates.count + " available"
+                        active: Updates.count > 0
+                        tint: Updates.level === "critical" ? Theme.error : Updates.level === "warning" ? Theme.warn : Theme.accent
+                        onClicked: {
+                            Updates.run();
+                            root.close();
+                        }
+                    }
+                    Tile {
+                        width: (parent.width - parent.spacing) / 2
+                        icon: Idle.inhibited ? "󰅶" : "󰾪"
+                        title: "Keep awake"
+                        subtitle: Idle.inhibited ? "On" : "Off"
+                        active: Idle.inhibited
+                        onClicked: Idle.toggle()
+                    }
+                }
+
                 SliderRow {
                     width: parent.width
                     icon: Audio.icon

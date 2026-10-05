@@ -8,21 +8,23 @@ Rectangle {
     property string title
     property string subtitle
     property bool active: false
+    property color tint: Theme.accent
+
 
     signal clicked()
 
     implicitHeight: 52
     radius: Theme.radiusItem
-    color: active ? Theme.accent : Theme.surfaceAlt
     border.width: 1
-    border.color: active ? Theme.accent : hover.hovered ? Theme.accent : Theme.border
     scale: tap.pressed ? 0.96 : 1
+    color: active ? tint : Theme.surfaceAlt
+    border.color: active ? tint : hover.hovered ? tint : Theme.border
 
     Text {
         id: iconLabel
 
         text: root.icon
-        color: root.active ? Theme.bg : Theme.accent
+        color: root.active ? Theme.bg : root.tint
         font.family: Theme.iconFont
         font.pixelSize: Theme.iconSizeLarge
 

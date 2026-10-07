@@ -46,4 +46,8 @@ Singleton {
     readonly property int animFast: 120
     // hover/color/opacity
     readonly property int animPress: 80
+
+    readonly property int launcherWidth: 480
+    readonly property int animLauncher: 340
+    readonly property int animLauncherClose: 520
 }

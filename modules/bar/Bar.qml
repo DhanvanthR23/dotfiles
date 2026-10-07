@@ -3,6 +3,7 @@ import "../../config"
 import "../../services"
 import "../calendar"
 import "../control"
+import "../launcher"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -34,6 +35,13 @@ Scope {
                 pill: controlPill
             }
 
+            LauncherPopup {
+                id: launcherPopup
+
+                screen: bar.modelData
+                pill: launcherPill
+            }
+
             IdleInhibitor {
                 window: bar
                 enabled: Idle.inhibited
@@ -49,7 +57,8 @@ Scope {
 
             ClockPill {
                 id: clockPill
-
+                launcherExpand: launcherPopup.fade
+                opacity: launcherPopup.progress > 0.02 ? 0 : 1
                 anchors.centerIn: parent
                 expand: calendarPopup.progress
             }
@@ -61,7 +70,7 @@ Scope {
             }
 
             Row {
-                spacing: Theme.gap
+                spacing: 0
 
                 anchors {
                     right: clockPill.left
@@ -69,11 +78,25 @@ Scope {
                     verticalCenter: parent.verticalCenter
                 }
 
+                Item {
+                    id: launcherSlot
+
+                    width: (Theme.pillHeight + Theme.gap) * (1 - launcherPopup.travel)
+                    height: Theme.pillHeight
+
+                    LauncherPill {
+                        id: launcherPill
+
+                        opacity: launcherPopup.progress > 0.02 ? 0 : 1
+                        onClicked: launcherPopup.toggle()
+                    }
+                }
+
                 Workspaces {
                     screenName: bar.modelData.name
                 }
-
             }
+
 
             Row {
                 spacing: Theme.gap

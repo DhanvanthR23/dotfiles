@@ -9,4 +9,6 @@ Singleton {
 
     readonly property int idleScreenOff: 300 // seconds
     readonly property int idleLock: 600
+
+    readonly property string terminal: "foot"
 }

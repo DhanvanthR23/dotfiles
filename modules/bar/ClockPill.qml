@@ -10,7 +10,10 @@ Pill {
     property real expand: 0 // 0..1, driven by the calendar popup
     readonly property real idleWidth: clockLabel.implicitWidth + Theme.padding * 2
 
-    implicitWidth: toast ? Theme.toastWidth : idleWidth + (Theme.toastWidth - idleWidth) * expand
+    property real launcherExpand: 0 // 0..1, driven by the launcher popup
+    readonly property real baseWidth: toast ? Theme.toastWidth : idleWidth + (Theme.toastWidth - idleWidth) * expand
+
+    implicitWidth: baseWidth + (Theme.launcherWidth - baseWidth) * launcherExpand
     implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
@@ -114,7 +117,7 @@ Pill {
     }
 
     Behavior on implicitWidth {
-        enabled: root.expand === 0
+        enabled: root.expand === 0 && root.launcherExpand === 0
 
         NumberAnimation {
             duration: Theme.animDuration

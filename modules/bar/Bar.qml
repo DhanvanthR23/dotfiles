@@ -4,6 +4,7 @@ import "../../services"
 import "../calendar"
 import "../control"
 import "../launcher"
+import "../picker"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -42,6 +43,8 @@ Scope {
                 pill: launcherPill
             }
 
+            PickerPopup { screen: bar.modelData }
+
             IdleInhibitor {
                 window: bar
                 enabled: Idle.inhibited
@@ -61,6 +64,7 @@ Scope {
                 opacity: launcherPopup.progress > 0.02 ? 0 : 1
                 anchors.centerIn: parent
                 expand: calendarPopup.progress
+                onPickerRequested: Picker.toggle(bar.modelData.name)
             }
 
             CalendarPopup {

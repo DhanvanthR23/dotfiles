@@ -18,6 +18,8 @@ Pill {
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
 
+    signal pickerRequested()
+
     // normal state: the clock
     Text {
         id: clockLabel

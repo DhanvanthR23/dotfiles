@@ -32,6 +32,7 @@ PopupWindow {
     readonly property bool shown: open && !Notifs.toastVisible
     property real progress: shown ? 1 : 0
     readonly property real fade: Math.max(0, progress * 2 - 1) // 0 in the first half, ramps to 1 in the second
+    signal pickerRequested()
 
     onWantOpenChanged: {
         if (wantOpen) {
@@ -276,6 +277,12 @@ PopupWindow {
                 rightMargin: 4
             }
 
+        }
+
+        // temporary picker opener: right-click works while the calendar is expanded
+        TapHandler {
+            acceptedButtons: Qt.RightButton
+            onTapped: root.pill.pickerRequested()
         }
 
         HoverHandler {

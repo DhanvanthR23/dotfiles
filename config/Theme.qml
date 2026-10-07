@@ -1,23 +1,74 @@
 import QtQuick
 import Quickshell
 pragma Singleton
+import Quickshell.Io
 
 Singleton {
-    // press feedback
+    id: root
 
     // surfaces
-    readonly property color bg: "#191724"
-    readonly property color surface: "#1f1d2e"
-    readonly property color surfaceAlt: "#26233a"
-    readonly property color border: "#403d52"
+    property color bg: "#191724"
+    property color surface: "#1f1d2e"
+    property color surfaceAlt: "#26233a"
+    property color border: "#403d52"
     // text
-    readonly property color text: "#e0def4"
-    readonly property color textMuted: "#908caa"
+    property color text: "#e0def4"
+    property color textMuted: "#908caa"
     // accents
-    readonly property color accent: "#c4a7e7"
-    readonly property color ok: "#9ccfd8"
-    readonly property color warn: "#f6c177"
-    readonly property color error: "#eb6f92"
+    property color accent: "#c4a7e7"
+    property color ok: "#9ccfd8"
+    property color warn: "#f6c177"
+    property color error: "#eb6f92"
+
+    readonly property string confPath: (Quickshell.env("XDG_CONFIG_HOME") || Quickshell.env("HOME") + "/.config") + "/colors/colors.conf"
+
+    function reload() {
+        conf.reload();
+        applyConf();
+    }
+
+    function applyConf() {
+        const m = {};
+        for (const line of conf.text().split("\n")) {
+            const x = line.match(/^COLOR_([A-Z_]+)=([0-9a-fA-F]{6})/);
+            if (x)
+                m[x[1]] = "#" + x[2];
+        }
+        if (m.BG) bg = m.BG;
+        if (m.SURFACE) surface = m.SURFACE;
+        if (m.OVERLAY) surfaceAlt = m.OVERLAY;
+        if (m.BORDER) border = m.BORDER;
+        if (m.FG) text = m.FG;
+        if (m.FG_SUBTLE) textMuted = m.FG_SUBTLE;
+        if (m.IRIS) accent = m.IRIS;
+        if (m.FOAM) ok = m.FOAM;
+        if (m.GOLD) warn = m.GOLD;
+        if (m.RED) error = m.RED;
+    }
+
+    Component.onCompleted: applyConf()
+
+    FileView {
+        id: conf
+
+        path: root.confPath
+        blockLoading: true
+        watchChanges: true
+        printErrors: false
+        onFileChanged: {
+            reload();
+            root.applyConf();
+        }
+    }
+
+        IpcHandler {
+            target: "theme"
+
+            function reload(): void {
+                root.reload();
+            }
+        }
+
     // font
     readonly property string iconFont: "JetBrainsMono Nerd Font"
     readonly property string fontFamily: "Google Sans Flex"

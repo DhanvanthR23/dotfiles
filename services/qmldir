@@ -15,3 +15,4 @@ singleton Media 1.0 Media.qml
 singleton Launcher 1.0 Launcher.qml
 singleton Themes 1.0 Themes.qml
 singleton Picker 1.0 Picker.qml
+singleton Session 1.0 Session.qml

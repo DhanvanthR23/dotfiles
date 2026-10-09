@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Bluetooth
 pragma Singleton
+import "../config"
 
 Singleton {
     id: root
@@ -21,6 +22,9 @@ Singleton {
         if (adapter)
             adapter.enabled = !adapter.enabled;
 
+    }
+    function openManager() {
+        Quickshell.execDetached([Settings.terminal, "--app-id", "bluetui", "-e", "bluetui"]);
     }
 
 }

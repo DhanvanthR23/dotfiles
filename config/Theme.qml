@@ -101,4 +101,6 @@ Singleton {
     readonly property int launcherWidth: 480
     readonly property int animLauncher: 340
     readonly property int animLauncherClose: 520
+
+    readonly property int sessionWidth: 260
 }

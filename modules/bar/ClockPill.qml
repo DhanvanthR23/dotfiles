@@ -13,7 +13,10 @@ Pill {
     property real launcherExpand: 0 // 0..1, driven by the launcher popup
     readonly property real baseWidth: toast ? Theme.toastWidth : idleWidth + (Theme.toastWidth - idleWidth) * expand
 
-    implicitWidth: baseWidth + (Theme.launcherWidth - baseWidth) * launcherExpand
+    property real sessionExpand: 0 // 0..1, driven by the session popup
+    readonly property real preSessionWidth: baseWidth + (Theme.launcherWidth - baseWidth) * launcherExpand
+
+    implicitWidth: preSessionWidth + (Theme.sessionWidth - preSessionWidth) * sessionExpand
     implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
@@ -119,7 +122,7 @@ Pill {
     }
 
     Behavior on implicitWidth {
-        enabled: root.expand === 0 && root.launcherExpand === 0
+        enabled: root.expand === 0 && root.launcherExpand === 0 && root.sessionExpand === 0
 
         NumberAnimation {
             duration: Theme.animDuration

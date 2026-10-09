@@ -38,10 +38,12 @@ PanelWindow {
             const n = Themes.themes.length;
             if (n > 0)
                 ti = (ti + d + n) % n;
+
         } else {
             const n = Themes.wallpapers.length;
             if (n > 0)
                 wi = Math.max(0, Math.min(n - 1, wi + d));
+
         }
     }
 
@@ -60,6 +62,7 @@ PanelWindow {
             const w = Themes.wallpapers[wi];
             if (w)
                 Themes.setWallpaper(w.path);
+
         }
     }
 
@@ -72,14 +75,6 @@ PanelWindow {
     Component.onCompleted: {
         syncThemes();
         syncWalls();
-    }
-
-    Behavior on bodyHeight {
-        NumberAnimation {
-            duration: Theme.animDuration
-            easing.type: Easing.OutCubic
-        }
-
     }
 
     Connections {
@@ -330,6 +325,7 @@ PanelWindow {
                             sourceSize.height: 180
                             fillMode: Image.PreserveAspectCrop
                             asynchronous: true
+                            cache: false
                         }
 
                         // border on top so the rounded thumb fills the whole cell
@@ -351,6 +347,7 @@ PanelWindow {
                                 root.activate();
                             }
                         }
+
                     }
 
                 }
@@ -366,6 +363,14 @@ PanelWindow {
 
             }
 
+        }
+
+    }
+
+    Behavior on bodyHeight {
+        NumberAnimation {
+            duration: Theme.animDuration
+            easing.type: Easing.OutCubic
         }
 
     }

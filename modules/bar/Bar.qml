@@ -5,6 +5,7 @@ import "../calendar"
 import "../control"
 import "../launcher"
 import "../picker"
+import "../session"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -45,6 +46,13 @@ Scope {
 
             PickerPopup { screen: bar.modelData }
 
+            SessionPopup {
+                id: sessionPopup
+
+                screen: bar.modelData
+                pill: clockPill
+            }
+
             IdleInhibitor {
                 window: bar
                 enabled: Idle.inhibited
@@ -61,7 +69,8 @@ Scope {
             ClockPill {
                 id: clockPill
                 launcherExpand: launcherPopup.fade
-                opacity: launcherPopup.progress > 0.02 ? 0 : 1
+                sessionExpand: sessionPopup.progress
+                opacity: launcherPopup.progress > 0.02 || sessionPopup.progress > 0.02 ? 0 : 1
                 anchors.centerIn: parent
                 expand: calendarPopup.progress
                 onPickerRequested: Picker.toggle(bar.modelData.name)

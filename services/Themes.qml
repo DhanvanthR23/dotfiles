@@ -1,8 +1,8 @@
+import "../config"
 import QtQuick
 import Quickshell
 import Quickshell.Io
 pragma Singleton
-import "../config"
 
 Singleton {
     id: root
@@ -17,6 +17,7 @@ Singleton {
     property bool wallsDirty: false
     property string current: ""
     property string currentWall: ""
+    property string queued: ""
 
     function pretty(slug) {
         return slug.split("-").map((w) => {
@@ -39,6 +40,7 @@ Singleton {
         currentWall = readState(wallFile);
         if (!lister.running)
             lister.running = true;
+
         loadWallpapers();
     }
 
@@ -56,8 +58,6 @@ Singleton {
         walls.running = true;
     }
 
-    property string queued: ""
-
     function apply(slug) {
         current = slug;
         loadWallpapers();
@@ -69,12 +69,19 @@ Singleton {
         setter.running = true;
     }
 
+    function setWallpaper(path) {
+        currentWall = path;
+        Quickshell.execDetached(["awww", "img", path, "--transition-type", "fade", "--transition-duration", "1"]);
+        wallFile.setText(path + "\n");
+    }
+
     Process {
         id: setter
 
         onRunningChanged: {
             if (running)
                 return ;
+
             Theme.reload();
             root.currentWall = root.readState(wallFile);
             if (root.queued !== "") {
@@ -83,12 +90,6 @@ Singleton {
                 root.apply(s);
             }
         }
-    }
-
-    function setWallpaper(path) {
-        currentWall = path;
-        Quickshell.execDetached(["awww", "img", path, "--transition-type", "fade", "--transition-duration", "1"]);
-        wallFile.setText(path + "\n");
     }
 
     FileView {
@@ -107,14 +108,6 @@ Singleton {
         printErrors: false
     }
 
-    // set-theme.fish picks a random wallpaper, read it back once it's done
-    Timer {
-        id: settle
-
-        interval: 1500
-        onTriggered: root.currentWall = root.readState(wallFile)
-    }
-
     // one rg call over all theme files -> name + 5 swatch colors each
     Process {
         id: lister
@@ -130,6 +123,7 @@ Singleton {
                     const m = line.match(/([^\/]+)\.conf:COLOR_([A-Z]+)=([0-9a-fA-F]{6})/);
                     if (!m)
                         continue;
+
                     if (!by[m[1]]) {
                         by[m[1]] = {
                         };
@@ -168,9 +162,9 @@ Singleton {
                     const p = line.split("\t");
                     if (p.length === 2)
                         out.push({
-                            "path": p[0],
-                            "thumb": p[1]
-                        });
+                        "path": p[0],
+                        "thumb": p[1]
+                    });
 
                 }
                 root.wallpapers = out;

@@ -112,6 +112,10 @@ PopupWindow {
                         subtitle: Net.label
                         active: Net.wifiOn
                         onClicked: Net.toggleWifi()
+                        onRightClicked: {
+                            Net.openManager();
+                            root.close();
+                        }
                     }
 
                     Tile {
@@ -121,6 +125,10 @@ PopupWindow {
                         subtitle: Bt.label
                         active: Bt.enabled
                         onClicked: Bt.toggle()
+                        onRightClicked: {
+                            Bt.openManager();
+                            root.close();
+                        }
                     }
 
                 }

@@ -12,6 +12,7 @@ Rectangle {
 
 
     signal clicked()
+    signal rightClicked()
 
     implicitHeight: 52
     radius: Theme.radiusItem
@@ -76,6 +77,10 @@ Rectangle {
         id: tap
 
         onTapped: root.clicked()
+    }
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+        onTapped: root.rightClicked()
     }
 
     Behavior on color {

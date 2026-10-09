@@ -9,10 +9,8 @@ Pill {
     readonly property bool toast: Notifs.toastVisible
     property real expand: 0 // 0..1, driven by the calendar popup
     readonly property real idleWidth: clockLabel.implicitWidth + Theme.padding * 2
-
     property real launcherExpand: 0 // 0..1, driven by the launcher popup
     readonly property real baseWidth: toast ? Theme.toastWidth : idleWidth + (Theme.toastWidth - idleWidth) * expand
-
     property real sessionExpand: 0 // 0..1, driven by the session popup
     readonly property real preSessionWidth: baseWidth + (Theme.launcherWidth - baseWidth) * launcherExpand
 
@@ -20,8 +18,6 @@ Pill {
     implicitHeight: toast ? Theme.toastHeight : Theme.pillHeight
     border.color: toast && Notifs.toastCritical ? Theme.error : Theme.border
     clip: true
-
-    signal pickerRequested()
 
     // normal state: the clock
     Text {
@@ -83,12 +79,46 @@ Pill {
             }
 
             Text {
+                id: toastBody
+
+                visible: Notifs.toastProgress < 0
                 width: parent.width
                 text: Notifs.toastBody
                 color: Theme.textMuted
                 elide: Text.ElideRight
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontCaption
+            }
+
+            Item {
+                visible: Notifs.toastProgress >= 0
+                width: parent.width
+                height: toastBody.implicitHeight
+
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width
+                    height: 4
+                    radius: 2
+                    color: Theme.border
+
+                    Rectangle {
+                        width: parent.width * Math.max(0, Math.min(1, Notifs.toastProgress))
+                        height: parent.height
+                        radius: parent.radius
+                        color: Theme.accent
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: Theme.animPress
+                            }
+
+                        }
+
+                    }
+
+                }
+
             }
 
         }

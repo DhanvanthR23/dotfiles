@@ -20,21 +20,25 @@ Singleton {
     function toggle() {
         if (player && player.canTogglePlaying)
             player.togglePlaying();
+
     }
 
     function next() {
         if (player && player.canGoNext)
             player.next();
+
     }
 
     function previous() {
         if (player && player.canGoPrevious)
             player.previous();
+
     }
 
     // track change -> toast on the clock pill (only while actually playing)
     onTrackKeyChanged: {
         if (trackKey !== "" && playing)
             Notifs.show("Media", title, artist, 0, 3000);
+
     }
 }

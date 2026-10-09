@@ -56,8 +56,13 @@ Pill {
                     NumberAnimation {
                         duration: Theme.animDuration
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }

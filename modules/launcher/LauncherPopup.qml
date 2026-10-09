@@ -11,15 +11,15 @@ Scope {
     property bool open: false
     property real startX: 0 // screen x of the pill when it was clicked
     property real progress: open ? 1 : 0
-    // first half: travel to center, second half: expand
 
     function smooth(t) {
         const c = Math.max(0, Math.min(1, t));
         return c * c * (3 - 2 * c); // smoothstep: zero speed at both ends
     }
 
-    readonly property real travel: smooth(progress / 0.65)
-    readonly property real fade: smooth((progress - 0.35) / 0.65)
+    // first half: travel to center, second half: expand
+    readonly property real travel: smooth(progress / 0.8)
+    readonly property real fade: smooth((progress - 0.2) / 0.8)
 
 
 
@@ -52,6 +52,15 @@ Scope {
         LauncherOverlay {
             popup: root
             screen: root.screen
+        }
+    }
+
+    Connections {
+        target: Ipc
+
+        function onLauncherToggle(name) {
+            if (name === root.screen.name)
+                root.toggle();
         }
     }
 }

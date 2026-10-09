@@ -11,11 +11,13 @@ Singleton {
     property string toastSummary: ""
     property string toastBody: ""
     property int toastUrgency: 1
+    property real toastProgress: -1 // -1 = no bar, 0..1 = show a bar
     readonly property bool toastCritical: toastUrgency === NotificationUrgency.Critical
     readonly property bool toastLow: toastUrgency === NotificationUrgency.Low
     readonly property var all: server.trackedNotifications
     readonly property int count: all.values.length
     readonly property var newestFirst: all.values.slice().reverse()
+    property bool dnd: false
 
     function isCritical(n) {
         return n.urgency === NotificationUrgency.Critical;
@@ -47,11 +49,12 @@ Singleton {
         return 2500;
     }
 
-    function show(app, summary, body, urgency, timeout) {
+    function show(app, summary, body, urgency, timeout, progress) {
         toastApp = app;
         toastSummary = summary;
         toastBody = body;
         toastUrgency = urgency;
+        toastProgress = progress === undefined ? -1 : progress;
         hideTimer.interval = durationFor(timeout, urgency);
         hideTimer.restart();
         toastVisible = true;
@@ -69,7 +72,9 @@ Singleton {
         actionsSupported: true
         imageSupported: true
         onNotification: (notification) => {
-            notification.tracked = true;
+            notification.tracked = true; // always keep it in the list
+            if (root.dnd && notification.urgency !== NotificationUrgency.Critical)
+                return;
             root.show(notification.appName, notification.summary, notification.body, notification.urgency, notification.expireTimeout);
         }
     }

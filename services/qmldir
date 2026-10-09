@@ -16,3 +16,7 @@ singleton Launcher 1.0 Launcher.qml
 singleton Themes 1.0 Themes.qml
 singleton Picker 1.0 Picker.qml
 singleton Session 1.0 Session.qml
+singleton Osd 1.0 Osd.qml
+singleton Clip 1.0 Clip.qml
+singleton Ipc 1.0 Ipc.qml
+singleton GameMode 1.0 GameMode.qml

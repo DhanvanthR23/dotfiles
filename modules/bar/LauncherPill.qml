@@ -22,7 +22,9 @@ Pill {
             ColorAnimation {
                 duration: Theme.animFast
             }
+
         }
+
     }
 
     HoverHandler {
@@ -32,4 +34,5 @@ Pill {
     TapHandler {
         onTapped: root.clicked()
     }
+
 }

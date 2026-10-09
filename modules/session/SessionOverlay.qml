@@ -21,13 +21,6 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: popup.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
-    Behavior on bodyHeight {
-        NumberAnimation {
-            duration: Theme.animDuration
-            easing.type: Easing.OutCubic
-        }
-    }
-
     anchors {
         top: true
         bottom: true
@@ -106,6 +99,7 @@ PanelWindow {
                 font: input.font
                 anchors.verticalCenter: parent.verticalCenter
             }
+
         }
 
         // fixed width, centered, so the card's growth reveals it
@@ -134,7 +128,9 @@ PanelWindow {
                         duration: Theme.animFast
                         easing.type: Easing.OutCubic
                     }
+
                 }
+
             }
 
             Text {
@@ -182,8 +178,21 @@ PanelWindow {
                             Session.activateSelected();
                         }
                     }
+
                 }
+
             }
+
         }
+
     }
+
+    Behavior on bodyHeight {
+        NumberAnimation {
+            duration: Theme.animDuration
+            easing.type: Easing.OutCubic
+        }
+
+    }
+
 }

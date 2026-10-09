@@ -28,5 +28,7 @@ PanelWindow {
             acceptedButtons: Qt.AllButtons
             onClicked: root.dismissed()
         }
+
     }
+
 }

@@ -8,6 +8,7 @@ PopupWindow {
     id: root
 
     required property Item pill
+    required property string screenName
     readonly property int cardWidth: Theme.popupWidth
     readonly property int contentHeight: body.implicitHeight + Theme.padding * 2
     // --- open/close ---
@@ -183,6 +184,34 @@ PopupWindow {
                     }
                 }
 
+                Row {
+                    width: parent.width
+                    spacing: Theme.gap
+
+                    Tile {
+                        width: (parent.width - parent.spacing) / 2
+                        icon: Notifs.dnd ? "\udb80\udc9b" : "\udb80\udc9a" // bell-off / bell
+                        title: "Do not disturb"
+                        subtitle: Notifs.dnd ? "On" : "Off"
+                        active: Notifs.dnd
+                        onClicked: Notifs.dnd = !Notifs.dnd
+                    }
+
+                    Tile {
+                        width: (parent.width - parent.spacing) / 2
+                        icon: "󰊗"
+                        title: "Game mode"
+                        subtitle: GameMode.active ? "On" : "Off"
+                        active: GameMode.active
+                        onClicked: GameMode.active = !GameMode.active
+                    }
+                }
+
+                TrayRow {
+                    width: parent.width
+                    active: root.open
+                }
+
                 SliderRow {
                     width: parent.width
                     icon: Audio.icon
@@ -224,4 +253,12 @@ PopupWindow {
         item: card
     }
 
+    Connections {
+        target: Ipc
+
+        function onControlToggle(name) {
+            if (name === root.screenName)
+                root.toggle();
+        }
+    }
 }

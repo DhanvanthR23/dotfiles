@@ -63,9 +63,9 @@ Singleton {
 
         command: ["foot", "-e", "bash", "-c", "paru -Syu --sudoloop; echo; echo '  Done. Press any key to close.'; read -n1"]
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 root.check(true);
-            }
+
         }
     }
 

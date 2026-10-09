@@ -2,6 +2,7 @@ import "../../components"
 import "../../config"
 import "../../services"
 import "../calendar"
+import "../clipboard"
 import "../control"
 import "../launcher"
 import "../picker"
@@ -15,6 +16,7 @@ Scope {
         model: Quickshell.screens
 
         PanelWindow {
+            // qmllint enable unqualified
             // qmllint enable unqualified
 
             id: bar
@@ -35,6 +37,7 @@ Scope {
                 id: controlPopup
 
                 pill: controlPill
+                screenName: bar.modelData.name
             }
 
             LauncherPopup {
@@ -44,11 +47,18 @@ Scope {
                 pill: launcherPill
             }
 
-            PickerPopup { screen: bar.modelData }
+            PickerPopup {
+                screen: bar.modelData
+            }
 
             SessionPopup {
                 id: sessionPopup
 
+                screen: bar.modelData
+                pill: clockPill
+            }
+
+            ClipPopup {
                 screen: bar.modelData
                 pill: clockPill
             }
@@ -64,16 +74,15 @@ Scope {
                 left: Theme.gap
                 right: Theme.gap
             }
-            // qmllint enable unqualified
 
             ClockPill {
                 id: clockPill
+
                 launcherExpand: launcherPopup.fade
                 sessionExpand: sessionPopup.progress
                 opacity: launcherPopup.progress > 0.02 || sessionPopup.progress > 0.02 ? 0 : 1
                 anchors.centerIn: parent
                 expand: calendarPopup.progress
-                onPickerRequested: Picker.toggle(bar.modelData.name)
             }
 
             CalendarPopup {
@@ -103,13 +112,14 @@ Scope {
                         opacity: launcherPopup.progress > 0.02 ? 0 : 1
                         onClicked: launcherPopup.toggle()
                     }
+
                 }
 
                 Workspaces {
                     screenName: bar.modelData.name
                 }
-            }
 
+            }
 
             Row {
                 spacing: Theme.gap
@@ -120,8 +130,9 @@ Scope {
                     verticalCenter: parent.verticalCenter
                 }
 
-                SystemPill { id: systemPill }
-
+                SystemPill {
+                    id: systemPill
+                }
 
                 ControlPill {
                     id: controlPill
@@ -138,6 +149,7 @@ Scope {
                         screen: bar.modelData
                         onDismissed: controlPopup.close()
                     }
+
                 }
 
             }

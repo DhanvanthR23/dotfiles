@@ -48,27 +48,6 @@ Singleton {
 
     Component.onCompleted: applyConf()
 
-    FileView {
-        id: conf
-
-        path: root.confPath
-        blockLoading: true
-        watchChanges: true
-        printErrors: false
-        onFileChanged: {
-            reload();
-            root.applyConf();
-        }
-    }
-
-        IpcHandler {
-            target: "theme"
-
-            function reload(): void {
-                root.reload();
-            }
-        }
-
     // font
     readonly property string iconFont: "JetBrainsMono Nerd Font"
     readonly property string fontFamily: "Google Sans Flex"
@@ -77,7 +56,7 @@ Singleton {
     readonly property int pillHeight: 28
     readonly property int toastWidth: 340
     readonly property int toastHeight: 40
-    readonly property int animDuration: 180
+
     // sizes
     readonly property int radius: 16
     // cards
@@ -93,14 +72,29 @@ Singleton {
     readonly property int fontCaption: fontSize - 3
     readonly property int iconSize: fontSize + 4
     readonly property int iconSizeLarge: fontSize + 6
-    // motion
-    readonly property int animFast: 120
-    // hover/color/opacity
-    readonly property int animPress: 80
 
     readonly property int launcherWidth: 480
-    readonly property int animLauncher: 340
-    readonly property int animLauncherClose: 520
-
     readonly property int sessionWidth: 260
+
+    property bool reduceMotion: false
+
+    readonly property int animDuration: reduceMotion ? 0 : 180
+    readonly property int animFast: reduceMotion ? 0 : 120
+    readonly property int animPress: reduceMotion ? 0 : 80
+    readonly property int animLauncher: reduceMotion ? 0 : 220
+    readonly property int animLauncherClose: reduceMotion ? 0 : 300
+
+    FileView {
+        id: conf
+
+        path: root.confPath
+        blockLoading: true
+        watchChanges: true
+        printErrors: false
+        onFileChanged: {
+            reload();
+            root.applyConf();
+        }
+    }
+
 }

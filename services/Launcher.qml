@@ -95,8 +95,6 @@ Singleton {
         return out;
     }
 
-    // 3 = name starts with, 2 = name contains, 1 = generic name / keywords contain
-
     function activate(item) {
         if (item.kind === "app") {
             bump(item.entry.id);
@@ -131,4 +129,5 @@ Singleton {
         launches = next; // replace, don't mutate
         store.setText(JSON.stringify(next));
     }
+
 }

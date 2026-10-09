@@ -1,7 +1,6 @@
 import "../config"
 import QtQuick
 import Quickshell
-import Quickshell.Io
 pragma Singleton
 
 Singleton {
@@ -59,12 +58,4 @@ Singleton {
 
     onQueryChanged: selected = 0
 
-    // qs ipc call session toggle | show | hide
-    IpcHandler {
-        target: "session"
-
-        function toggle(): void { root.toggle(""); }
-        function show(): void { root.show(""); }
-        function hide(): void { root.hide(); }
-    }
 }

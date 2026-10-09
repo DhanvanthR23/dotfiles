@@ -10,7 +10,6 @@ Rectangle {
     property bool active: false
     property color tint: Theme.accent
 
-
     signal clicked()
     signal rightClicked()
 
@@ -78,6 +77,7 @@ Rectangle {
 
         onTapped: root.clicked()
     }
+
     TapHandler {
         acceptedButtons: Qt.RightButton
         onTapped: root.rightClicked()

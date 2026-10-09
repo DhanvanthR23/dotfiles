@@ -34,4 +34,5 @@ Row {
         font.family: Theme.fontFamily
         font.pixelSize: Theme.fontSize
     }
+
 }

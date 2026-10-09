@@ -64,12 +64,4 @@ Singleton {
         }
     }
 
-    // lets the Niri keybind reach the shell: qs ipc call idle toggle
-    IpcHandler {
-        target: "idle"
-
-        function toggle(): void {
-            root.toggle();
-        }
-    }
 }

@@ -1,8 +1,8 @@
+import "../config"
 import QtQuick
 import Quickshell
 import Quickshell.Networking
 pragma Singleton
-import "../config"
 
 Singleton {
     id: root
@@ -29,6 +29,7 @@ Singleton {
     function toggleWifi() {
         Networking.wifiEnabled = !Networking.wifiEnabled;
     }
+
     function openManager() {
         Quickshell.execDetached([Settings.terminal, "--app-id", "wlctl", "-e", "wlctl"]);
     }

@@ -32,7 +32,6 @@ PopupWindow {
     readonly property bool shown: open && !Notifs.toastVisible
     property real progress: shown ? 1 : 0
     readonly property real fade: Math.max(0, progress * 2 - 1) // 0 in the first half, ramps to 1 in the second
-    signal pickerRequested()
 
     onWantOpenChanged: {
         if (wantOpen) {
@@ -43,9 +42,9 @@ PopupWindow {
         }
     }
     onProgressChanged: {
-        if (progress === 0) {
+        if (progress === 0)
             weekOffset = 0;
-        }
+
     }
     // window sits exactly on top of the pill, card grows downward from there
     anchor.item: pill
@@ -208,6 +207,7 @@ PopupWindow {
                     }
 
                 }
+
                 Item {
                     visible: Media.available
                     width: parent.width
@@ -239,6 +239,7 @@ PopupWindow {
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontCaption
                         }
+
                     }
 
                     Row {
@@ -261,7 +262,9 @@ PopupWindow {
                             label: "󰒭"
                             onClicked: Media.next()
                         }
+
                     }
+
                 }
 
             }
@@ -279,12 +282,6 @@ PopupWindow {
 
         }
 
-        // temporary picker opener: right-click works while the calendar is expanded
-        TapHandler {
-            acceptedButtons: Qt.RightButton
-            onTapped: root.pill.pickerRequested()
-        }
-
         HoverHandler {
             id: popupHover
         }
@@ -298,7 +295,6 @@ PopupWindow {
         }
 
     }
-    // reset week only once fully collapsed, so it doesn't jump mid-animation
 
     // only the card catches the mouse, transparent window area doesn't block other pills
     mask: Region {

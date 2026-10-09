@@ -8,14 +8,14 @@ Scope {
 
     required property var screen
     required property var pill
-    readonly property bool open: Session.open && Session.screenName === screen.name
+    readonly property bool open: Clip.open && Clip.screenName === screen.name
     property real progress: open ? 1 : 0
 
     // stays alive while shrinking
     LazyLoader {
         active: root.open || root.progress > 0
 
-        SessionOverlay {
+        ClipOverlay {
             popup: root
             screen: root.screen
         }

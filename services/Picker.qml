@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Niri
 pragma Singleton
 
@@ -39,23 +38,6 @@ Singleton {
             hide();
         else
             show(name);
-    }
-
-    // qs ipc call picker toggle | show | hide
-    IpcHandler {
-        target: "picker"
-
-        function toggle(): void {
-            root.toggle("");
-        }
-
-        function show(): void {
-            root.show("");
-        }
-
-        function hide(): void {
-            root.hide();
-        }
     }
 
 }

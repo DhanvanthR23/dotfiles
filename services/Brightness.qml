@@ -159,7 +159,6 @@ Singleton {
         blockLoading: true
     }
 
-
     Process {
         id: detector
 
@@ -221,9 +220,9 @@ Singleton {
         id: setter
 
         onRunningChanged: {
-            if (!running) {
+            if (!running)
                 root.flush();
-            }
+
         }
     }
 

@@ -8,12 +8,13 @@ PanelWindow {
     id: root
 
     required property var popup
+    readonly property int cardWidth: Theme.launcherWidth
     readonly property int rowHeight: 32
-    readonly property int topPad: 4
     readonly property int rowGap: 4
-    readonly property int count: Launcher.results.length
+    readonly property int count: Clip.results.length
     readonly property real listHeight: count > 0 ? count * rowHeight + (count - 1) * rowGap : rowHeight
-    property real bodyHeight: listHeight + Theme.padding * 2
+    readonly property real fade: Math.max(0, popup.progress * 2 - 1)
+    property real bodyHeight: listHeight
 
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
@@ -31,17 +32,19 @@ PanelWindow {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        onClicked: root.popup.close()
+        onClicked: Clip.hide()
     }
 
     Rectangle {
         id: card
 
-        // sits exactly where the clock pill sits
+        readonly property real startWidth: root.popup.pill.idleWidth
+
+        // grows out of the clock pill, downward
         y: Theme.gap + (Theme.barHeight - Theme.pillHeight) / 2
-        x: root.popup.startX + ((root.width - width) / 2 - root.popup.startX) * root.popup.travel
-        width: Theme.pillHeight + (Theme.launcherWidth - Theme.pillHeight) * root.popup.fade
-        height: Theme.pillHeight + (root.bodyHeight + root.topPad) * root.popup.fade
+        x: (root.width - width) / 2
+        width: startWidth + (root.cardWidth - startWidth) * root.popup.progress
+        height: Theme.pillHeight + (root.bodyHeight + Theme.padding * 2) * root.popup.progress
         radius: Math.min(height / 2, Theme.radius)
         color: Theme.surface
         border.width: 1
@@ -51,20 +54,16 @@ PanelWindow {
         // swallow clicks so they don't reach the backdrop
         MouseArea {
             anchors.fill: parent
-            enabled: root.popup.open
             acceptedButtons: Qt.AllButtons
-            onClicked: root.popup.close()
         }
 
         Text {
             id: glyph
 
             height: Theme.pillHeight
-            // centered while it's a circle, left-aligned once expanded
-            x: (card.width - width) / 2 * (1 - root.popup.fade) + Theme.padding * root.popup.fade
-            y: root.topPad * root.popup.fade
+            x: (card.width - width) / 2 * (1 - root.popup.progress) + Theme.padding * root.popup.progress
             verticalAlignment: Text.AlignVCenter
-            text: "󰍉"
+            text: "\udb80\udd47" // nf-md-clipboard
             color: Theme.accent
             font.family: Theme.iconFont
             font.pixelSize: Theme.fontSize
@@ -74,37 +73,29 @@ PanelWindow {
             id: input
 
             x: Theme.padding + glyph.width + Theme.gap
-            y: root.topPad * root.popup.fade
             width: card.width - x - Theme.padding
             height: Theme.pillHeight
             verticalAlignment: TextInput.AlignVCenter
-            opacity: root.popup.fade
+            opacity: root.fade
             focus: true
             color: Theme.text
             selectionColor: Theme.accent
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSize
             clip: true
-            onTextChanged: Launcher.query = text
-            Keys.onEscapePressed: root.popup.close()
-            Keys.onDownPressed: Launcher.move(1)
-            Keys.onUpPressed: Launcher.move(-1)
-            Keys.onTabPressed: Launcher.move(1)
-            Keys.onBacktabPressed: Launcher.move(-1)
-            Keys.onReturnPressed: {
-                if (Launcher.activateSelected())
-                    root.popup.close();
-
-            }
-            Keys.onEnterPressed: {
-                if (Launcher.activateSelected())
-                    root.popup.close();
-
-            }
+            onTextChanged: Clip.query = text
+            Keys.onEscapePressed: Clip.hide()
+            Keys.onDownPressed: Clip.move(1)
+            Keys.onUpPressed: Clip.move(-1)
+            Keys.onTabPressed: Clip.move(1)
+            Keys.onBacktabPressed: Clip.move(-1)
+            Keys.onReturnPressed: Clip.activateSelected()
+            Keys.onEnterPressed: Clip.activateSelected()
+            Keys.onDeletePressed: Clip.deleteSelected()
 
             Text {
                 visible: input.text === ""
-                text: "Search apps or calculate…"
+                text: "clipboard…"
                 color: Theme.textMuted
                 font: input.font
                 anchors.verticalCenter: parent.verticalCenter
@@ -112,22 +103,22 @@ PanelWindow {
 
         }
 
-        // results body: fixed width, centered, so the card's growth reveals it
+        // fixed width, centered, so the card's growth reveals it
         Item {
             id: body
 
-            width: Theme.launcherWidth - Theme.padding * 2
+            width: root.cardWidth - Theme.padding * 2
             height: root.listHeight
             x: (card.width - width) / 2
-            y: Theme.pillHeight + Theme.padding + root.topPad * root.popup.fade
-            opacity: root.popup.fade
+            y: Theme.pillHeight + Theme.padding
+            opacity: root.fade
 
             // sliding selection highlight
             Rectangle {
                 visible: root.count > 0
                 width: parent.width
                 height: root.rowHeight
-                y: Launcher.selected * (root.rowHeight + root.rowGap)
+                y: Clip.selected * (root.rowHeight + root.rowGap)
                 radius: Theme.radiusSmall
                 color: Theme.surfaceAlt
                 border.width: 1
@@ -144,19 +135,19 @@ PanelWindow {
             }
 
             Text {
-                visible: root.count === 0
+                visible: root.count === 0 && !Clip.loading
                 width: parent.width
                 height: root.rowHeight
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: "No results"
+                text: Clip.needle === "" ? "Clipboard is empty" : "No match"
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSmall
             }
 
             Repeater {
-                model: Launcher.results
+                model: Clip.results
 
                 Item {
                     id: row
@@ -169,8 +160,9 @@ PanelWindow {
                     height: root.rowHeight
 
                     Text {
-                        text: row.modelData.kind === "calc" ? "= " + row.modelData.title : row.modelData.title
-                        color: row.modelData.kind === "calc" ? Theme.accent : Theme.text
+                        text: row.modelData.text
+                        // image entries show up as "[[ binary data ... ]]"
+                        color: row.modelData.text.startsWith("[[ binary data") ? Theme.textMuted : Theme.text
                         elide: Text.ElideRight
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSmall
@@ -178,25 +170,6 @@ PanelWindow {
                         anchors {
                             left: parent.left
                             leftMargin: Theme.padding
-                            right: sub.left
-                            rightMargin: Theme.gap
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                    }
-
-                    Text {
-                        id: sub
-
-                        width: Math.min(implicitWidth, row.width * 0.4)
-                        horizontalAlignment: Text.AlignRight
-                        text: row.modelData.subtitle
-                        color: Theme.textMuted
-                        elide: Text.ElideRight
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontCaption
-
-                        anchors {
                             right: parent.right
                             rightMargin: Theme.padding
                             verticalCenter: parent.verticalCenter
@@ -208,10 +181,10 @@ PanelWindow {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onPositionChanged: Launcher.selected = row.index
+                        onPositionChanged: Clip.selected = row.index
                         onClicked: {
-                            Launcher.activate(row.modelData);
-                            root.popup.close();
+                            Clip.selected = row.index;
+                            Clip.activateSelected();
                         }
                     }
 

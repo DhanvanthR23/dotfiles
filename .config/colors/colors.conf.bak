@@ -1,0 +1,125 @@
+# ~/.config/colors/colors.conf
+# ═══════════════════════════════════════════════════════════════════════════════
+# Semantic Color Roles — Rosé Pine
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+#   Base        Primary background
+#               Editor / document background
+#               Main application panels, e.g. sidebars, file trees
+#               Colour against which semi-transparent elements are composited
+#
+#   Surface     Secondary background atop base
+#               Floating panels, e.g. popups, autocomplete menus, notifications
+#               Input fields, e.g. search bars, command palettes
+#               Status bars, title bars
+#
+#   Overlay     Tertiary background atop surface
+#               Active / hovered list items, tabs, sidebar entries
+#               Visual selection highlight
+#               Search match backgrounds
+#               Elevated surfaces, e.g. tooltips, dialogs
+#               Terminal black
+#
+#   Highlight High   High contrast highlight
+#                    Borders, visual dividers, separators
+#                    Cursor background
+#                    Search / incremental search match background
+#
+#   Highlight Med    Medium contrast highlight
+#                    Text selection background
+#                    Active / hovered popup menu item background
+#
+#   Highlight Low    Low contrast highlight
+#                    Cursor line / current line background
+#                    Subtle row striping in lists and tables
+#
+#   Text        High contrast foreground
+#               Body text, variable names, identifiers
+#               Active tab / item foreground
+#               Cursor colour paired with Highlight High background
+#               Selection foreground paired with Highlight Med background
+#               Terminal white, bright white
+#
+#   Subtle      Medium contrast foreground
+#               Secondary text, e.g. labels, tab titles, breadcrumbs
+#               Placeholder text in inputs
+#               Inactive / unfocussed pane foreground
+#               Punctuation, operators
+#
+#   Muted       Low contrast foreground
+#               Comments, documentation prose
+#               Line numbers, scrollbar miscellanea
+#               Non-text characters, e.g. whitespace markers, delimiters
+#               Disabled / dimmed UI labels
+#               Terminal bright black
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ── Base ──────────────────────────────────────────────────────────────────────
+COLOR_BG=232136
+
+# ── Surface ───────────────────────────────────────────────────────────────────
+COLOR_SURFACE=2a273f
+
+# ── Overlay ───────────────────────────────────────────────────────────────────
+COLOR_OVERLAY=393552
+
+# ── Highlight High ────────────────────────────────────────────────────────────
+#    Borders, dividers, cursor bg, search match bg
+COLOR_BORDER=56526e
+
+# ── Highlight Med ─────────────────────────────────────────────────────────────
+#    Selection bg, active/hovered popup item bg
+COLOR_SELECTION=44415a
+
+# ── Highlight Low ─────────────────────────────────────────────────────────────
+#    Cursor line bg, subtle row striping
+COLOR_CURSOR_LINE=2a283e
+
+# ── Text ──────────────────────────────────────────────────────────────────────
+COLOR_FG=e0def4
+
+# ── Subtle ────────────────────────────────────────────────────────────────────
+COLOR_FG_SUBTLE=908caa
+
+# ── Muted ─────────────────────────────────────────────────────────────────────
+COLOR_FG_MUTED=6e6a86
+
+# ── Palette ───────────────────────────────────────────────────────────────────
+COLOR_RED=eb6f92
+COLOR_ROSE=ea9a97
+COLOR_GOLD=f6c177
+COLOR_PINE=3e8fb0
+COLOR_FOAM=9ccfd8
+COLOR_IRIS=c4a7e7
+
+# ── Terminal Palette ──────────────────────────────────────────────────────────
+# Normal (0-7)
+COLOR_BLACK=232136
+COLOR_RED_N=eb6f92
+COLOR_GREEN_N=9ccfd8
+COLOR_YELLOW_N=f6c177
+COLOR_BLUE_N=3e8fb0
+COLOR_MAGENTA_N=c4a7e7
+COLOR_CYAN_N=9ccfd8
+COLOR_WHITE_N=e0def4
+
+# Bright (8-15)
+COLOR_BRIGHT_BLACK=6e6a86
+COLOR_BRIGHT_RED=eb6f92
+COLOR_BRIGHT_GREEN=9ccfd8
+COLOR_BRIGHT_YELLOW=f6c177
+COLOR_BRIGHT_BLUE=3e8fb0
+COLOR_BRIGHT_MAGENTA=c4a7e7
+COLOR_BRIGHT_CYAN=9ccfd8
+COLOR_BRIGHT_WHITE=e0def4
+
+# Dim
+COLOR_DIM_BLACK=1f1d2e
+COLOR_DIM_RED=908caa
+COLOR_DIM_GREEN=9ccfd8
+COLOR_DIM_YELLOW=f6c177
+COLOR_DIM_BLUE=3e8fb0
+COLOR_DIM_MAGENTA=c4a7e7
+COLOR_DIM_CYAN=9ccfd8
+COLOR_DIM_WHITE=6e6a86

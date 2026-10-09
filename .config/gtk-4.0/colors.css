@@ -1,0 +1,49 @@
+/* Rosé Pine — libadwaita color overrides */
+@define-color accent_bg_color #957fb8;
+@define-color accent_fg_color #1f1f28;
+@define-color accent_color #957fb8;
+
+@define-color destructive_bg_color #e46876;
+@define-color destructive_fg_color #1f1f28;
+@define-color destructive_color #e46876;
+
+@define-color success_bg_color #7fb4ca;
+@define-color success_fg_color #dcd7ba;
+@define-color success_color #7fb4ca;
+
+@define-color warning_bg_color #e6c384;
+@define-color warning_fg_color #dcd7ba;
+@define-color warning_color #e6c384;
+
+@define-color error_bg_color #e46876;
+@define-color error_fg_color #dcd7ba;
+@define-color error_color #e46876;
+
+@define-color window_bg_color #1f1f28;
+@define-color window_fg_color #dcd7ba;
+
+@define-color view_bg_color #1f1f28;
+@define-color view_fg_color #dcd7ba;
+
+@define-color headerbar_bg_color #2a2a37;
+@define-color headerbar_fg_color #dcd7ba;
+@define-color headerbar_backdrop_color #1f1f28;
+@define-color headerbar_shade_color #1f1f28;
+
+@define-color card_bg_color #2a2a37;
+@define-color card_fg_color #dcd7ba;
+@define-color card_shade_color #1f1f28;
+
+@define-color popover_bg_color #2a2a37;
+@define-color popover_fg_color #dcd7ba;
+
+@define-color sidebar_bg_color #1f1f28;
+@define-color sidebar_fg_color #dcd7ba;
+
+/* Legacy GTK3 vars for compatibility */
+@define-color theme_bg_color #1f1f28;
+@define-color theme_fg_color #dcd7ba;
+@define-color theme_base_color #16161d;
+@define-color theme_selected_bg_color #7e9cd8;
+@define-color theme_selected_fg_color #1f1f28;
+

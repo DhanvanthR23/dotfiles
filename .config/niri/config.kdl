@@ -152,21 +152,21 @@ environment {
     QT_QPA_PLATFORMTHEME "qt6ct"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
     QT_LOGGING_RULES "quickshell.dbus.properties=false"
+    QT_QUICK_BACKEND "software"
 }
 
 // ============================================================================
 // STARTUP
 // ============================================================================
 
-
-spawn-at-startup "waybar"
-spawn-at-startup "mako"
-spawn-at-startup "hypridle"
-spawn-at-startup "swayosd-server" "--top-margin" "0.08"
+spawn-at-startup "qs"
+spawn-at-startup "thunar" "--daemon"
+// spawn-at-startup "swayosd-server" "--top-margin" "0.08"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-spawn-at-startup "sh" "-c" "~/.config/niri/scripts/awww-restore.sh"
+spawn-at-startup "awww-daemon"
+spawn-at-startup "fish" "-c" "sleep 0.5; awww img (cat ~/.local/state/qs-test/wallpaper) --transition-type none"
 spawn-at-startup "sh" "-c" "sleep 2; systemctl --user import-environment WAYLAND_DISPLAY XDG_RUNTIME_DIR; systemctl --user restart xdg-desktop-portal-gtk xdg-desktop-portal"
 
 // ============================================================================
@@ -241,40 +241,49 @@ animations {
 // ============================================================================
 
 binds {
-    //Mod+D { spawn "qs" "ipc" "call" "ui" "toggleLauncher"; }
-    //Mod+A { spawn "qs" "ipc" "call" "ui" "toggleControlCenter"; }
-    //Ctrl+Alt+Delete { spawn "qs" "ipc" "call" "ui" "togglePowerMenu"; }
 
-    // Tier 2: OSD Volume hooks
-    //XF86AudioRaiseVolume { spawn "fish" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && qs ipc call ui showOsd Vol $(wpctl get-volume @DEFAULT_AUDIO_SINK@)"; }
-    //XF86AudioLowerVolume { spawn "fish" "-c" "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && qs ipc call ui showOsd Vol $(wpctl get-volume @DEFAULT_AUDIO_SINK@)"; }
+    Mod+D { spawn "qs" "ipc" "call" "launcher" "toggle"; }
+    Mod+A { spawn "qs" "ipc" "call" "control" "toggle"; }
+    Mod+H { spawn "qs" "ipc" "call" "idle" "toggle"; }
+    Mod+Ctrl+T { spawn "qs" "ipc" "call" "picker" "toggle"; }
+    Mod+Escape { spawn "qs" "ipc" "call" "session" "toggle"; }
+    Ctrl+Alt+Delete { spawn "qs" "ipc" "call" "session" "toggle"; }
+    Mod+Shift+N { spawn "qs" "ipc" "call" "notifs" "clear"; }
+    Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
+    Mod+Shift+U { spawn "qs" "ipc" "call" "updates" "run"; }
     
-    //Mod+Shift+N { spawn "fish" "-c" "killall gammastep || gammastep -O 3500 &"; }
-    //Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
-    //Mod+Ctrl+T { spawn "qs" "ipc" "call" "wallpaper" "toggle"; }
-    //Mod+L { spawn "qs" "ipc" "call" "lockscreen" "lock"; }
+    Mod+Shift+W { spawn-sh "pkill -x qs; sleep 0.3; QT_QUICK_BACKEND=software qs -d"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true hotkey-overlay-title="Increase Volume" { spawn-sh "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+; qs ipc call osd volume"; }
+    XF86AudioLowerVolume allow-when-locked=true hotkey-overlay-title="Decrease Volume" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; qs ipc call osd volume"; }
+    XF86AudioMute allow-when-locked=true hotkey-overlay-title="Mute Volume" { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; qs ipc call osd volume"; }
+    XF86MonBrightnessUp allow-when-locked=true hotkey-overlay-title="Increase Brightness" { spawn-sh "brightnessctl -q -d intel_backlight set 5%+; qs ipc call osd brightness"; }
+    XF86MonBrightnessDown allow-when-locked=true hotkey-overlay-title="Decrease Brightness" { spawn-sh "brightnessctl -q -d intel_backlight set 5%-; qs ipc call osd brightness"; }
+
+    Caps_Lock allow-when-locked=true { spawn-sh "qs ipc call osd caps"; }
+    Num_Lock allow-when-locked=true { spawn-sh "qs ipc call osd num"; }
 
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+H { spawn "sh" "-c" "~/.config/niri/scripts/toggle-idle.fish"; }
+    // Mod+H { spawn "sh" "-c" "~/.config/niri/scripts/toggle-idle.fish"; }
     Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
     Mod+Shift+D {spawn "sh" "-c" "~/.config/niri/scripts/file-search.sh";}
     Mod+Alt+L {spawn "localsend";}
 
     // legacy commands
-     Mod+D { spawn "fuzzel"; }
-     Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
-     Mod+Shift+N { spawn "makoctl" "dismiss" "--all"; }
-     Mod+Ctrl+T { spawn "waypaper";}
+     // Mod+Escape { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
+     // Mod+D { spawn "fuzzel"; }
+     // Mod+Shift+N { spawn "makoctl" "dismiss" "--all"; }
+     // Mod+Ctrl+T { spawn "waypaper";}
+     // Mod+Shift+U { spawn "sh" "-c" "~/.config/niri/scripts/run-updates.sh"; }
+     // Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
      Mod+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
-     Mod+Shift+U { spawn "sh" "-c" "~/.config/niri/scripts/run-updates.sh"; }
-     XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "swayosd-client" "--output-volume" "raise"; }
-     XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "swayosd-client" "--output-volume" "lower"; }
-     XF86AudioMute hotkey-overlay-title="Mute Volume" { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
-     XF86AudioMicMute hotkey-overlay-title="Mute Microphone" { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
-     XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "swayosd-client" "--brightness" "raise"; }
-     XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "swayosd-client" "--brightness" "lower"; }
-     Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
-     Mod+Escape { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}
+     // XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "swayosd-client" "--output-volume" "raise"; }
+     // XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "swayosd-client" "--output-volume" "lower"; }
+     // XF86AudioMute hotkey-overlay-title="Mute Volume" { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+     // XF86AudioMicMute hotkey-overlay-title="Mute Microphone" { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+     // XF86MonBrightnessUp hotkey-overlay-title="Increase Brightness" { spawn "swayosd-client" "--brightness" "raise"; }
+     // XF86MonBrightnessDown hotkey-overlay-title="Decrease Brightness" { spawn "swayosd-client" "--brightness" "lower"; }
+     // Mod+Shift+W {spawn "sh" "-c" "pkill waybar; sleep 0.3; waybar &";}
 
     // Screenshots
     Mod+Shift+S { screenshot show-pointer=false; }
@@ -283,7 +292,8 @@ binds {
 
     // Applications
     Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "foot"; }
-    Mod+E hotkey-overlay-title="Open File Manager" { spawn "nautilus"; }
+    // Mod+E hotkey-overlay-title="Open File Manager" { spawn "nautilus"; }
+    Mod+E hotkey-overlay-title="Open File Manager" { spawn "thunar"; }
     Mod+B hotkey-overlay-title="Open Brave" { spawn "brave-origin"; }
     Mod+Shift+B hotkey-overlay-title="Open Chrome" { spawn "google-chrome-stable"; }
     Mod+M hotkey-overlay-title="Open Thunderbird" { spawn "thunderbird"; }

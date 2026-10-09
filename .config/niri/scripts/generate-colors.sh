@@ -4,7 +4,8 @@ set -euo pipefail
 
 COLORS="${XDG_CONFIG_HOME:-$HOME/.config}/colors/colors.conf"
 if [[ ! -f "$COLORS" ]]; then
-  echo "ERROR: $COLORS not found" >&2; exit 1
+  echo "ERROR: $COLORS not found" >&2
+  exit 1
 fi
 source "$COLORS"
 
@@ -12,7 +13,7 @@ OUT="${XDG_CONFIG_HOME:-$HOME/.config}/colors"
 mkdir -p "$OUT"
 
 # ── Niri (KDL) ───────────────────────────────────────────────────────────────
-cat > "$OUT/colors.kdl" << EOF
+cat >"$OUT/colors.kdl" <<EOF
 layout {
     focus-ring {
         active-color   "#${COLOR_BORDER}"
@@ -45,69 +46,8 @@ recent-windows {
 }
 EOF
 
-# ── Waybar CSS (@define-color) ───────────────────────────────────────────────
-cat > "$OUT/colors.css" << EOF
-@define-color bg           #${COLOR_BG};
-@define-color surface      #${COLOR_SURFACE};
-@define-color overlay      #${COLOR_OVERLAY};
-@define-color border       #${COLOR_BORDER};
-@define-color selection    #${COLOR_SELECTION};
-@define-color cursor-line  #${COLOR_CURSOR_LINE};
-@define-color fg           #${COLOR_FG};
-@define-color fg-subtle    #${COLOR_FG_SUBTLE};
-@define-color fg-muted     #${COLOR_FG_MUTED};
-@define-color red          #${COLOR_RED};
-@define-color rose         #${COLOR_ROSE};
-@define-color gold         #${COLOR_GOLD};
-@define-color pine         #${COLOR_PINE};
-@define-color foam         #${COLOR_FOAM};
-@define-color iris         #${COLOR_IRIS};
-EOF
-
-# ── Waybar JSONC (calendar colors) ───────────────────────────────────────────
-cat > "$OUT/colors-waybar.jsonc" << EOF
-{
-  "calendar": {
-    "format": {
-      "months": "<span color='#${COLOR_FG}'><b>{}</b></span>",
-      "days": "<span color='#${COLOR_FG_SUBTLE}'>{}</span>",
-      "today": "<span color='#${COLOR_PINE}'><b>{}</b></span>"
-    }
-  }
-}
-EOF
-
-# ── Mako ─────────────────────────────────────────────────────────────────────
-cat > "$OUT/colors-mako.ini" << EOF
-background-color=#${COLOR_BG}ee
-text-color=#${COLOR_FG}
-border-color=#${COLOR_FG_MUTED}
-
-[urgency=low]
-background-color=#${COLOR_BG}cc
-text-color=#${COLOR_FG_MUTED}
-border-color=#${COLOR_FG_MUTED}
-
-[urgency=normal]
-background-color=#${COLOR_BG}ee
-text-color=#${COLOR_FG}
-border-color=#${COLOR_FG_MUTED}
-
-[urgency=high]
-background-color=#${COLOR_BG}
-text-color=#${COLOR_RED}
-border-color=#${COLOR_RED}
-border-size=2
-
-[app-name=Spotify]
-border-color=#${COLOR_FOAM}
-
-[app-name=Jellyfin]
-border-color=#${COLOR_PINE}
-EOF
-
 # ── Foot ─────────────────────────────────────────────────────────────────────
-cat > "$OUT/colors-foot.ini" << EOF
+cat >"$OUT/colors-foot.ini" <<EOF
 [colors-dark]
 background=${COLOR_BG}
 foreground=${COLOR_FG}
@@ -144,7 +84,7 @@ dim7=${COLOR_DIM_WHITE}
 EOF
 
 # ── Fuzzel ───────────────────────────────────────────────────────────────────
-cat > "$OUT/colors-fuzzel.ini" << EOF
+cat >"$OUT/colors-fuzzel.ini" <<EOF
 [colors]
 background=${COLOR_BG}ff
 text=${COLOR_FG}ff
@@ -159,7 +99,7 @@ input=${COLOR_FG}ff
 EOF
 
 # ── Zathura ───────────────────────────────────────────────────────────────────
-cat > "$OUT/colors-zathura" << EOF
+cat >"$OUT/colors-zathura" <<EOF
 set default-bg "#${COLOR_BG}"
 set default-fg "#${COLOR_FG}"
 set recolor-darkcolor "#${COLOR_FG}"
@@ -190,7 +130,7 @@ set recolor true
 EOF
 
 # ── Hyprlock (hyprlang vars) ─────────────────────────────────────────────────
-cat > "$OUT/colors-hypr.conf" << EOF
+cat >"$OUT/colors-hypr.conf" <<EOF
 \$border_color=rgb(${COLOR_BORDER})
 \$bg_color=rgb(${COLOR_BG})
 \$text_color=rgb(${COLOR_FG})
@@ -222,7 +162,7 @@ GOLD_RGB=$(hex_to_rgb "$COLOR_GOLD")
 IRIS_RGB=$(hex_to_rgb "$COLOR_IRIS")
 DIM_BLACK_RGB=$(hex_to_rgb "$COLOR_DIM_BLACK")
 
-cat > "$QT_DIR/RosePine.colors" << EOF
+cat >"$QT_DIR/RosePine.colors" <<EOF
 [ColorEffects:Disabled]
 Color=${FG_MUTED_RGB}
 ColorAmount=0.55
@@ -425,13 +365,11 @@ GTK4_COLORS_CONTENT="/* Rosé Pine — libadwaita color overrides */
 @define-color theme_selected_fg_color #${COLOR_BG};
 "
 
-echo "$GTK3_COLORS_CONTENT" > "${HOME}/.config/gtk-3.0/colors"
-echo "$GTK4_COLORS_CONTENT" > "${HOME}/.config/gtk-4.0/colors"
+echo "$GTK4_COLORS_CONTENT" >"${HOME}/.config/gtk-3.0/colors.css"
+echo "$GTK4_COLORS_CONTENT" >"${HOME}/.config/gtk-4.0/colors.css"
 
 # ── Symlinks (for tools that resolve includes relative to their config dir) ──
 mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura" "${HOME}/.config/swayosd"
-[ -L "${HOME}/.config/waybar/colors" ] || ln -sf "../colors" "${HOME}/.config/waybar/colors"
 [ -L "${HOME}/.config/zathura/colors-zathura" ] || ln -sf "../colors/colors-zathura" "${HOME}/.config/zathura/colors-zathura"
-[ -L "${HOME}/.config/swayosd/colors.css" ] || ln -sf "../colors/colors.css" "${HOME}/.config/swayosd/colors.css"
 
 echo "Colors generated from $COLORS"

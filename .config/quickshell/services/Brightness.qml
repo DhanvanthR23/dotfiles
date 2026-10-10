@@ -48,17 +48,17 @@ Singleton {
         levels = next; // must replace, not mutate
     }
 
-    // --- exponential curve: slider position <-> fraction of max ---
+    // linear curve
     function floorFor(name) {
-        return isInternal(name) ? 0.01 : 0.05;
+        return isInternal(name) ? 0.01 : 0;
     }
 
     function toFraction(p, floor) {
-        return floor * Math.pow(1 / floor, p);
+        return Math.max(floor, p);
     }
 
     function toPosition(f, floor) {
-        return Math.log(Math.max(f, floor) / floor) / Math.log(1 / floor);
+        return Math.max(0, Math.min(1, f));
     }
 
     function refreshInternal() {

@@ -19,6 +19,12 @@ Singleton {
     readonly property var newestFirst: all.values.slice().reverse()
     property bool dnd: false
 
+    // toasts waiting for the pill; OSD-style toasts never wait (see show())
+    property var queue: []
+    readonly property int maxQueue: 5
+    // these replace the current toast instantly, so holding a volume key doesn't pile up a queue
+    readonly property var instantApps: ["Volume", "Brightness", "Caps Lock", "Num Lock", "Idle", "Media"]
+
     function isCritical(n) {
         return n.urgency === NotificationUrgency.Critical;
     }
@@ -32,6 +38,7 @@ Singleton {
     }
 
     function clearAll() {
+        queue = [];
         for (const n of all.values.slice()) n.dismiss()
     }
 
@@ -49,20 +56,51 @@ Singleton {
         return 2500;
     }
 
-    function show(app, summary, body, urgency, timeout, progress) {
-        toastApp = app;
-        toastSummary = summary;
-        toastBody = body;
-        toastUrgency = urgency;
-        toastProgress = progress === undefined ? -1 : progress;
-        hideTimer.interval = durationFor(timeout, urgency);
+    function display(t) {
+        toastApp = t.app;
+        toastSummary = t.summary;
+        toastBody = t.body;
+        toastUrgency = t.urgency;
+        toastProgress = t.progress;
+        hideTimer.interval = durationFor(t.timeout, t.urgency);
         hideTimer.restart();
         toastVisible = true;
     }
 
+    function show(app, summary, body, urgency, timeout, progress) {
+        const t = {
+            "app": app,
+            "summary": summary,
+            "body": body,
+            "urgency": urgency,
+            "timeout": timeout,
+            "progress": progress === undefined ? -1 : progress
+        };
+        const instant = progress !== undefined || instantApps.includes(app);
+        if (!toastVisible || instant) {
+            display(t);
+            return ;
+        }
+        // a critical toast jumps the line, everything else waits its turn
+        const next = queue.slice();
+        if (urgency === NotificationUrgency.Critical)
+            next.unshift(t);
+        else
+            next.push(t);
+        queue = next.slice(0, maxQueue);
+    }
+
+    // show the next waiting toast, or hide the pill state when nothing is left
     function hideToast() {
-        toastVisible = false;
         hideTimer.stop();
+        if (queue.length > 0) {
+            const next = queue.slice();
+            const t = next.shift();
+            queue = next;
+            display(t);
+            return ;
+        }
+        toastVisible = false;
     }
 
     NotificationServer {

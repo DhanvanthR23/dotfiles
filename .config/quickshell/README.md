@@ -1,4 +1,4 @@
-# qs-test
+# Quickshell Config
 
 A Quickshell (noctalia-qs) shell for Niri. Floating pill bar, with every popup growing out of a pill.
 
@@ -122,10 +122,8 @@ Helper scripts live in `~/.config/niri/scripts/`: `set-theme.fish`, `wall-list.f
 
 `config/Settings.qml`: night light temperature, latitude and longitude (for the auto schedule), idle screen-off and lock timeouts (seconds), terminal.
 
-## Known quirks (WIP)
+## Known limits
 
-- The brightness OSD shows the built-in panel only, as a linear percentage; the control center slider uses an exponential curve.
-- Caps and Num Lock OSDs read `/sys/class/leds/input3::*` after a 200 ms delay; on another machine the LED name may differ.
-- There is no system tray, no Do Not Disturb, and only one toast is shown at a time (the control center list keeps all notifications).
-- Wi-Fi and Bluetooth management open `wlctl` and `bluetui` in foot on right-click; Quickshell has no NetworkManager password agent.
-- Idle memory is about 90 MB Pss with the software renderer; after opening every popup it settles around 85 MB anon and stays flat.
+- Wi-Fi/Bluetooth management opens `wlctl`/`bluetui`; Quickshell has no NetworkManager password agent.
+- Caps/Num Lock OSD waits 200 ms after the keypress for the LED to flip.
+- Up to 5 toasts queue; OSD-style toasts replace the current one.

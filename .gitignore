@@ -12,3 +12,4 @@
 .config/colors/colors-mako.ini
 .config/colors/colors-waybar.jsonc
 .config/colors/colors-zathura
+.config/starship.toml

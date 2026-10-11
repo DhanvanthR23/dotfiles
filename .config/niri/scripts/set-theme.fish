@@ -37,6 +37,8 @@ cp $theme $cfg/colors.conf
 bash ~/.config/niri/scripts/generate-colors.sh >/dev/null; or echo "generate-colors.sh failed" >&2
 qs ipc call theme reload 2>/dev/null
 echo $slug >$state/theme
+thunar -q 2>/dev/null
+setsid thunar --daemon >/dev/null 2>&1 &
 
 # wallpaper
 set -l pick $argv[2]

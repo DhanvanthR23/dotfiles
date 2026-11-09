@@ -1,0 +1,16 @@
+[Unit]
+Description=KDE Connect daemon
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.kde.kdeconnect
+ExecStart=/usr/bin/kdeconnectd
+Environment="QT_LOGGING_RULES=kf.config.core=false;qt.qpa.services=false"
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=graphical-session.target

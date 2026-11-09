@@ -13,3 +13,7 @@
 .config/colors/colors-waybar.jsonc
 .config/colors/colors-zathura
 .config/starship.toml
+
+# systemd enable symlinks if the unit dir ever gets folded by stow
+.config/systemd/user/*.wants/
+.config/systemd/user/*.requires/

@@ -19,12 +19,13 @@ if (( rc == 1 )); then
   [[ -f $cache ]] && cat "$cache" || echo 0
   exit 0
 fi
-official=$(printf '%s' "$out" | grep -c .)
+
+official=$(printf '%s\n' "$out" | grep -v '\[ignored\]' | grep -c .)
 
 if command -v paru &>/dev/null; then
-  aur=$(paru -Qua 2>/dev/null | wc -l)
+    aur=$(paru -Qua 2>/dev/null | grep -v '\[ignored\]' | grep -c .)
 elif command -v yay &>/dev/null; then
-  aur=$(yay -Qua 2>/dev/null | wc -l)
+    aur=$(yay -Qua 2>/dev/null | grep -v '\[ignored\]' | grep -c .)
 else
   aur=0
 fi

@@ -40,6 +40,14 @@ echo $slug >$state/theme
 thunar -q 2>/dev/null
 setsid thunar --daemon >/dev/null 2>&1 &
 
+if pgrep -x brave >/dev/null
+    pkill -TERM -x brave
+    while pgrep -x brave >/dev/null
+        sleep 0.1
+    end
+    setsid brave-origin --restore-last-session >/dev/null 2>&1 &
+end
+
 # wallpaper
 set -l pick $argv[2]
 if test "$pick" = --keep

@@ -16,6 +16,7 @@ CORE=(
   qt6ct qt5ct darkly adw-gtk-theme
   xdg-desktop-portal-gtk polkit-gnome gtk-engine-murrine
   ttf-jetbrains-mono-nerd
+  kdeconnect
 )
 
 # AUR / less common names: tried one by one, a failure only warns.
@@ -24,6 +25,7 @@ OPTIONAL=(
   noctalia-qs # Quickshell fork the shell runs on (or plain `quickshell`)
   wlctl       # Wi-Fi TUI opened by right-click on the Wi-Fi tile
   bluetui     # Bluetooth TUI opened by right-click on the Bluetooth tile
+  sshfs       # KDE Connect "browse phone filesystem"
 )
 
 echo "==> Installing core packages..."
@@ -35,6 +37,10 @@ for pkg in "${OPTIONAL[@]}"; do
 done
 
 # ── stow ────────────────────────────────────────────────────────────────────
+# Real dirs must exist first, else stow folds them into one symlink to the repo
+# and `systemctl --user enable` then writes *.wants/ symlinks inside the repo.
+mkdir -p ~/.config/systemd/user ~/.local/share/dbus-1/services
+
 echo "==> Checking for stow conflicts..."
 conflicts=$(stow -n . --target="$HOME" 2>&1 |
   sed -n 's/.*existing target is not owned by stow: //p;s/.*existing target is neither a link nor a directory: //p' |
@@ -61,6 +67,40 @@ chmod +x ~/.config/niri/scripts/*.sh ~/.config/niri/scripts/*.fish
 # ── runtime dirs the shell and scripts expect ───────────────────────────────
 echo "==> Creating runtime directories..."
 mkdir -p ~/Pictures/wallpapers ~/.local/state/qs-test ~/.cache/qs-test
+
+# ── systemd user units ──────────────────────────────────────────────────────
+# Every unit shipped in .config/systemd/user/ gets enabled (templates skipped).
+# Drop a new .service/.timer/.path there, re-run this script, done.
+echo "==> Enabling systemd user units..."
+if systemctl --user show-environment >/dev/null 2>&1; then
+  systemctl --user daemon-reload
+  shopt -s nullglob
+  for f in .config/systemd/user/*.service .config/systemd/user/*.timer .config/systemd/user/*.path; do
+    unit=$(basename "$f")
+    [[ $unit == *@* ]] && continue
+    systemctl --user enable "$unit" || warn "could not enable $unit"
+    # Only start now if a graphical session is already up, else it starts at login.
+    if systemctl --user is-active --quiet graphical-session.target; then
+      systemctl --user restart "$unit" || warn "could not start $unit"
+    fi
+  done
+  shopt -u nullglob
+else
+  warn "no systemd user bus (ssh/chroot?), units not enabled. Re-run from a login session."
+fi
+
+# ── KDE Connect firewall ────────────────────────────────────────────────────
+# Phone never finds the PC if 1714-1764 tcp+udp is blocked.
+echo "==> Opening KDE Connect ports (if a firewall is active)..."
+if command -v ufw >/dev/null && [[ $(sudo ufw status) == *"Status: active"* ]]; then
+  sudo ufw allow 1714:1764/tcp
+  sudo ufw allow 1714:1764/udp
+elif command -v firewall-cmd >/dev/null && sudo firewall-cmd --state >/dev/null 2>&1; then
+  sudo firewall-cmd --permanent --add-service=kdeconnect
+  sudo firewall-cmd --reload
+else
+  echo "  no active ufw/firewalld, skipping"
+fi
 
 # ── theme ───────────────────────────────────────────────────────────────────
 echo "==> Generating colors..."

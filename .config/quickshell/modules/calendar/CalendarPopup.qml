@@ -14,10 +14,12 @@ PopupWindow {
     readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight + (Media.available ? Theme.gap + mediaHeight : 0)
     // --- week strip data ---
     readonly property var today: Time.now
-    property int weekOffset: 0
+    property int weekOffset: 0   // target week, changes instantly on click
+    property int shownOffset: 0  // week the strip actually displays, swaps at the animation midpoint
+    property int slideDir: 1     // -1 = went back, 1 = went forward
     readonly property var stripStart: {
         const d = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        d.setDate(d.getDate() - 3 + weekOffset * 7);
+        d.setDate(d.getDate() - 3 + shownOffset * 7);
         return d;
     }
     readonly property var centerDay: {
@@ -33,6 +35,12 @@ PopupWindow {
     property real progress: shown ? 1 : 0
     readonly property real fade: Math.max(0, progress * 2 - 1) // 0 in the first half, ramps to 1 in the second
 
+    function go(dir) {
+        slideDir = dir;
+        weekOffset += dir;
+        flip.restart();
+    }
+
     onWantOpenChanged: {
         if (wantOpen) {
             closeTimer.stop();
@@ -42,9 +50,13 @@ PopupWindow {
         }
     }
     onProgressChanged: {
-        if (progress === 0)
+        if (progress === 0) {
+            flip.stop();
             weekOffset = 0;
-
+            shownOffset = 0;
+            strip.x = 0;
+            strip.opacity = 1;
+        }
     }
     // window sits exactly on top of the pill, card grows downward from there
     anchor.item: pill
@@ -137,67 +149,126 @@ PopupWindow {
                         ArrowButton {
                             label: "‹"
                             nudge: -2
-                            onClicked: root.weekOffset--
+                            onClicked: root.go(-1)
                         }
 
                         ArrowButton {
                             label: "›"
                             nudge: 2
-                            onClicked: root.weekOffset++
+                            onClicked: root.go(1)
                         }
 
                     }
 
                 }
 
-                Row {
+                // clipping window so the sliding strip never leaks outside its slot
+                Item {
                     width: parent.width
+                    height: 52
+                    clip: true
 
-                    Repeater {
-                        model: 7
+                    Row {
+                        id: strip
 
-                        Item {
-                            id: cell
+                        width: parent.width
 
-                            required property int index
-                            readonly property var day: {
-                                const d = new Date(root.stripStart);
-                                d.setDate(d.getDate() + index);
-                                return d;
-                            }
-                            readonly property bool isToday: day.toDateString() === root.today.toDateString()
+                        Repeater {
+                            model: 7
 
-                            width: parent.width / 7
-                            height: 52
+                            Item {
+                                id: cell
 
-                            Rectangle {
-                                anchors.centerIn: parent
-                                width: parent.width - 6
-                                height: parent.height
-                                radius: Theme.radiusItem
-                                color: cell.isToday ? Theme.accent : "transparent"
+                                required property int index
+                                readonly property var day: {
+                                    const d = new Date(root.stripStart);
+                                    d.setDate(d.getDate() + index);
+                                    return d;
+                                }
+                                readonly property bool isToday: day.toDateString() === root.today.toDateString()
 
-                                Column {
+                                width: parent.width / 7
+                                height: 52
+
+                                Rectangle {
                                     anchors.centerIn: parent
-                                    spacing: 4
+                                    width: parent.width - 6
+                                    height: parent.height
+                                    radius: Theme.radiusItem
+                                    color: cell.isToday ? Theme.accent : "transparent"
 
-                                    Text {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        text: Qt.formatDate(cell.day, "ddd")
-                                        color: cell.isToday ? Theme.bg : Theme.textMuted
-                                        font.family: Theme.fontFamily
-                                        font.pixelSize: Theme.fontCaption
+                                    Column {
+                                        anchors.centerIn: parent
+                                        spacing: 4
+
+                                        Text {
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            text: Qt.formatDate(cell.day, "ddd")
+                                            color: cell.isToday ? Theme.bg : Theme.textMuted
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: Theme.fontCaption
+                                        }
+
+                                        Text {
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            text: cell.day.getDate()
+                                            color: cell.isToday ? Theme.bg : Theme.text
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: Theme.fontSize
+                                            font.bold: cell.isToday
+                                        }
+
                                     }
 
-                                    Text {
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        text: cell.day.getDate()
-                                        color: cell.isToday ? Theme.bg : Theme.text
-                                        font.family: Theme.fontFamily
-                                        font.pixelSize: Theme.fontSize
-                                        font.bold: cell.isToday
-                                    }
+                                }
 
+                            }
+
+                        }
+
+                        // out: slide + fade away -> swap data -> in: slide + fade back from the other side
+                        SequentialAnimation {
+                            id: flip
+
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: strip
+                                    property: "x"
+                                    to: -root.slideDir * 24
+                                    duration: Theme.animFast
+                                    easing.type: Easing.InCubic
+                                }
+
+                                NumberAnimation {
+                                    target: strip
+                                    property: "opacity"
+                                    to: 0
+                                    duration: Theme.animFast
+                                }
+
+                            }
+
+                            ScriptAction {
+                                script: {
+                                    root.shownOffset = root.weekOffset;
+                                    strip.x = root.slideDir * 24;
+                                }
+                            }
+
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    target: strip
+                                    property: "x"
+                                    to: 0
+                                    duration: Theme.animDuration
+                                    easing.type: Easing.OutCubic
+                                }
+
+                                NumberAnimation {
+                                    target: strip
+                                    property: "opacity"
+                                    to: 1
+                                    duration: Theme.animDuration
                                 }
 
                             }

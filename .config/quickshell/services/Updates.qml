@@ -51,7 +51,7 @@ Singleton {
     }
 
     Timer {
-        interval: 30 * 60 * 1000
+        interval: 2 * 60 * 60 * 1000
         running: true
         repeat: true
         triggeredOnStart: true

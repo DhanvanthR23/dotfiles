@@ -22,7 +22,7 @@ output "HDMI-A-1" {
     mode "1920x1080@60.000"
     scale 1
     focus-at-startup
-    position x=-1920 y=-100
+    position x=-1920 y=50
 }
 
 output "eDP-1" {
@@ -245,14 +245,14 @@ binds {
     Mod+D { spawn "qs" "ipc" "call" "launcher" "toggle"; }
     Mod+A { spawn "qs" "ipc" "call" "control" "toggle"; }
     Mod+H { spawn "qs" "ipc" "call" "idle" "toggle"; }
-    Mod+Ctrl+T { spawn "qs" "ipc" "call" "picker" "toggle"; }
+    Mod+Shift+W { spawn "qs" "ipc" "call" "picker" "toggle"; }
     Mod+Escape { spawn "qs" "ipc" "call" "session" "toggle"; }
     Ctrl+Alt+Delete { spawn "qs" "ipc" "call" "session" "toggle"; }
     Mod+Shift+N { spawn "qs" "ipc" "call" "notifs" "clear"; }
     Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
     Mod+Shift+U { spawn "qs" "ipc" "call" "updates" "run"; }
     
-    Mod+Shift+W { spawn-sh "pkill -x qs; sleep 0.3; QT_QUICK_BACKEND=software qs -d"; }
+    Mod+Alt+R { spawn-sh "pkill -x qs; sleep 0.3; QT_QUICK_BACKEND=software qs -d"; }
 
     XF86AudioRaiseVolume allow-when-locked=true hotkey-overlay-title="Increase Volume" { spawn-sh "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+; qs ipc call osd volume"; }
     XF86AudioLowerVolume allow-when-locked=true hotkey-overlay-title="Decrease Volume" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-; qs ipc call osd volume"; }

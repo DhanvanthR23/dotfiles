@@ -17,6 +17,7 @@ CORE=(
   xdg-desktop-portal-gtk polkit-gnome gtk-engine-murrine
   ttf-jetbrains-mono-nerd
   kdeconnect
+  inotify-tools rsync # doc-sync.service (sync-documents.sh)
 )
 
 # AUR / less common names: tried one by one, a failure only warns.
@@ -74,6 +75,13 @@ mkdir -p ~/Pictures/wallpapers ~/.local/state/qs-test ~/.cache/qs-test
 echo "==> Enabling systemd user units..."
 if systemctl --user show-environment >/dev/null 2>&1; then
   systemctl --user daemon-reload
+
+  # Masked on purpose (file indexers eat RAM/IO). Mask = symlink to /dev/null,
+  # so these are created here, not shipped in the repo.
+  for t in extract miner-fs miner-rss writeback xdg-portal; do
+    systemctl --user mask "tracker-$t-3.service" || warn "could not mask tracker-$t-3.service"
+  done
+
   shopt -s nullglob
   for f in .config/systemd/user/*.service .config/systemd/user/*.timer .config/systemd/user/*.path; do
     unit=$(basename "$f")

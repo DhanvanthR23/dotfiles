@@ -1,0 +1,11 @@
+[Unit]
+Description=Sync Documents to /mnt/storage
+After=local-fs.target
+
+[Service]
+ExecStart=%h/.config/niri/scripts/sync-documents.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

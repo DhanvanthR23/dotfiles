@@ -12,7 +12,22 @@ PanelWindow {
     readonly property int rowHeight: 32
     readonly property int rowGap: 4
     readonly property int count: Clip.results.length
-    readonly property real listHeight: count > 0 ? count * rowHeight + (count - 1) * rowGap : rowHeight
+    readonly property int imgRowHeight: 72
+
+    function rowH(e) {
+        return e && Clip.isImage(e) ? imgRowHeight : rowHeight;
+    }
+
+    readonly property var offsets: {
+        const out = [];
+        let y = 0;
+        for (const e of Clip.results) {
+            out.push(y);
+            y += rowH(e) + rowGap;
+        }
+        return out;
+    }
+    readonly property real listHeight: count > 0 ? offsets[count - 1] + rowH(Clip.results[count - 1]) : rowHeight
     readonly property real fade: Math.max(0, popup.progress * 2 - 1)
     property real bodyHeight: listHeight
 
@@ -117,21 +132,15 @@ PanelWindow {
             Rectangle {
                 visible: root.count > 0
                 width: parent.width
-                height: root.rowHeight
-                y: Clip.selected * (root.rowHeight + root.rowGap)
+                y: root.offsets[Clip.selected] || 0
+                height: root.rowH(Clip.results[Clip.selected])
+
+                Behavior on y { NumberAnimation { duration: Theme.animFast; easing.type: Easing.OutCubic } }
+                Behavior on height { NumberAnimation { duration: Theme.animFast; easing.type: Easing.OutCubic } }
                 radius: Theme.radiusSmall
                 color: Theme.surfaceAlt
                 border.width: 1
                 border.color: Theme.accent
-
-                Behavior on y {
-                    NumberAnimation {
-                        duration: Theme.animFast
-                        easing.type: Easing.OutCubic
-                    }
-
-                }
-
             }
 
             Text {
@@ -155,9 +164,25 @@ PanelWindow {
                     required property var modelData
                     required property int index
 
-                    y: index * (root.rowHeight + root.rowGap)
+                    y: root.offsets[index] || 0
+                    height: root.rowH(modelData)
                     width: body.width
-                    height: root.rowHeight
+
+                    Image {
+                        id: thumb
+
+
+                        readonly property bool isImg: Clip.isImage(row.modelData)
+                        visible: status === Image.Ready
+                        source: isImg && Clip.thumbReady[Clip.idOf(row.modelData)]
+                            ? "file://" + Clip.thumbDir + "/" + Clip.idOf(row.modelData) + ".png" : ""
+                        fillMode: Image.PreserveAspectFit
+                        sourceSize.width: 320
+                        sourceSize.height: 180
+                        width: 128
+                        height: parent.height - 12
+                        anchors { left: parent.left; leftMargin: Theme.padding; verticalCenter: parent.verticalCenter }
+                    }
 
                     Text {
                         text: row.modelData.text
@@ -168,8 +193,8 @@ PanelWindow {
                         font.pixelSize: Theme.fontSmall
 
                         anchors {
-                            left: parent.left
-                            leftMargin: Theme.padding
+                            left: thumb.visible ? thumb.right : parent.left
+                            leftMargin: thumb.visible ? Theme.gap : Theme.padding
                             right: parent.right
                             rightMargin: Theme.padding
                             verticalCenter: parent.verticalCenter

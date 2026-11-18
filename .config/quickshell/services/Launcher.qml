@@ -29,6 +29,52 @@ Singleton {
     property var launches: ({})
     readonly property string storeDir: (Quickshell.env("XDG_STATE_HOME") || Quickshell.env("HOME") + "/.local/state") + "/qs-test"
 
+    property string qalcResult: ""
+    readonly property bool qalcMode: query.startsWith("=")
+    readonly property string qalcExpr: query.slice(1).trim()
+
+    readonly property bool cmdMode: query.startsWith(">")
+    readonly property string cmdNeedle: query.slice(1).trim().toLowerCase()
+    readonly property var commands: [
+        { "label": "Themes", "sub": "Theme picker", "run": () => Picker.show("") },
+        { "label": "Wallpapers", "sub": "Wallpaper picker", "run": () => { Picker.view = "walls"; Picker.show(""); } },
+        { "label": "Clipboard", "sub": "History", "run": () => Clip.show("") },
+        { "label": "Session", "sub": "Lock, logout, power", "run": () => Session.show("") },
+        { "label": "Lock", "sub": "Lock screen", "run": () => Quickshell.execDetached([Idle.lockScript]) },
+        { "label": "Check updates", "sub": "Refresh count", "run": () => Updates.check(true) },
+        { "label": "Run updates", "sub": "paru -Syu", "run": () => Updates.run() },
+        { "label": "Keep awake", "sub": "Toggle", "run": () => Idle.toggle() },
+        { "label": "Do not disturb", "sub": "Toggle", "run": () => { Notifs.dnd = !Notifs.dnd; } },
+        { "label": "Game mode", "sub": "Toggle", "run": () => { GameMode.active = !GameMode.active; } },
+        { "label": "Night light", "sub": "Cycle off / now / auto", "run": () => NightLight.cycle() },
+        { "label": "Power profile", "sub": "Cycle", "run": () => Power.cycle() },
+        { "label": "Clear notifications", "sub": "Dismiss all", "run": () => Notifs.clearAll() }
+    ]
+
+    onQalcExprChanged: {
+        qalcResult = "";
+        if (qalcMode && qalcExpr !== "")
+            qalcDebounce.restart();
+        else
+            qalcDebounce.stop();
+    }
+
+    Timer {
+        id: qalcDebounce
+        interval: 250
+        onTriggered: {
+            qalcProc.command = ["qalc", "-t", root.qalcExpr];
+            qalcProc.running = true;
+        }
+    }
+
+    Process {
+        id: qalcProc
+        stdout: StdioCollector {
+            onStreamFinished: root.qalcResult = this.text.trim()
+        }
+    }
+
     Component.onCompleted: {
         Quickshell.execDetached(["mkdir", "-p", storeDir]);
         try {
@@ -66,6 +112,18 @@ Singleton {
     // [{ kind: "calc" | "app", title, subtitle, entry? }]
     readonly property var results: {
         const out = [];
+        if (qalcMode) {
+                return qalcResult !== ""
+                    ? [{ "kind": "calc", "title": qalcResult, "subtitle": "Copy result" }]
+                    : [];
+            }
+
+        if (cmdMode) {
+            return commands
+                .filter((c) => cmdNeedle === "" || SearchJs.tier(cmdNeedle, c.label, c.sub) > 0)
+                .map((c) => ({ "kind": "cmd", "title": c.label, "subtitle": c.sub, "run": c.run }));
+        }
+
         if (calcResult !== "")
             out.push({
             "kind": "calc",
@@ -104,6 +162,8 @@ Singleton {
                 item.entry.execute();
         } else if (item.kind === "calc") {
             Quickshell.execDetached(["wl-copy", item.title]);
+        } else if (item.kind === "cmd") {
+            item.run();
         }
     }
 

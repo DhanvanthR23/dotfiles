@@ -87,7 +87,6 @@ Scope {
 
             CalendarPopup {
                 id: calendarPopup
-
                 pill: clockPill
             }
 
@@ -111,6 +110,7 @@ Scope {
 
                         opacity: launcherPopup.progress > 0.02 ? 0 : 1
                         onClicked: launcherPopup.toggle()
+                        onRightClicked: Picker.toggle("")
                     }
 
                 }
@@ -140,7 +140,9 @@ Scope {
                     tipEnabled: !controlPopup.open
                     opacity: controlPopup.progress > 0.2 ? 0 : 1
                     onClicked: controlPopup.toggle()
+                    onRightClicked: {Audio.toggleMute();Osd.volume();}
                 }
+
 
                 LazyLoader {
                     active: controlPopup.open

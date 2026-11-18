@@ -20,3 +20,4 @@ singleton Osd 1.0 Osd.qml
 singleton Clip 1.0 Clip.qml
 singleton Ipc 1.0 Ipc.qml
 singleton GameMode 1.0 GameMode.qml
+singleton Weather 1.0 Weather.qml

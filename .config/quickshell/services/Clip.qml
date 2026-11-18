@@ -26,6 +26,45 @@ Singleton {
         return out;
     }
 
+    readonly property string thumbDir: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/qs-clip"
+    property var thumbReady: ({})   // id -> true once the file exists
+    property var thumbBatch: []
+    property bool thumbPending: false
+
+    function isImage(e) { return e.text.startsWith("[[ binary data"); }
+    function idOf(e) { return e.raw.split("\t")[0]; }
+
+    function requestThumbs() {
+        const batch = results.filter((e) => isImage(e) && !thumbReady[idOf(e)]);
+        if (batch.length === 0)
+            return;
+        if (thumber.running) {
+            thumbPending = true;
+            return;
+        }
+        thumbBatch = batch;
+        const script = 'd="$1"; shift; mkdir -p "$d"; for raw; do id=$(printf "%s" "$raw" | cut -f1); '
+            + '[ -f "$d/$id.png" ] || printf "%s\\n" "$raw" | cliphist decode | magick - -thumbnail 320x180 "png:$d/$id.png"; done';
+        thumber.command = ["sh", "-c", script, "_", thumbDir].concat(batch.map((e) => e.raw));
+        thumber.running = true;
+    }
+
+    Process {
+        id: thumber
+
+        onRunningChanged: {
+            if (running)
+                return;
+            const next = Object.assign({}, root.thumbReady);
+            for (const e of root.thumbBatch) next[root.idOf(e)] = true;
+            root.thumbReady = next; // replace, don't mutate
+            if (root.thumbPending) {
+                root.thumbPending = false;
+                root.requestThumbs();
+            }
+        }
+    }
+
     function load() {
         if (!lister.running)
             lister.running = true;
@@ -43,6 +82,8 @@ Singleton {
         query = "";
         selected = 0;
         entries = []; // free the history while closed
+        thumbReady = ({});
+        Quickshell.execDetached(["rm", "-rf", thumbDir]);
     }
 
     function toggle(name) {
@@ -80,6 +121,7 @@ Singleton {
     onResultsChanged: {
         if (selected >= results.length)
             selected = Math.max(0, results.length - 1);
+        requestThumbs();
     }
 
     Process {

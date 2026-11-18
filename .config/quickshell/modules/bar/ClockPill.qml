@@ -139,10 +139,9 @@ Pill {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: 2
-            rightMargin: 4
+            topMargin: 1
+            rightMargin: 1
         }
-
     }
 
     // click anywhere on a toast to dismiss it
@@ -150,6 +149,7 @@ Pill {
         enabled: root.toast
         onTapped: Notifs.hideToast()
     }
+
 
     Behavior on implicitWidth {
         enabled: root.expand === 0 && root.launcherExpand === 0 && root.sessionExpand === 0

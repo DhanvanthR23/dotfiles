@@ -53,6 +53,10 @@ set -l pick $argv[2]
 if test "$pick" = --keep
     exit 0
 end
+if test -z "$pick"; and test -f $state/walls/$slug
+    set pick (cat $state/walls/$slug)
+    test -f "$pick"; or set pick
+end
 if test -z "$pick"
     set pick (find -L $walls/$dir -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | shuf -n1)
 end
@@ -65,4 +69,5 @@ pgrep -x awww-daemon >/dev/null; or begin
     sleep 0.5
 end
 awww img $pick --transition-type fade --transition-duration 1
-echo $pick >$state/wallpaper
+mkdir -p $state/walls
+echo $pick >$state/walls/$slug

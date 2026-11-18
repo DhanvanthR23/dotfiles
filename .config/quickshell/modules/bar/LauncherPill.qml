@@ -8,6 +8,7 @@ Pill {
     property string icon: "󰍉"
 
     signal clicked()
+    signal rightClicked()
 
     implicitWidth: Theme.pillHeight // 28px circle, since Pill's radius is height / 2
 
@@ -35,4 +36,5 @@ Pill {
         onTapped: root.clicked()
     }
 
+    TapHandler { acceptedButtons: Qt.RightButton; onTapped: root.rightClicked() }
 }

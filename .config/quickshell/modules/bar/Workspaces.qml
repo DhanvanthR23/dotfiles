@@ -1,6 +1,7 @@
 import "../../components"
 import "../../config"
 import QtQuick
+import Quickshell
 import Quickshell.Niri
 
 Pill {
@@ -17,6 +18,29 @@ Pill {
     // never smaller than the fixed width, but grows if a 5th workspace ever shows up
     implicitWidth: Math.max(fixedWidth, row.implicitWidth + Theme.padding * 2)
     hoverable: false
+
+    property bool scrollReady: true
+
+    signal rightClicked()
+
+    Timer {
+        id: scrollCooldown
+
+        interval: 150
+        onTriggered: root.scrollReady = true
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        onWheel: (wheel) => {
+            if (!root.scrollReady || wheel.angleDelta.y === 0)
+                return;
+            Quickshell.execDetached(["niri", "msg", "action", wheel.angleDelta.y > 0 ? "focus-workspace-up" : "focus-workspace-down"]);
+            root.scrollReady = false;
+            scrollCooldown.restart();
+        }
+    }
 
     Row {
         id: row
@@ -64,5 +88,6 @@ Pill {
         }
 
     }
+    TapHandler { acceptedButtons: Qt.RightButton; onTapped: Quickshell.execDetached(["niri", "msg", "action", "toggle-overview"]) }
 
 }

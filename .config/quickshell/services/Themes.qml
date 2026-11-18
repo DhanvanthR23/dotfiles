@@ -18,6 +18,36 @@ Singleton {
     property string current: ""
     property string currentWall: ""
     property string queued: ""
+    property var lastWalls: ({})   // slug -> wallpaper path
+    readonly property string thumbRoot: (Quickshell.env("XDG_CACHE_HOME") || home + "/.cache") + "/qs-test/thumbs"
+
+    function thumbFor(path) {
+        const p = path.split("/");
+        return thumbRoot + "/" + p[p.length - 2] + "/" + p[p.length - 1] + ".png";
+    }
+
+    function readLastWalls() {
+        if (!lastReader.running)
+            lastReader.running = true;
+    }
+
+    Process {
+        id: lastReader
+
+        command: ["sh", "-c", 'cd "$1" 2>/dev/null && for f in *; do [ -f "$f" ] && printf "%s\\t%s\\n" "$f" "$(cat "$f")"; done', "_", root.stateDir + "/walls"]
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const m = {};
+                for (const line of this.text.split("\n")) {
+                    const p = line.split("\t");
+                    if (p.length === 2 && p[1] !== "")
+                        m[p[0]] = p[1];
+                }
+                root.lastWalls = m;
+            }
+        }
+    }
 
     function pretty(slug) {
         return slug.split("-").map((w) => {
@@ -41,7 +71,9 @@ Singleton {
         if (!lister.running)
             lister.running = true;
 
+        readLastWalls();
         loadWallpapers();
+
     }
 
     function loadWallpapers() {
@@ -70,6 +102,8 @@ Singleton {
     }
 
     function setWallpaper(path) {
+        lastWalls = Object.assign({}, lastWalls, { [current]: path });
+        Quickshell.execDetached(["sh", "-c", 'mkdir -p "$1" && printf "%s\\n" "$2" > "$1/$3"', "_", stateDir + "/walls", path, current]);
         currentWall = path;
         Quickshell.execDetached(["awww", "img", path, "--transition-type", "fade", "--transition-duration", "1"]);
         wallFile.setText(path + "\n");
@@ -83,6 +117,7 @@ Singleton {
                 return ;
 
             Theme.reload();
+            root.readLastWalls();
             root.currentWall = root.readState(wallFile);
             if (root.queued !== "") {
                 const s = root.queued;

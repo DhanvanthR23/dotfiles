@@ -6,7 +6,9 @@ pragma Singleton
 Singleton {
     id: root
 
-    readonly property var players: Mpris.players.values
+    readonly property var players: Mpris.players.values.filter((p) => {
+        return p.isPlaying || (p.trackTitle !== "" && !p.dbusName.includes("kdeconnect"));
+    })
     // prefer whoever is playing, else the first player
     readonly property var player: players.find((p) => {
         return p.isPlaying;

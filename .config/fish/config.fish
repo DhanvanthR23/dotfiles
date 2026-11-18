@@ -78,6 +78,7 @@ if status is-interactive
     alias ps 'paru -S --needed'
     alias pr 'paru -Rns'
     alias pu 'paru -Syu --noconfirm --sudoloop'
+    alias pf 'paru -F'
 
     # ── Editors ───────────────────────────────────────────
     alias vim nvim

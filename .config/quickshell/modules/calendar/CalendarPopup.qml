@@ -11,7 +11,23 @@ PopupWindow {
     readonly property int headerHeight: 32
     readonly property int stripHeight: 52
     readonly property int mediaHeight: 36
-    readonly property int contentHeight: Theme.padding * 2 + headerHeight + Theme.gap + stripHeight + (Media.available ? Theme.gap + mediaHeight : 0)
+    property bool expanded: false
+    property real detail: expanded ? 1 : 0
+    readonly property int weatherHeight: 28
+    readonly property int topBlocks: (Media.available ? 1 : 0) + (Weather.ready ? 1 : 0)
+    readonly property real contentHeight: Theme.padding * 2 * (topBlocks > 0 ? 1 : detail)
+        + (Media.available ? mediaHeight : 0)
+        + (Weather.ready ? weatherHeight : 0)
+        + Math.max(0, topBlocks - 1) * Theme.gap
+        + (topBlocks > 0 ? Theme.gap * detail : 0)
+        + (headerHeight + Theme.gap + stripHeight) * detail
+    property real textY: (topBlocks > 0 || expanded) ? 10 : 0
+    Behavior on textY {
+        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
+    }
+    Behavior on detail {
+        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
+    }
     // --- week strip data ---
     readonly property var today: Time.now
     property int weekOffset: 0   // target week, changes instantly on click
@@ -30,7 +46,6 @@ PopupWindow {
     // --- open/close logic ---
     property bool open: false
     readonly property bool wantOpen: pill.hovered || popupHover.hovered
-    // --- animation driver: 0 = pill, 1 = full popup ---
     readonly property bool shown: open && !Notifs.toastVisible
     property real progress: shown ? 1 : 0
     readonly property real fade: Math.max(0, progress * 2 - 1) // 0 in the first half, ramps to 1 in the second
@@ -56,6 +71,7 @@ PopupWindow {
             shownOffset = 0;
             strip.x = 0;
             strip.opacity = 1;
+            expanded = false;
         }
     }
     // window sits exactly on top of the pill, card grows downward from there
@@ -89,7 +105,7 @@ PopupWindow {
 
         // clock text, same spot as in the pill so the handoff is seamless
         Text {
-            y: 10
+            y: root.textY
             height: Theme.pillHeight
             verticalAlignment: Text.AlignVCenter
             // centered at progress 0, left padding at progress 1
@@ -104,7 +120,7 @@ PopupWindow {
         Text {
             anchors.right: parent.right
             anchors.rightMargin: Theme.padding
-            y: 10
+            y: root.textY
             height: Theme.pillHeight
             verticalAlignment: Text.AlignVCenter
             text: Time.dateShort
@@ -120,8 +136,8 @@ PopupWindow {
             y: Theme.pillHeight
             width: root.implicitWidth
             height: root.contentHeight
-            opacity: root.fade
             enabled: root.shown
+
 
             Column {
                 anchors.fill: parent
@@ -129,7 +145,105 @@ PopupWindow {
                 spacing: Theme.gap
 
                 Item {
+                    visible: Media.available
                     width: parent.width
+                    height: root.mediaHeight
+
+                    Column {
+                        anchors {
+                            left: parent.left
+                            right: controls.left
+                            rightMargin: Theme.gap
+                            verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
+                            width: parent.width
+                            text: Media.title
+                            color: Theme.text
+                            elide: Text.ElideRight
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontSmall
+                            font.bold: true
+                        }
+
+                        Text {
+                            width: parent.width
+                            text: Media.artist
+                            color: Theme.textMuted
+                            elide: Text.ElideRight
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontCaption
+                        }
+
+                    }
+
+                    Row {
+                        id: controls
+
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        ArrowButton {
+                            label: "󰒮"
+                            onClicked: Media.previous()
+                        }
+
+                        ArrowButton {
+                            label: Media.playing ? "󰏤" : "󰐊"
+                            onClicked: Media.toggle()
+                        }
+
+                        ArrowButton {
+                            label: "󰒭"
+                            onClicked: Media.next()
+                        }
+
+                    }
+
+                }
+
+                Item {
+                    visible: Weather.ready
+                    width: parent.width
+                    height: root.weatherHeight
+
+                    Row {
+                        anchors.left: parent.left
+                        height: parent.height
+                        spacing: 8
+
+                        Text {
+                            height: parent.height
+                            verticalAlignment: Text.AlignVCenter
+                            text: Weather.icon
+                            color: Theme.accent
+                            font.family: Theme.iconFont
+                            font.pixelSize: Theme.iconSize
+                        }
+
+                        Text {
+                            height: parent.height
+                            verticalAlignment: Text.AlignVCenter
+                            text: Math.round(Weather.temp) + "° " + Weather.condition
+                            color: Theme.text
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontSmall
+                            font.bold: true
+                        }
+                    }
+                    Text {
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "H " + Math.round(Weather.high) + "°  L " + Math.round(Weather.low) + "°  ·  feels " + Math.round(Weather.feels) + "°"
+                        color: Theme.textMuted; font.family: Theme.fontFamily; font.pixelSize: Theme.fontCaption
+                    }
+                }
+
+                Item {
+                    width: parent.width
+                    visible: root.detail > 0
+                    opacity: root.detail
                     height: 32
 
                     Text {
@@ -172,6 +286,8 @@ PopupWindow {
                         id: strip
 
                         width: parent.width
+                        visible: root.detail > 0
+                        opacity: root.detail
 
                         Repeater {
                             model: 7
@@ -279,64 +395,7 @@ PopupWindow {
 
                 }
 
-                Item {
-                    visible: Media.available
-                    width: parent.width
-                    height: root.mediaHeight
 
-                    Column {
-                        anchors {
-                            left: parent.left
-                            right: controls.left
-                            rightMargin: Theme.gap
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        Text {
-                            width: parent.width
-                            text: Media.title
-                            color: Theme.text
-                            elide: Text.ElideRight
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSmall
-                            font.bold: true
-                        }
-
-                        Text {
-                            width: parent.width
-                            text: Media.artist
-                            color: Theme.textMuted
-                            elide: Text.ElideRight
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontCaption
-                        }
-
-                    }
-
-                    Row {
-                        id: controls
-
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        ArrowButton {
-                            label: "󰒮"
-                            onClicked: Media.previous()
-                        }
-
-                        ArrowButton {
-                            label: Media.playing ? "󰏤" : "󰐊"
-                            onClicked: Media.toggle()
-                        }
-
-                        ArrowButton {
-                            label: "󰒭"
-                            onClicked: Media.next()
-                        }
-
-                    }
-
-                }
 
             }
 
@@ -347,10 +406,15 @@ PopupWindow {
             anchors {
                 top: parent.top
                 right: parent.right
-                topMargin: 2
-                rightMargin: 4
+                topMargin: 1
+                rightMargin: 1
             }
+        }
 
+        Item {
+            anchors { top: parent.top; left: parent.left; right: parent.right }
+            height: Theme.pillHeight + 10
+            TapHandler { onTapped: root.expanded = !root.expanded }
         }
 
         HoverHandler {
@@ -364,7 +428,6 @@ PopupWindow {
             duration: Theme.animDuration
             easing.type: Easing.OutCubic
         }
-
     }
 
     // only the card catches the mouse, transparent window area doesn't block other pills

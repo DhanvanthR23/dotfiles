@@ -202,11 +202,41 @@ PanelWindow {
                 opacity: root.fade
                 enabled: root.popup.open
 
+                Image {
+                    id: preview
+
+                    readonly property var theme: Themes.themes[root.ti]
+                    readonly property string last: theme ? (Themes.lastWalls[theme.slug] || "") : ""
+
+                    visible: Picker.view === "themes"
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 200
+                    height: 112
+                    source: last === "" ? "" : "file://" + Themes.thumbFor(last)
+                    sourceSize.width: 320
+                    sourceSize.height: 180
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    cache: false
+                    opacity: status === Image.Ready ? 1 : 0
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animFast }
+                    }
+                }
+
                 ListView {
                     id: themeList
 
                     visible: Picker.view === "themes"
-                    anchors.fill: parent
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        bottom: parent.bottom
+                        right: parent.right
+                        rightMargin: 200 + Theme.gap
+                    }
                     spacing: root.rowGap
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds

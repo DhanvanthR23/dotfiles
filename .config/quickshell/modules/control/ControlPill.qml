@@ -16,6 +16,7 @@ Rectangle {
     property bool showTip: false
 
     signal clicked()
+    signal rightClicked()
 
     onHoveredChanged: {
         if (hovered && tipEnabled) {
@@ -95,6 +96,8 @@ Rectangle {
     TapHandler {
         onTapped: root.clicked()
     }
+
+    TapHandler { acceptedButtons: Qt.RightButton; onTapped: root.rightClicked() }
 
     PopupWindow {
         id: tip

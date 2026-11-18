@@ -1,12 +1,14 @@
 import "../../components"
 import "../../config"
 import "../../services"
+import Quickshell
 import QtQuick
 
 Pill {
     id: root
 
     implicitWidth: row.implicitWidth + 20
+    signal rightClicked()
 
     Row {
         id: row
@@ -32,4 +34,5 @@ Pill {
 
     }
 
+    TapHandler { acceptedButtons: Qt.RightButton; onTapped: Quickshell.execDetached([Settings.terminal, "-e", "btop", "--force-utf"]) }
 }

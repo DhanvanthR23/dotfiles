@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import Quickshell.Niri
 pragma Singleton
 
 Singleton {
@@ -11,16 +10,9 @@ Singleton {
     property string view: "themes" // "themes" | "walls"
 
     // output of the focused niri workspace, else the first screen
+    // remove: import Quickshell.Niri
     function focusedOutput() {
-        try {
-            const ws = Niri.workspaces.values.find((x) => {
-                return x.focused;
-            });
-            if (ws)
-                return ws.output;
-        } catch (e) {
-        }
-        return Quickshell.screens[0] ? Quickshell.screens[0].name : "";
+        return NiriService.focusedOutput() || (Quickshell.screens[0] ? Quickshell.screens[0].name : "");
     }
 
     function show(name) {

@@ -7,7 +7,7 @@ Minimalist CachyOS rice: **niri** compositor with a hand-written **Quickshell** 
 | Component     | Choice                                                                                          |
 | ------------- | ----------------------------------------------------------------------------------------------- |
 | Compositor    | [niri](https://github.com/YaLTeR/niri)                                                          |
-| Shell         | [Quickshell](https://quickshell.org) (noctalia-qs fork), config in `.config/quickshell`         |
+| Shell         | [Quickshell], config in `.config/quickshell`         |
 | Terminal      | [foot](https://codeberg.org/dnkl/foot)                                                          |
 | Wallpaper     | [awww](https://github.com/D-Brox/awww)                                                          |
 | Lock / idle   | [hyprlock](https://github.com/hyprwm/hyprlock), idle stages handled by the shell                |
@@ -54,7 +54,7 @@ chmod +x ~/.config/niri/scripts/*.sh ~/.config/niri/scripts/*.fish
 
 | Used for                 | Packages                                        |
 | ------------------------ | ----------------------------------------------- |
-| Shell                    | `quickshell` (noctalia-qs), `ttf-jetbrains-mono-nerd`, Google Sans Flex (manual) |
+| Shell                    | `quickshell`, `ttf-jetbrains-mono-nerd`, Google Sans Flex (manual) |
 | Brightness               | `brightnessctl`, `ddcutil` (external monitors)  |
 | Night light              | `wlsunset`                                      |
 | Clipboard                | `cliphist`, `wl-clipboard`                      |

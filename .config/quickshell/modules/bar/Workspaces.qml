@@ -1,8 +1,8 @@
 import "../../components"
 import "../../config"
+import "../../services"
 import QtQuick
 import Quickshell
-import Quickshell.Niri
 
 Pill {
     id: root
@@ -48,16 +48,18 @@ Pill {
         anchors.centerIn: parent
         spacing: root.dotGap
 
+        // remove: import Quickshell.Niri
         Repeater {
-            model: Niri.workspaces
+            model: NiriService.workspaces
 
             Item {
                 id: dot
 
-                required property var modelData
+                required property var model
+                readonly property bool occupied: model.activeWindowId !== 0
 
-                visible: modelData.output === root.screenName
-                width: modelData.focused ? root.focusedSize : root.dotSize
+                visible: model.output === root.screenName
+                width: model.isFocused ? root.focusedSize : root.dotSize
                 height: root.height
 
                 Rectangle {
@@ -65,26 +67,14 @@ Pill {
                     width: parent.width
                     height: root.dotSize
                     radius: height / 2
-                    color: dot.modelData.focused ? Theme.accent : dot.modelData.occupied ? Theme.textMuted : Theme.border
+                    color: dot.model.isFocused ? Theme.accent : dot.occupied ? Theme.textMuted : Theme.border
                 }
 
-                HoverHandler {
-                    cursorShape: Qt.PointingHandCursor
-                }
+                HoverHandler { cursorShape: Qt.PointingHandCursor }
+                TapHandler { onTapped: NiriService.focusWorkspace(dot.model.id) }
 
-                TapHandler {
-                    onTapped: Niri.dispatch(["focus-workspace", String(dot.modelData.idx)])
-                }
-
-                Behavior on width {
-                    NumberAnimation {
-                        duration: Theme.animDuration
-                    }
-
-                }
-
+                Behavior on width { NumberAnimation { duration: Theme.animDuration } }
             }
-
         }
 
     }

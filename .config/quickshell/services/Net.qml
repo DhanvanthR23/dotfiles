@@ -10,10 +10,10 @@ Singleton {
     readonly property var devices: Networking.devices.values
     // wifi devices expose `networks`, wired ones don't
     readonly property var wifiDevice: devices.find((d) => {
-        return d.networks !== undefined;
+        return d.type === DeviceType.Wifi;
     }) || null
     readonly property var wiredDevice: devices.find((d) => {
-        return d.networks === undefined && d.connected && d.name !== "lo";
+        return d.type === DeviceType.Wired && d.connected;
     }) || null
     readonly property var activeNetwork: wifiDevice ? (wifiDevice.networks.values.find((n) => {
         return n.connected;

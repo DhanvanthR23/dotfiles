@@ -23,10 +23,11 @@ CORE=(
 # AUR / less common names: tried one by one, a failure only warns.
 # Verify these names on your system (paru -Ss <name>) before relying on them.
 OPTIONAL=(
-  noctalia-qs # Quickshell fork the shell runs on (or plain `quickshell`)
-  wlctl       # Wi-Fi TUI opened by right-click on the Wi-Fi tile
-  bluetui     # Bluetooth TUI opened by right-click on the Bluetooth tile
-  sshfs       # KDE Connect "browse phone filesystem"
+  quickshell-git # Quickshell fork the shell runs on (or plain `quickshell`)
+  qml-niri       # Niri module
+  wlctl          # Wi-Fi TUI opened by right-click on the Wi-Fi tile
+  bluetui        # Bluetooth TUI opened by right-click on the Bluetooth tile
+  sshfs          # KDE Connect "browse phone filesystem"
 )
 
 echo "==> Installing core packages..."

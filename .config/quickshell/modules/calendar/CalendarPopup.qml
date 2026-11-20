@@ -14,13 +14,23 @@ PopupWindow {
     property bool expanded: false
     property real detail: expanded ? 1 : 0
     readonly property int weatherHeight: 28
+    // --- month view: the calendar icon next to the title flips strip <-> month grid ---
+    readonly property int monthHeadHeight: 20
+    readonly property int monthRowHeight: 30
+    readonly property int monthH: monthHeadHeight + monthRowHeight * 6
+    property bool monthMode: false
+    property real monthT: monthMode ? 1 : 0
+    readonly property real bodyH: stripHeight + (monthH - stripHeight) * monthT
+    Behavior on monthT {
+        NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
+    }
     readonly property int topBlocks: (Media.available ? 1 : 0) + (Weather.ready ? 1 : 0)
     readonly property real contentHeight: Theme.padding * 2 * (topBlocks > 0 ? 1 : detail)
         + (Media.available ? mediaHeight : 0)
         + (Weather.ready ? weatherHeight : 0)
         + Math.max(0, topBlocks - 1) * Theme.gap
         + (topBlocks > 0 ? Theme.gap * detail : 0)
-        + (headerHeight + Theme.gap + stripHeight) * detail
+        + (headerHeight + Theme.gap + bodyH) * detail
     property real textY: (topBlocks > 0 || expanded) ? 10 : 0
     Behavior on textY {
         NumberAnimation { duration: Theme.animDuration; easing.type: Easing.OutCubic }
@@ -43,6 +53,36 @@ PopupWindow {
         d.setDate(d.getDate() + 3);
         return d;
     }
+    // --- month grid data (1st of the month sits under its weekday, Monday-first) ---
+    property int monthOffset: 0
+    readonly property var monthDate: new Date(today.getFullYear(), today.getMonth() + monthOffset, 1)
+    readonly property int monthDays: new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate()
+    readonly property int monthLead: (monthDate.getDay() + 6) % 7
+    property string pickedKey: ""
+
+    function goMonth(dir) {
+        monthOffset += dir;
+    }
+
+    function pick(d) {
+        pickedKey = d.toDateString();
+        pickTimer.restart();
+    }
+
+    onExpandedChanged: {
+        if (!expanded) {
+            monthMode = false;
+            monthOffset = 0;
+        }
+    }
+
+    Timer {
+        id: pickTimer
+
+        interval: 1500
+        onTriggered: root.pickedKey = ""
+    }
+
     // --- open/close logic ---
     property bool open: false
     readonly property bool wantOpen: pill.hovered || popupHover.hovered
@@ -72,6 +112,9 @@ PopupWindow {
             strip.x = 0;
             strip.opacity = 1;
             expanded = false;
+            monthMode = false;
+            monthOffset = 0;
+            pickedKey = "";
         }
     }
     // window sits exactly on top of the pill, card grows downward from there
@@ -247,13 +290,24 @@ PopupWindow {
                     height: 32
 
                     Text {
+                        id: monthTitle
+
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        text: Qt.formatDate(root.centerDay, "MMMM yyyy")
+                        text: Qt.formatDate(root.monthMode ? root.monthDate : root.centerDay, "MMMM yyyy")
                         color: Theme.text
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSize
                         font.bold: true
+                    }
+
+                    // calendar icon: expands the week strip into the month grid
+                    ArrowButton {
+                        anchors.left: monthTitle.right
+                        anchors.leftMargin: 4
+                        anchors.verticalCenter: parent.verticalCenter
+                        label: "󰃭"
+                        onClicked: root.monthMode = !root.monthMode
                     }
 
                     Row {
@@ -263,24 +317,108 @@ PopupWindow {
                         ArrowButton {
                             label: "‹"
                             nudge: -2
-                            onClicked: root.go(-1)
+                            onClicked: root.monthMode ? root.goMonth(-1) : root.go(-1)
                         }
 
                         ArrowButton {
                             label: "›"
                             nudge: 2
-                            onClicked: root.go(1)
+                            onClicked: root.monthMode ? root.goMonth(1) : root.go(1)
                         }
 
                     }
 
                 }
 
-                // clipping window so the sliding strip never leaks outside its slot
+                // clipping window: week strip and month grid share it, height follows bodyH
                 Item {
                     width: parent.width
-                    height: 52
+                    height: root.bodyH
                     clip: true
+
+                    // month grid
+                    Item {
+                        id: monthGrid
+
+                        width: parent.width
+                        height: root.monthH
+                        visible: root.detail > 0 && root.monthT > 0
+                        opacity: root.detail * root.monthT
+
+                        Repeater {
+                            model: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+                            Text {
+                                required property string modelData
+                                required property int index
+
+                                x: index * (monthGrid.width / 7)
+                                width: monthGrid.width / 7
+                                height: root.monthHeadHeight
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                text: modelData
+                                color: Theme.textMuted
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontCaption
+                            }
+                        }
+
+                        Repeater {
+                            model: 42
+
+                            Item {
+                                id: mcell
+
+                                required property int index
+                                readonly property int dayNum: index - root.monthLead + 1
+                                readonly property bool valid: dayNum >= 1 && dayNum <= root.monthDays
+                                readonly property var day: new Date(root.monthDate.getFullYear(), root.monthDate.getMonth(), dayNum)
+                                readonly property bool isToday: valid && day.toDateString() === root.today.toDateString()
+                                readonly property bool picked: valid && day.toDateString() === root.pickedKey
+
+                                visible: valid
+                                x: (index % 7) * (monthGrid.width / 7)
+                                y: root.monthHeadHeight + Math.floor(index / 7) * root.monthRowHeight
+                                width: monthGrid.width / 7
+                                height: root.monthRowHeight
+
+                                Rectangle {
+                                    anchors.centerIn: parent
+                                    width: parent.width - 6
+                                    height: parent.height - 4
+                                    radius: Theme.radiusSmall
+                                    color: mcell.isToday ? Theme.accent : "transparent"
+                                    border.width: 2
+                                    border.color: mcell.picked ? (mcell.isToday ? Theme.text : Theme.accent) : "transparent"
+
+                                    Behavior on border.color {
+                                        ColorAnimation { duration: Theme.animFast }
+                                    }
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: mcell.dayNum
+                                        color: mcell.isToday ? Theme.bg : Theme.text
+                                        font.family: Theme.fontFamily
+                                        font.pixelSize: Theme.fontSmall
+                                        font.bold: mcell.isToday
+                                    }
+                                }
+
+                                TapHandler {
+                                    onTapped: root.pick(mcell.day)
+                                }
+                            }
+                        }
+                    }
+
+                    // week strip (wrapper fades it out when the month grid takes over)
+                    Item {
+                        width: parent.width
+                        height: root.stripHeight
+                        visible: root.monthT < 1
+                        opacity: 1 - root.monthT
 
                     Row {
                         id: strip
@@ -390,6 +528,8 @@ PopupWindow {
                             }
 
                         }
+
+                    }
 
                     }
 

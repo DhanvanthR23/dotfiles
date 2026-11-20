@@ -35,6 +35,13 @@ end
 mkdir -p $state ~/.config/gtk-3.0 ~/.config/gtk-4.0
 cp $theme $cfg/colors.conf
 bash ~/.config/niri/scripts/generate-colors.sh >/dev/null; or echo "generate-colors.sh failed" >&2
+if command -q spicetify
+    if pgrep -x spotify >/dev/null
+        spicetify -q apply >/dev/null 2>&1 &
+    else
+        spicetify -q apply -n >/dev/null 2>&1 &
+    end
+end
 qs ipc call theme reload 2>/dev/null
 echo $slug >$state/theme
 thunar -q 2>/dev/null

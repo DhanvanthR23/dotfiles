@@ -79,6 +79,7 @@ if status is-interactive
     alias pr 'paru -Rns'
     alias pu 'paru -Syu --noconfirm --sudoloop'
     alias pf 'paru -F'
+    alias pss 'paru -Ss'
 
     # ── Editors ───────────────────────────────────────────
     alias vim nvim
@@ -240,3 +241,5 @@ end
 
 # Added by Antigravity CLI installer
 set -gx PATH "/home/dhanvanth/.local/bin" $PATH
+
+fish_add_path /home/dhanvanth/.spicetify

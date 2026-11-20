@@ -251,6 +251,7 @@ binds {
     Mod+Shift+N { spawn "qs" "ipc" "call" "notifs" "clear"; }
     Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
     Mod+Shift+U { spawn "qs" "ipc" "call" "updates" "run"; }
+    Mod+Shift+L { spawn "qs" "ipc" "call" "lockdev" "toggle"; }
     
     Mod+Alt+R { spawn-sh "pkill -x qs; sleep 0.3; QT_QUICK_BACKEND=software qs -d"; }
 
@@ -268,6 +269,7 @@ binds {
     Mod+TAB repeat=false hotkey-overlay-title="Toggle Overview" { toggle-overview; }
     Mod+Shift+D {spawn "sh" "-c" "~/.config/niri/scripts/file-search.sh";}
     Mod+Alt+L {spawn "localsend";}
+    Mod+Z {spawn "zeditor";}
 
     // legacy commands
      // Mod+Escape { spawn "sh" "-c" "~/.config/niri/scripts/session.sh";}

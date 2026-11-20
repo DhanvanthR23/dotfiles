@@ -7,6 +7,7 @@ import "../control"
 import "../launcher"
 import "../picker"
 import "../session"
+import "../lock"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -58,6 +59,13 @@ Scope {
                 pill: clockPill
             }
 
+            LockPopup {
+                id: lockPopup
+
+                screen: bar.modelData
+                pill: clockPill
+            }
+
             ClipPopup {
                 screen: bar.modelData
                 pill: clockPill
@@ -80,7 +88,7 @@ Scope {
 
                 launcherExpand: launcherPopup.fade
                 sessionExpand: sessionPopup.progress
-                opacity: launcherPopup.progress > 0.02 || sessionPopup.progress > 0.02 ? 0 : 1
+                opacity: launcherPopup.progress > 0.02 || sessionPopup.progress > 0.02 || Lock.open || lockPopup.progress > 0.02 ? 0 : 1
                 anchors.centerIn: parent
                 expand: calendarPopup.progress
             }
@@ -91,7 +99,21 @@ Scope {
             }
 
             Row {
+                id: leftRow
+
+                // 0 = normal bar, 1 = fully merged into the center
+                readonly property real merge: Math.min(1, lockPopup.progress / 0.4)
+
+                opacity: 1 - Math.max(0, (merge - 0.45) / 0.45)
+                transform: Translate {
+                    x: (Theme.gap + clockPill.width / 2) * leftRow.merge
+                }
                 spacing: 0
+
+
+                Behavior on opacity {
+                    NumberAnimation { duration: Theme.animDuration }
+                }
 
                 anchors {
                     right: clockPill.left
@@ -122,7 +144,20 @@ Scope {
             }
 
             Row {
+                id: rightRow
+
+                readonly property real merge: Math.min(1, lockPopup.progress / 0.4)
+
+                opacity: 1 - Math.max(0, (merge - 0.45) / 0.45)
+                transform: Translate {
+                    x: -(Theme.gap + clockPill.width / 2) * rightRow.merge
+                }
                 spacing: Theme.gap
+
+
+                Behavior on opacity {
+                    NumberAnimation { duration: Theme.animDuration }
+                }
 
                 anchors {
                     left: clockPill.right

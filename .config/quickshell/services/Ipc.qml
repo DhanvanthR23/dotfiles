@@ -80,4 +80,10 @@ Singleton {
         function caps(): void { Osd.lock("capslock"); }
         function num(): void { Osd.lock("numlock"); }
     }
+
+    IpcHandler {
+        target: "lockdev"
+
+        function toggle(): void { Lock.toggle(""); }
+    }
 }

@@ -603,6 +603,32 @@ cat >"$ZED_DIR/colors.json" <<EOF
 }
 EOF
 
+# ── Spicetify ────────────────────────────────────────────────────────────────
+SPICE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/spicetify/Themes/rice"
+mkdir -p "$SPICE_DIR"
+cat >"$SPICE_DIR/color.ini" <<EOF
+[rice]
+text               = ${COLOR_FG}
+subtext            = ${COLOR_FG_SUBTLE}
+main               = ${COLOR_BG}
+main-elevated      = ${COLOR_SURFACE}
+highlight          = ${COLOR_OVERLAY}
+highlight-elevated = ${COLOR_SELECTION}
+sidebar            = ${COLOR_DIM_BLACK}
+player             = ${COLOR_SURFACE}
+card               = ${COLOR_SURFACE}
+shadow             = ${COLOR_DIM_BLACK}
+selected-row       = ${COLOR_FG}
+button             = ${COLOR_IRIS}
+button-active      = ${COLOR_PINE}
+button-disabled    = ${COLOR_FG_MUTED}
+tab-active         = ${COLOR_OVERLAY}
+notification       = ${COLOR_OVERLAY}
+notification-error = ${COLOR_RED}
+equalizer          = ${COLOR_IRIS}
+misc               = ${COLOR_BORDER}
+EOF
+
 # ── Symlinks (for tools that resolve includes relative to their config dir) ──
 mkdir -p "${HOME}/.config/waybar" "${HOME}/.config/zathura" "${HOME}/.config/swayosd"
 [ -L "${HOME}/.config/zathura/colors-zathura" ] || ln -sf "../colors/colors-zathura" "${HOME}/.config/zathura/colors-zathura"

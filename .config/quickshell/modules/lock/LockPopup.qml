@@ -21,6 +21,11 @@ Scope {
         }
     }
 
+    onProgressChanged: {
+        if (progress >= 1 && hasKeyboard)
+            Lock.overlayDone();
+    }
+
     Behavior on progress {
         NumberAnimation {
             duration: root.open ? 450 : 750

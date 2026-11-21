@@ -1,4 +1,5 @@
 import "./modules/bar"
+import "./modules/lock"
 import "./services"
 import Quickshell
 
@@ -7,5 +8,5 @@ Scope {
 
     Bar {
     }
-
+    LockSession { }
 }

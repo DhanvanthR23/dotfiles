@@ -27,7 +27,7 @@ Singleton {
         timeout: Settings.idleLock
         onIsIdleChanged: {
             if (isIdle)
-                Quickshell.execDetached([root.lockScript]);
+                Lock.lockInstant();
         }
     }
     // --- sleep hooks (hypridle's before_sleep_cmd / after_sleep_cmd) ---
@@ -54,7 +54,7 @@ Singleton {
         stdout: SplitParser {
             onRead: (line) => {
                 if (line.includes("boolean true")) {
-                    Quickshell.execDetached([root.lockScript]);
+                    Lock.lockInstant();
                     releaseDelay.start();
                 } else if (line.includes("boolean false")) {
                     sleepDelay.running = true; // take the delay lock again for next time

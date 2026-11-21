@@ -12,7 +12,7 @@ Singleton {
     property int selected: 0
     readonly property string needle: query.trim().toLowerCase()
     readonly property var actions: [
-        { "label": "Lock", "cmd": [Idle.lockScript] },
+        { "label": "Lock", "cmd": ["qs", "ipc", "call", "lockreal", "lock"] },
         { "label": "Logout", "cmd": ["niri", "msg", "action", "quit", "--skip-confirmation"] },
         { "label": "Suspend", "cmd": ["systemctl", "suspend"] },
         { "label": "Reboot", "cmd": ["systemctl", "reboot"] },

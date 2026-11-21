@@ -33,6 +33,14 @@ PanelWindow {
         right: true
     }
 
+    Image {
+        anchors.fill: parent
+        source: Lock.wallpaper !== "" ? "file://" + Lock.wallpaper : ""
+        fillMode: Image.PreserveAspectCrop
+        cache: true
+        opacity: Math.min(1, root.p * 2) // fully covers the windows by halfway
+    }
+
     // dim the wallpaper
     Rectangle {
         anchors.fill: parent

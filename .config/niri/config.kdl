@@ -251,7 +251,7 @@ binds {
     Mod+Shift+N { spawn "qs" "ipc" "call" "notifs" "clear"; }
     Mod+V { spawn "qs" "ipc" "call" "clipboard" "toggle"; }
     Mod+Shift+U { spawn "qs" "ipc" "call" "updates" "run"; }
-    Mod+Shift+L { spawn "qs" "ipc" "call" "lockdev" "toggle"; }
+    Mod+L { spawn "qs" "ipc" "call" "lockreal" "lock"; }
     
     Mod+Alt+R { spawn-sh "pkill -x qs; sleep 0.3; QT_QUICK_BACKEND=software qs -d"; }
 
@@ -278,7 +278,7 @@ binds {
      // Mod+Ctrl+T { spawn "waypaper";}
      // Mod+Shift+U { spawn "sh" "-c" "~/.config/niri/scripts/run-updates.sh"; }
      // Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
-     Mod+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
+     Mod+Shift+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
      // XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "swayosd-client" "--output-volume" "raise"; }
      // XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "swayosd-client" "--output-volume" "lower"; }
      // XF86AudioMute hotkey-overlay-title="Mute Volume" { spawn "swayosd-client" "--output-volume" "mute-toggle"; }

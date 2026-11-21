@@ -82,8 +82,9 @@ Singleton {
     }
 
     IpcHandler {
-        target: "lockdev"
+        target: "lockreal"
 
-        function toggle(): void { Lock.toggle(""); }
+        function lock(): void { Lock.lockNow(); }
+        function instant(): void { Lock.lockInstant(); }
     }
 }

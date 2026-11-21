@@ -24,6 +24,52 @@ Singleton {
         return v === null ? "" : String(Number(v.toPrecision(12))); // trims 0.1+0.2 noise
     }
     property int selected: 0
+    readonly property bool fileMode: query.startsWith("f ")
+    readonly property string fileNeedle: fileMode ? query.slice(2).trim() : ""
+    readonly property string home: Quickshell.env("HOME")
+    property var fileHits: []
+
+    onFileNeedleChanged: fileDebounce.restart()
+    onFileHitsChanged: selected = 0
+
+    Timer {
+        id: fileDebounce
+        interval: 120
+        onTriggered: root.runFileSearch()
+    }
+
+    function runFileSearch() {
+        if (fileNeedle.length < 2) {
+            fileHits = [];
+            return;
+        }
+        if (fileProc.running) {
+            fileProc.running = false; // onRunningChanged restarts with the newest needle
+            return;
+        }
+        fileProc.needle = fileNeedle;
+        fileProc.command = ["fd", "--type", "f", "--ignore-case", "--max-results", "8",
+                            "--color", "never", "--", fileNeedle, home];
+        fileProc.running = true;
+    }
+
+    Process {
+        id: fileProc
+        property string needle
+
+        onRunningChanged: {
+            if (!running && root.fileMode && needle !== root.fileNeedle)
+                root.runFileSearch();
+        }
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                if (fileProc.needle !== root.fileNeedle)
+                    return; // stale result
+                root.fileHits = this.text.split("\n").filter((l) => l !== "");
+            }
+        }
+    }
 
     // entry id -> { n: launch count, t: last launch ms }
     property var launches: ({})
@@ -112,6 +158,17 @@ Singleton {
     // [{ kind: "calc" | "app", title, subtitle, entry? }]
     readonly property var results: {
         const out = [];
+        if (fileMode) {
+            return fileHits.map((p) => {
+                const i = p.lastIndexOf("/");
+                return {
+                    "kind": "file",
+                    "title": p.slice(i + 1),
+                    "subtitle": p.slice(0, i).replace(home, "~"),
+                    "path": p
+                };
+            });
+        }
         if (qalcMode) {
                 return qalcResult !== ""
                     ? [{ "kind": "calc", "title": qalcResult, "subtitle": "Copy result" }]
@@ -164,6 +221,8 @@ Singleton {
             Quickshell.execDetached(["wl-copy", item.title]);
         } else if (item.kind === "cmd") {
             item.run();
+        } else if (item.kind === "file") {
+            Quickshell.execDetached(["xdg-open", item.path]);
         }
     }
 

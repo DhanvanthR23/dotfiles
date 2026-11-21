@@ -104,7 +104,7 @@ PanelWindow {
 
             Text {
                 visible: input.text === ""
-                text: "Search apps or calculate…"
+                text: "Search apps, calculate, or f for files…"
                 color: Theme.textMuted
                 font: input.font
                 anchors.verticalCenter: parent.verticalCenter

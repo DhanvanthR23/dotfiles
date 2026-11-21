@@ -221,6 +221,12 @@ PopupWindow {
                         return Audio.setVolume(v);
                     }
                     onIconClicked: Audio.toggleMute()
+                    onIconRightClicked: mixer.open = !mixer.open
+                }
+
+                MixerRow {
+                    id: mixer
+                    width: parent.width
                 }
 
                 BrightnessRow {

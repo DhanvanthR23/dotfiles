@@ -13,6 +13,7 @@ Item {
 
     signal moved(real newValue) // user dragged or clicked: new 0..1
     signal iconClicked()
+    signal iconRightClicked()
 
     implicitHeight: 36
 
@@ -48,6 +49,10 @@ Item {
 
         TapHandler {
             onTapped: root.iconClicked()
+        }
+        TapHandler {
+            acceptedButtons: Qt.RightButton
+            onTapped: root.iconRightClicked()
         }
 
     }

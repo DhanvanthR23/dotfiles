@@ -12,6 +12,19 @@ Singleton {
     readonly property bool muted: hasSink ? sink.audio.muted : false
     readonly property string icon: muted || volume === 0 ? "󰝟" : volume < 0.34 ? "󰕿" : volume < 0.67 ? "󰖀" : "󰕾"
 
+    readonly property var streamNodes: Pipewire.nodes.values.filter((n) => n.isStream)
+    readonly property var streams: streamNodes.filter((n) => {
+        return n.audio && n.properties["media.class"] === "Stream/Output/Audio";
+    })
+
+    function appName(n) {
+        return n.properties["application.name"] || n.nickname || n.name;
+    }
+
+    PwObjectTracker {
+        objects: root.streamNodes
+    }
+
     function setVolume(v) {
         if (hasSink)
             sink.audio.volume = Math.max(0, Math.min(1, v));

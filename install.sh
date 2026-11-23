@@ -9,25 +9,35 @@ warn() { printf '  !! %s\n' "$*" >&2; }
 # ── packages ────────────────────────────────────────────────────────────────
 # Core: the script aborts if any of these fail.
 CORE=(
-  niri foot hyprlock awww
-  cliphist wl-clipboard libnotify playerctl
+  # compositor + shell runtime
+  niri foot awww
+  cliphist wl-clipboard libnotify playerctl curl
   brightnessctl ddcutil wlsunset
-  pacman-contrib imagemagick ripgrep fish starship stow
-  qt6ct qt5ct darkly adw-gtk-theme
-  xdg-desktop-portal-gtk polkit-gnome gtk-engine-murrine
+  pacman-contrib imagemagick ripgrep fd fuzzel thunar
+  # system services the shell talks to
+  pipewire wireplumber networkmanager bluez bluez-utils upower power-profiles-daemon
+  # theming
+  stow qt6ct qt5ct darkly adw-gtk-theme gtk-engine-murrine
+  xdg-desktop-portal-gtk polkit-gnome
   ttf-jetbrains-mono-nerd
-  kdeconnect
-  inotify-tools rsync # doc-sync.service (sync-documents.sh)
+  # fish config assumes these (zoxide/starship init, eza/bat/trash aliases, fcd)
+  fish starship zoxide eza bat fzf trash-cli fastfetch
+  # doc-sync.service + KDE Connect
+  kdeconnect inotify-tools rsync
 )
 
 # AUR / less common names: tried one by one, a failure only warns.
 # Verify these names on your system (paru -Ss <name>) before relying on them.
 OPTIONAL=(
-  quickshell-git # Quickshell fork the shell runs on (or plain `quickshell`)
-  qml-niri       # Niri module
+  quickshell-git # upstream Quickshell the shell runs on
+  qml-niri       # Niri QML module (import Niri)
   wlctl          # Wi-Fi TUI opened by right-click on the Wi-Fi tile
   bluetui        # Bluetooth TUI opened by right-click on the Bluetooth tile
+  hyprlock       # fallback locker, bound to Mod+Shift+L (Mod+L is the native lock)
   sshfs          # KDE Connect "browse phone filesystem"
+  neovim         # $EDITOR in config.fish
+  bibata-cursor-theme # cursor set in niri + GTK settings
+  hyprpicker btop localsend scrcpy android-tools # apps bound in config.kdl / fish `scr`
 )
 
 echo "==> Installing core packages..."
@@ -36,6 +46,13 @@ paru -S --needed "${CORE[@]}"
 echo "==> Installing optional packages..."
 for pkg in "${OPTIONAL[@]}"; do
   paru -S --needed "$pkg" || warn "could not install $pkg, install it manually"
+done
+
+# ── system services ─────────────────────────────────────────────────────────
+# The control center needs BlueZ, UPower and power-profiles-daemon running.
+echo "==> Enabling system services..."
+for svc in bluetooth upower power-profiles-daemon NetworkManager; do
+  sudo systemctl enable --now "$svc" || warn "could not enable $svc"
 done
 
 # ── stow ────────────────────────────────────────────────────────────────────
@@ -63,12 +80,22 @@ fi
 echo "==> Stowing dotfiles..."
 stow -R . --target="$HOME"
 
+# colors.conf is gitignored (it changes on every theme switch), so a fresh clone
+# has none and generate-colors.sh would abort. Seed it from the default theme.
+if [ ! -f ~/.config/colors/colors.conf ]; then
+  echo "==> Seeding colors.conf from the kanagawa theme..."
+  cp ~/.config/colors/themes/kanagawa.conf ~/.config/colors/colors.conf
+fi
+
 echo "==> Fixing script permissions..."
 chmod +x ~/.config/niri/scripts/*.sh ~/.config/niri/scripts/*.fish
 
-# ── runtime dirs the shell and scripts expect ───────────────────────────────
+# ── runtime dirs + initial state the shell expects ──────────────────────────
 echo "==> Creating runtime directories..."
-mkdir -p ~/Pictures/wallpapers ~/.local/state/qs-test ~/.cache/qs-test
+mkdir -p ~/Pictures/wallpapers ~/Pictures/Screenshots ~/.local/state/qs-test ~/.cache/qs-test
+# The picker shows "Apply a theme first" until this file exists. Matches the
+# committed colors.conf (Kanagawa).
+[ -f ~/.local/state/qs-test/theme ] || echo kanagawa >~/.local/state/qs-test/theme
 
 # ── systemd user units ──────────────────────────────────────────────────────
 # Every unit shipped in .config/systemd/user/ gets enabled (templates skipped).
@@ -120,15 +147,20 @@ gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface font-name 'Google Sans Flex 10'
 gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 11'
+gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'
 
 # ── what is left to do by hand ──────────────────────────────────────────────
 cat <<'EOF'
 
 Done. Still manual:
   - Install the Google Sans Flex font from fonts.google.com
-  - Put wallpapers in ~/Pictures/wallpapers/<theme folder> (names in
-    ~/.config/niri/scripts/wall-dir.fish), then run wall-thumbs.fish
-  - Make sure mako is NOT running (pgrep -x mako): it fights the shell for
-    the notification service
+  - Edit the machine-specific values (see "Machine-specific values" in the README):
+      niri config.kdl outputs + intel_backlight, quickshell config/Settings.qml
+      latitude/longitude
+  - Put wallpapers in ~/Pictures/wallpapers/<theme slug>/ (rose-pine-moon uses
+    rose-pine/), then run:  ~/.config/niri/scripts/set-theme.fish kanagawa
+  - Make sure no other notification daemon runs (pgrep -x mako; pgrep -x dunst):
+    it fights the shell for the notification service
+  - Optional: chsh -s "$(command -v fish)"
   - Log out and back in
 EOF

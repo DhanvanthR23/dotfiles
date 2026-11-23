@@ -33,7 +33,7 @@ if status is-interactive
     # ── Environment ────────────────────────────────────────
     set -gx EDITOR nvim
     set -gx VISUAL nvim
-    set -gx TERMINAL kitty
+    set -gx TERMINAL foot
     set -gx TERM kitty
     set -gx NTFY_TOPIC nord6watch_xk7f2q
 

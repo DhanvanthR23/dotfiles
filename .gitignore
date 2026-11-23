@@ -16,7 +16,10 @@
 .config/gtk-4.0/colors.css
 .config/gtk-3.0/colors.css
 .config/colors/colors.conf
+.local/share/color-schemes/RosePine.colors
 
 # systemd enable symlinks if the unit dir ever gets folded by stow
 .config/systemd/user/*.wants/
 .config/systemd/user/*.requires/
+
+.config/fish/fish_variables

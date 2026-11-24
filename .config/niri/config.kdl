@@ -279,6 +279,7 @@ binds {
      // Mod+Shift+U { spawn "sh" "-c" "~/.config/niri/scripts/run-updates.sh"; }
      // Mod+V {spawn "sh" "-c" "pkill -x fuzzel || cliphist list | fuzzel --dmenu --placeholder 'clipboard...' --with-nth=2 | cliphist decode | wl-copy";}
      Mod+Shift+L {spawn "sh" "-c" "~/.config/niri/scripts/lock.sh";}
+     Mod+Ctrl+Shift+Alt+Delete {spawn-sh "systemctl shutdown";}
      // XF86AudioRaiseVolume hotkey-overlay-title="Increase Volume" { spawn "swayosd-client" "--output-volume" "raise"; }
      // XF86AudioLowerVolume hotkey-overlay-title="Decrease Volume" { spawn "swayosd-client" "--output-volume" "lower"; }
      // XF86AudioMute hotkey-overlay-title="Mute Volume" { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
@@ -300,7 +301,7 @@ binds {
     Mod+Shift+B hotkey-overlay-title="Open Chrome" { spawn "google-chrome-stable"; }
     Mod+M hotkey-overlay-title="Open Thunderbird" { spawn "thunderbird"; }
     Ctrl+Shift+Escape hotkey-overlay-title="System Monitor" { spawn "foot" "-e" "btop" "--force-utf"; }
-    Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "hyprpicker" "-a"; }
+    Mod+Shift+C hotkey-overlay-title="Color Picker" { spawn "sh" "-c" "~/.config/niri/scripts/color-picker.fish"; }
 
     // Window management
     Mod+Q repeat=false { close-window; }
